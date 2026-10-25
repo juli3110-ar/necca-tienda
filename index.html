@@ -64,24 +64,22 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
 .burger span::before { position: absolute; top: -7px; }
 .burger span::after { position: absolute; top: 7px; }
 
-/* Hero */
-.hero { position: relative; margin: 24px 0 40px; }
-.hero-img { position: relative; max-width: 100%; aspect-ratio: 4 / 5; overflow: hidden; background: #0E0C0D; display: grid; place-items: center; }
-.hero-img img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; display: block; }
+/* Hero: full-bleed photo, text over it */
+.hero { position: relative; margin: 0 0 40px; }
+.hero-img { position: relative; width: 100%; max-width: 100%; aspect-ratio: 4 / 5; overflow: hidden; background: #0E0C0D; display: grid; place-items: center; }
+.hero-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 62% 30%; display: block; }
 .hero-img .hero-ph { font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--muted); }
-.hero-img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,9,9,.75) 0%, rgba(10,9,9,0) 45%); pointer-events: none; }
-.hero-text { position: absolute; left: clamp(20px, 5vw, 56px); bottom: clamp(24px, 5vw, 56px); z-index: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; color: #F4EEE8; }
-.eyebrow { font-size: 11px; letter-spacing: .32em; text-transform: uppercase; opacity: .85; }
-.hero-title { margin: 0; font-family: var(--display); font-weight: 200; font-size: clamp(30px, 5vw, 54px); letter-spacing: .14em; text-transform: uppercase; line-height: 1.1; text-wrap: balance; }
+.hero-img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,9,9,.78) 0%, rgba(10,9,9,0) 48%); pointer-events: none; }
+.hero-text { position: absolute; z-index: 1; left: max(20px, env(safe-area-inset-left, 0px)); right: max(20px, env(safe-area-inset-right, 0px)); bottom: clamp(28px, 6vw, 72px); display: flex; flex-direction: column; align-items: flex-start; gap: 10px; color: #F4EEE8; }
+.eyebrow { font-size: 11px; letter-spacing: .32em; text-transform: uppercase; opacity: .9; }
+.hero-title { margin: 0; font-family: var(--display); font-weight: 200; font-size: clamp(30px, 5vw, 60px); letter-spacing: .14em; text-transform: uppercase; line-height: 1.1; text-wrap: balance; }
 .hero-btn { margin-top: 8px; height: 44px; padding: 0 26px; border: 1px solid #F4EEE8; background: transparent; color: #F4EEE8; border-radius: 0; font-size: 11px; letter-spacing: .26em; text-transform: uppercase; }
 .hero-btn:hover { background: #F4EEE8; color: #0E0C0D; }
 @media (min-width: 760px) {
-  .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: center; gap: 48px; }
-  .hero-img { order: 2; max-height: 720px; }
-  .hero-img::after { display: none; }
-  .hero-text { position: static; order: 1; color: var(--fg); padding-left: clamp(0px, 3vw, 40px); }
-  .hero-text .hero-btn { border-color: var(--fg); color: var(--fg); }
-  .hero-text .hero-btn:hover { background: var(--fg); color: var(--bg); }
+  .hero-img { aspect-ratio: auto; height: clamp(460px, 78vh, 860px); }
+  .hero-img img { object-position: center 32%; }
+  .hero-img::after { background: linear-gradient(to right, rgba(10,9,9,.72) 0%, rgba(10,9,9,.25) 45%, rgba(10,9,9,0) 70%), linear-gradient(to top, rgba(10,9,9,.5) 0%, rgba(10,9,9,0) 40%); }
+  .hero-text { left: max(48px, calc((100vw - 1180px) / 2 + 16px)); }
 }
 
 /* Catalog */
@@ -275,8 +273,8 @@ body.editing { padding-bottom: 120px; }
   </div>
 </header>
 
+<section class="hero" id="hero"></section>
 <main class="wrap">
-  <section class="hero" id="hero"></section>
   <h2 class="filters" id="filters">Todo</h2>
   <section class="grid" id="grid" aria-live="polite"></section>
 </main>
@@ -382,7 +380,7 @@ body.editing { padding-bottom: 120px; }
   <div class="d-foot" id="ed-foot"></div>
 </aside>
 
-<script type="application/json" id="necca-seed">{"hero":{"img":"/fotos/portada.jpg","alt":"Chica sentada en la barra de un bar con camisa blanca, chaleco negro con flecos y jean ancho","eyebrow":"Colección verano","title":"Nueva temporada"},"contact":{"instagram":"","whatsapp":"","email":""},"products":[{"id":"p1","name":"Vestido lencero midi","cat":"vestidos","color":"Turquesa","tint":"#4FB3AE","ink":"#0F3E3B","glyph":"g-dress","price":34900,"badge":"Nuevo","img":"","m":[["Busto","84","88","92"],["Largo","112","114","116"]]},{"id":"p2","name":"Vestido lencero corto","cat":"vestidos","color":"Negro","tint":"#2E2629","ink":"#E9D5C8","glyph":"g-dress","price":29900,"badge":"","img":"","m":[["Busto","84","88","92"],["Largo","86","88","90"]]},{"id":"p3","name":"Pollera midi satinada","cat":"vestidos","color":"Champagne","tint":"#E3CDB0","ink":"#5A4630","glyph":"g-skirt","price":27900,"badge":"","img":"","m":[["Cintura","66","70","74"],["Largo","78","80","82"]]},{"id":"p4","name":"Bermuda de jean","cat":"abajo","color":"Celeste claro","tint":"#A9C3D9","ink":"#24405A","glyph":"g-short","price":29900,"badge":"Nuevo","img":"","m":[["Cintura","70","74","78"],["Largo","44","45","46"]]},{"id":"p5","name":"Bermuda sastrera de lino","cat":"abajo","color":"Beige","tint":"#D9C7AE","ink":"#5A4A35","glyph":"g-short","price":27900,"badge":"","img":"","m":[["Cintura","68","72","76"],["Largo","46","47","48"]]},{"id":"p6","name":"Pantalón wide leg","cat":"abajo","color":"Blanco","tint":"#F1ECE6","ink":"#6E5D62","glyph":"g-pant","price":34900,"badge":"","img":"","m":[["Cintura","68","72","76"],["Largo","104","106","108"]]},{"id":"p7","name":"Top lencero de satén","cat":"tops","color":"Turquesa","tint":"#63BDB7","ink":"#0F3E3B","glyph":"g-top","price":18900,"badge":"Nuevo","img":"","m":[["Busto","82","86","90"],["Largo","48","50","52"]]},{"id":"p8","name":"Remera entallada","cat":"tops","color":"Blanco","tint":"#F4F0EB","ink":"#6E5D62","glyph":"g-tee","price":14900,"badge":"","img":"","m":[["Busto","80","84","88"],["Largo","56","58","60"]]},{"id":"p9","name":"Musculosa de morley","cat":"tops","color":"Rosa empolvado","tint":"#D8AFAE","ink":"#5E2633","glyph":"g-top","price":12900,"badge":"","img":"","m":[["Busto","80","84","88"],["Largo","52","54","56"]]},{"id":"p10","name":"Camisa de lino oversize","cat":"tops","color":"Arena","tint":"#E2D3BF","ink":"#5A4A35","glyph":"g-tee","price":26900,"badge":"","img":"","m":[["Busto","104","108","112"],["Largo","70","72","74"]]},{"id":"p11","name":"Conjunto de lino","cat":"conjuntos","color":"Beige","tint":"#D6C2A6","ink":"#5A4A35","glyph":"g-set","price":49900,"badge":"","img":"","m":[["Busto","100","104","108"],["Cintura","68","72","76"]]},{"id":"p12","name":"Conjunto top y pollera","cat":"conjuntos","color":"Negro","tint":"#332A2D","ink":"#E9D5C8","glyph":"g-set","price":44900,"badge":"","img":"","m":[["Busto","82","86","90"],["Cintura","66","70","74"]]}]}</script>
+<script type="application/json" id="necca-seed">{"hero":{"img":"/fotos/portada.jpg","alt":"Chica con vestido negro de plumas agachada en un rincón de paredes de cemento","eyebrow":"Colección verano","title":"Nueva temporada"},"contact":{"instagram":"","whatsapp":"","email":""},"products":[{"id":"p1","name":"Vestido lencero midi","cat":"vestidos","color":"Turquesa","tint":"#4FB3AE","ink":"#0F3E3B","glyph":"g-dress","price":34900,"badge":"Nuevo","img":"","m":[["Busto","84","88","92"],["Largo","112","114","116"]]},{"id":"p2","name":"Vestido lencero corto","cat":"vestidos","color":"Negro","tint":"#2E2629","ink":"#E9D5C8","glyph":"g-dress","price":29900,"badge":"","img":"","m":[["Busto","84","88","92"],["Largo","86","88","90"]]},{"id":"p3","name":"Pollera midi satinada","cat":"vestidos","color":"Champagne","tint":"#E3CDB0","ink":"#5A4630","glyph":"g-skirt","price":27900,"badge":"","img":"","m":[["Cintura","66","70","74"],["Largo","78","80","82"]]},{"id":"p4","name":"Bermuda de jean","cat":"abajo","color":"Celeste claro","tint":"#A9C3D9","ink":"#24405A","glyph":"g-short","price":29900,"badge":"Nuevo","img":"","m":[["Cintura","70","74","78"],["Largo","44","45","46"]]},{"id":"p5","name":"Bermuda sastrera de lino","cat":"abajo","color":"Beige","tint":"#D9C7AE","ink":"#5A4A35","glyph":"g-short","price":27900,"badge":"","img":"","m":[["Cintura","68","72","76"],["Largo","46","47","48"]]},{"id":"p6","name":"Pantalón wide leg","cat":"abajo","color":"Blanco","tint":"#F1ECE6","ink":"#6E5D62","glyph":"g-pant","price":34900,"badge":"","img":"","m":[["Cintura","68","72","76"],["Largo","104","106","108"]]},{"id":"p7","name":"Top lencero de satén","cat":"tops","color":"Turquesa","tint":"#63BDB7","ink":"#0F3E3B","glyph":"g-top","price":18900,"badge":"Nuevo","img":"","m":[["Busto","82","86","90"],["Largo","48","50","52"]]},{"id":"p8","name":"Remera entallada","cat":"tops","color":"Blanco","tint":"#F4F0EB","ink":"#6E5D62","glyph":"g-tee","price":14900,"badge":"","img":"","m":[["Busto","80","84","88"],["Largo","56","58","60"]]},{"id":"p9","name":"Musculosa de morley","cat":"tops","color":"Rosa empolvado","tint":"#D8AFAE","ink":"#5E2633","glyph":"g-top","price":12900,"badge":"","img":"","m":[["Busto","80","84","88"],["Largo","52","54","56"]]},{"id":"p10","name":"Camisa de lino oversize","cat":"tops","color":"Arena","tint":"#E2D3BF","ink":"#5A4A35","glyph":"g-tee","price":26900,"badge":"","img":"","m":[["Busto","104","108","112"],["Largo","70","72","74"]]},{"id":"p11","name":"Conjunto de lino","cat":"conjuntos","color":"Beige","tint":"#D6C2A6","ink":"#5A4A35","glyph":"g-set","price":49900,"badge":"","img":"","m":[["Busto","100","104","108"],["Cintura","68","72","76"]]},{"id":"p12","name":"Conjunto top y pollera","cat":"conjuntos","color":"Negro","tint":"#332A2D","ink":"#E9D5C8","glyph":"g-set","price":44900,"badge":"","img":"","m":[["Busto","82","86","90"],["Cintura","66","70","74"]]}]}</script>
 <script>
 (function () {
 const TRANSFER_OFF = 0.10;
