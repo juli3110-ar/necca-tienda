@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Necca: ropa para chicas en Rosario. Envíos en el día.">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Necca Tienda</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&display=swap">
+<style>
+/* Layout: minimal boutique, always dark. Black header and menu, charcoal page, a 2-4 column grid of product cards, a slide-in bag, an owner-only edit mode. */
+:root {
+  --bg: #161415;
+  --surface: #1E1B1C;
+  --nude: #1B1819;
+  --fg: #F4EEE8;
+  --muted: #ADA4A0;
+  --line: #312C2E;
+  --head: #0A0909;
+  --head-ink: #F4EEE8;
+  --wine: #F4EEE8;
+  --wine-ink: #0E0C0D;
+  --rose: #C9C0BA;
+  --rose-ink: #C9C0BA;
+  --good: #9DBFAE;
+  --warn: #E5B37A;
+  --shadow: 0 18px 50px rgba(0, 0, 0, .6);
+  color-scheme: dark;
+  --display: 'Jost', 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+  --script: 'Parisienne', 'Snell Roundhand', cursive;
+  --body: 'Jost', 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-weight: 300; font-size: 15px; line-height: 1.55; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--head); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-visible, label:focus-within { outline: 2px solid var(--rose-ink); outline-offset: 2px; }
+
+/* Announcement bar */
+.announce { background: var(--fg); color: var(--head); overflow: hidden; white-space: nowrap; padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+.announce-track { display: inline-flex; padding-block: 8px; }
+.announce-track span { font-size: 11px; font-weight: 400; letter-spacing: .24em; text-transform: uppercase; padding: 0 28px; position: relative; }
+.announce-track span::after { content: ""; position: absolute; right: -2px; top: 50%; width: 3px; height: 3px; border-radius: 50%; background: currentColor; opacity: .5; }
+@media (prefers-reduced-motion: no-preference) {
+  .announce-track { animation: ticker 32s linear infinite; }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+}
+
+/* Header */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--head); color: var(--head-ink); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
+.left { display: flex; align-items: center; gap: 12px; }
+.logo { font-family: var(--display); font-weight: 300; font-size: 20px; letter-spacing: .42em; padding-left: .42em; line-height: 1; text-transform: uppercase; }
+.bag-btn { display: inline-flex; align-items: center; gap: 10px; background: transparent; border: 1px solid rgba(244,238,232,.35); color: var(--head-ink); border-radius: 2px; padding: 10px 16px; font-weight: 300; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; }
+.bag-btn:hover { background: rgba(244,238,232,.08); }
+.count { min-width: 22px; height: 22px; border-radius: 999px; background: var(--head-ink); color: var(--head); font-size: 11px; font-weight: 500; display: inline-grid; place-items: center; padding: 0 6px; font-variant-numeric: tabular-nums; }
+.burger { width: 44px; height: 44px; border: 0; background: transparent; color: var(--head-ink); display: grid; place-items: center; border-radius: 6px; }
+.burger:hover { background: rgba(244,238,232,.08); }
+.burger span, .burger span::before, .burger span::after { display: block; width: 22px; height: 1.6px; background: currentColor; border-radius: 2px; position: relative; content: ""; }
+.burger span::before { position: absolute; top: -7px; }
+.burger span::after { position: absolute; top: 7px; }
+
+/* Hero */
+.hero { position: relative; margin: 24px 0 40px; }
+.hero-img { position: relative; max-width: 100%; aspect-ratio: 4 / 5; overflow: hidden; background: #0E0C0D; display: grid; place-items: center; }
+.hero-img img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; display: block; }
+.hero-img .hero-ph { font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--muted); }
+.hero-img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,9,9,.75) 0%, rgba(10,9,9,0) 45%); pointer-events: none; }
+.hero-text { position: absolute; left: clamp(20px, 5vw, 56px); bottom: clamp(24px, 5vw, 56px); z-index: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; color: #F4EEE8; }
+.eyebrow { font-size: 11px; letter-spacing: .32em; text-transform: uppercase; opacity: .85; }
+.hero-title { margin: 0; font-family: var(--display); font-weight: 200; font-size: clamp(30px, 5vw, 54px); letter-spacing: .14em; text-transform: uppercase; line-height: 1.1; text-wrap: balance; }
+.hero-btn { margin-top: 8px; height: 44px; padding: 0 26px; border: 1px solid #F4EEE8; background: transparent; color: #F4EEE8; border-radius: 0; font-size: 11px; letter-spacing: .26em; text-transform: uppercase; }
+.hero-btn:hover { background: #F4EEE8; color: #0E0C0D; }
+@media (min-width: 760px) {
+  .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: center; gap: 48px; }
+  .hero-img { order: 2; max-height: 720px; }
+  .hero-img::after { display: none; }
+  .hero-text { position: static; order: 1; color: var(--fg); padding-left: clamp(0px, 3vw, 40px); }
+  .hero-text .hero-btn { border-color: var(--fg); color: var(--fg); }
+  .hero-text .hero-btn:hover { background: var(--fg); color: var(--bg); }
+}
+
+/* Catalog */
+.filters { font-family: var(--display); font-weight: 300; font-size: 15px; letter-spacing: .32em; text-transform: uppercase; margin: 0 0 24px; padding-bottom: 12px; border-bottom: 1px solid var(--line); scroll-margin-top: 110px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 28px 20px; padding-bottom: 64px; }
+.card { position: relative; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.ph { position: relative; aspect-ratio: 4 / 5; max-width: 100%; border-radius: 2px; display: grid; place-items: center; overflow: hidden; }
+.ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ph svg { width: 46%; height: auto; opacity: .55; }
+.ph .ph-label { position: absolute; left: 10px; bottom: 8px; font-size: 11px; letter-spacing: .08em; opacity: .7; }
+.badge { position: absolute; top: 10px; left: 10px; z-index: 1; background: #0E0C0D; color: #F4EEE8; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; padding: 4px 8px; border-radius: 2px; }
+.name { font-family: var(--display); font-weight: 400; font-size: 15px; letter-spacing: .04em; line-height: 1.3; margin: 0; }
+.color { font-size: 13px; color: var(--muted); }
+.prices { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-variant-numeric: tabular-nums; }
+.price { font-weight: 500; font-size: 15px; }
+.transfer { font-size: 13px; color: var(--good); }
+.sizes { display: flex; flex-wrap: wrap; gap: 6px; }
+.size { min-width: 40px; height: 36px; border: 1px solid var(--line); background: transparent; border-radius: 2px; font-size: 12px; font-weight: 400; letter-spacing: .06em; }
+.size.order { border-style: dashed; color: var(--muted); }
+.size[aria-pressed="true"] { background: var(--wine); color: var(--wine-ink); border-color: var(--wine); border-style: solid; }
+.hint { font-size: 12px; color: var(--muted); min-height: 18px; }
+details { font-size: 13px; }
+details summary { cursor: pointer; color: var(--rose-ink); width: fit-content; }
+.measures { margin: 8px 0 0; width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.measures th, .measures td { border-bottom: 1px solid var(--line); padding: 4px 6px; text-align: left; font-weight: 400; }
+.measures th { color: var(--muted); font-size: 12px; }
+.add { margin-top: auto; height: 44px; border: 0; border-radius: 2px; background: var(--wine); color: var(--wine-ink); font-weight: 400; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; }
+.add:disabled { background: var(--nude); color: var(--muted); cursor: not-allowed; }
+.add.done { background: var(--good); }
+.empty-grid { grid-column: 1 / -1; color: var(--muted); padding: 32px 0; }
+
+/* Drawers */
+.scrim { position: fixed; inset: 0; background: rgba(0, 0, 0, .6); z-index: 20; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(440px, 100%); background: var(--head); border-left: 1px solid var(--line); z-index: 21; display: flex; flex-direction: column; box-shadow: var(--shadow);
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); padding-right: env(safe-area-inset-right, 0px); }
+.d-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--line); }
+.d-head h2 { font-family: var(--display); font-weight: 300; font-size: 15px; letter-spacing: .32em; text-transform: uppercase; margin: 0; }
+.x { border: 0; background: transparent; width: 44px; height: 44px; font-size: 22px; border-radius: 6px; }
+.d-body { flex: 1; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 16px; }
+.line { display: grid; grid-template-columns: 64px 1fr auto; gap: 12px; align-items: start; }
+.line .thumb { width: 64px; aspect-ratio: 4/5; border-radius: 2px; position: relative; overflow: hidden; display: grid; place-items: center; }
+.line .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.line .thumb svg { width: 50%; height: auto; opacity: .55; }
+.line .l-name { font-family: var(--display); font-weight: 400; font-size: 15px; line-height: 1.3; }
+.line .l-meta { font-size: 12.5px; color: var(--muted); }
+.qty { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 2px; margin-top: 6px; }
+.qty button { width: 32px; height: 32px; border: 0; background: transparent; }
+.qty span { min-width: 22px; text-align: center; font-variant-numeric: tabular-nums; }
+.l-price { font-weight: 500; font-variant-numeric: tabular-nums; text-align: right; }
+.rm { border: 0; background: transparent; color: var(--muted); font-size: 12px; text-decoration: underline; padding: 4px 0; }
+.empty { text-align: center; color: var(--muted); padding: 40px 0; }
+.empty p { font-family: var(--display); font-weight: 300; font-size: 14px; letter-spacing: .28em; text-transform: uppercase; color: var(--fg); margin: 0 0 8px; }
+fieldset { border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+legend { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.opt { display: flex; align-items: center; gap: 10px; border: 1px solid var(--line); border-radius: 2px; padding: 10px 12px; background: var(--surface); cursor: pointer; font-size: 14px; }
+.opt input { accent-color: var(--fg); width: 18px; height: 18px; }
+.opt small { color: var(--muted); margin-left: auto; text-align: right; }
+.d-foot { border-top: 1px solid var(--line); padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+.row { display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; }
+.row.total { font-size: 18px; font-weight: 500; }
+.cta { height: 48px; border: 0; border-radius: 2px; background: var(--wine); color: var(--wine-ink); font-weight: 400; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; }
+.cta:disabled { background: var(--nude); color: var(--muted); cursor: not-allowed; }
+.order-box { display: flex; flex-direction: column; gap: 10px; }
+.order-box textarea { width: 100%; min-height: 180px; border: 1px solid var(--line); border-radius: 2px; padding: 10px; font: 13px/1.5 var(--body); background: var(--surface); color: var(--fg); resize: vertical; }
+.order-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.ghost { height: 44px; padding: 0 16px; border: 1px solid var(--line); border-radius: 2px; background: var(--surface); }
+.wa { display: inline-flex; align-items: center; justify-content: center; height: 44px; padding: 0 16px; border-radius: 2px; background: var(--wine); color: var(--wine-ink); text-decoration: none; font-weight: 400; }
+.small { font-size: 12.5px; color: var(--muted); margin: 0; }
+
+/* Menu */
+.menu { position: fixed; top: 0; left: 0; bottom: 0; width: min(340px, 88%); background: var(--head); color: var(--head-ink); border-right: 1px solid var(--line); z-index: 21; display: flex; flex-direction: column; box-shadow: var(--shadow);
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); padding-left: env(safe-area-inset-left, 0px); }
+.m-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+.m-head .logo { font-size: 18px; }
+.menu .x { color: var(--head-ink); }
+.m-nav { flex: 1; overflow-y: auto; padding: 8px 0 24px; }
+.m-item { display: flex; width: 100%; align-items: center; justify-content: space-between; text-align: left; background: transparent; border: 0; color: var(--head-ink); padding: 14px 24px; font-family: var(--display); font-weight: 300; font-size: 13px; letter-spacing: .26em; text-transform: uppercase; }
+.m-item:hover { background: rgba(244,238,232,.06); }
+.m-item .chev { font-size: 16px; transition: transform .2s; }
+.m-item[aria-expanded="true"] .chev { transform: rotate(90deg); }
+.m-sub { padding: 0 0 8px; }
+.m-sub button { display: block; width: 100%; text-align: left; background: transparent; border: 0; color: var(--head-ink); padding: 10px 24px 10px 40px; font-size: 15px; opacity: .9; }
+.m-sub button:hover { background: rgba(244,238,232,.06); opacity: 1; }
+.m-sep { height: 1px; background: var(--line); margin: 8px 24px; }
+
+/* Info */
+.info { background: var(--head); border-top: 1px solid var(--line); }
+.info .wrap { padding-block: 48px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px; }
+.info section { scroll-margin-top: 110px; min-width: 0; }
+.info h2 { font-family: var(--display); font-weight: 300; font-size: 15px; letter-spacing: .32em; text-transform: uppercase; margin: 0 0 16px; }
+.info ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
+.info p { margin: 0 0 8px; }
+.info .wide { grid-column: 1 / -1; }
+.size-wrap { overflow-x: auto; margin: 8px 0 16px; }
+.size-table { width: 100%; min-width: 420px; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.size-table th, .size-table td { padding: 10px 12px; text-align: center; border-bottom: 1px solid var(--line); }
+.size-table th { font-weight: 400; letter-spacing: .12em; border-bottom: 1px solid var(--muted); }
+.size-table td:first-child, .size-table th:first-child { text-align: left; }
+.size-table tr:last-child td { border-bottom: 0; color: var(--muted); }
+.how { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 24px; margin-bottom: 12px; }
+.how div { display: flex; flex-direction: column; gap: 2px; font-size: 14px; }
+.how b { font-weight: 500; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; }
+.contact-line { display: flex; flex-direction: column; gap: 2px; margin-bottom: 10px; overflow-wrap: anywhere; }
+.contact-line b { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.flash { animation: flash 1.2s ease-out; }
+@keyframes flash { from { background: rgba(201,192,186,.25); } to { background: transparent; } }
+
+footer { border-top: 1px solid var(--line); }
+footer .wrap { padding-block: 24px 40px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--muted); }
+
+/* Edit mode (owner only) */
+.edit-fab { position: fixed; z-index: 15; left: max(16px, env(safe-area-inset-left, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); height: 44px; padding: 0 18px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); border-radius: 999px; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; box-shadow: var(--shadow); }
+.editbar { position: fixed; z-index: 15; left: 0; right: 0; bottom: 0; background: var(--fg); color: var(--head); padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); display: flex; flex-wrap: wrap; align-items: center; gap: 10px; box-shadow: 0 -10px 30px rgba(0,0,0,.4); }
+.editbar .eb-text { flex: 1 1 200px; font-size: 13px; min-width: 0; }
+.editbar .eb-text b { font-weight: 500; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; margin-right: 8px; }
+.editbar button { height: 40px; padding: 0 14px; border-radius: 2px; border: 1px solid rgba(14,12,13,.3); background: transparent; color: var(--head); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+.editbar .eb-save { background: var(--head); color: var(--fg); border-color: var(--head); }
+.editbar .eb-save:disabled { opacity: .45; cursor: not-allowed; }
+body.editing { padding-bottom: 120px; }
+.ed-card { position: absolute; top: 8px; right: 8px; z-index: 2; height: 36px; padding: 0 14px; border: 0; border-radius: 2px; background: var(--fg); color: var(--head); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; box-shadow: 0 4px 14px rgba(0,0,0,.4); }
+.add-card { aspect-ratio: 4 / 5; border: 1px dashed var(--muted); background: transparent; color: var(--fg); border-radius: 2px; display: grid; place-items: center; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; }
+.add-card:hover { background: var(--surface); }
+.ed-hero { position: absolute; top: 12px; right: 12px; z-index: 3; }
+.form { display: flex; flex-direction: column; gap: 14px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field > span, .field-label { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.field input[type="text"], .field input[type="number"], .field input[type="tel"], .field input[type="email"], .field select { height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 2px; background: var(--surface); color: var(--fg); font: 15px var(--body); width: 100%; }
+.check { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.check input { width: 18px; height: 18px; accent-color: var(--fg); }
+.photo-row { display: flex; gap: 14px; align-items: flex-end; }
+.photo-prev { width: 110px; flex: 0 0 110px; aspect-ratio: 4 / 5; border: 1px solid var(--line); border-radius: 2px; overflow: hidden; display: grid; place-items: center; position: relative; background: var(--surface); }
+.photo-prev img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.photo-prev span { font-size: 11px; color: var(--muted); text-align: center; padding: 6px; }
+.photo-actions { display: flex; flex-direction: column; gap: 8px; }
+.upload-btn { position: relative; display: inline-flex; align-items: center; justify-content: center; height: 44px; padding: 0 16px; border-radius: 2px; background: var(--wine); color: var(--wine-ink); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; }
+.upload-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+.m-table { width: 100%; border-collapse: collapse; }
+.m-table th { font-size: 11px; letter-spacing: .12em; color: var(--muted); font-weight: 400; text-align: left; padding: 0 4px 6px; }
+.m-table td { padding: 3px 4px; }
+.m-table input { width: 100%; height: 38px; padding: 0 8px; border: 1px solid var(--line); border-radius: 2px; background: var(--surface); color: var(--fg); font: 14px var(--body); }
+.ed-msg { font-size: 13px; min-height: 20px; color: var(--muted); }
+.ed-msg.err { color: var(--warn); }
+.danger { color: var(--warn); border-color: rgba(229,179,122,.4); }
+.confirm { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 1px solid rgba(229,179,122,.4); border-radius: 2px; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .drawer { animation: slide .28s ease-out; }
+  @keyframes slide { from { transform: translateX(24px); opacity: .6; } to { transform: none; opacity: 1; } }
+  .menu { animation: slideL .28s ease-out; }
+  @keyframes slideL { from { transform: translateX(-24px); opacity: .6; } to { transform: none; opacity: 1; } }
+}
+@media (max-width: 520px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 12px; }
+  .size { min-width: 36px; }
+  .logo { font-size: 17px; letter-spacing: .36em; padding-left: .36em; }
+  .bag-label { display: none; }
+  .ed-card { top: 6px; right: 6px; padding: 0 10px; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="g-dress" viewBox="0 0 100 140"><path d="M38 6v18l-12 30L14 134h72L74 54 62 24V6M38 24h24" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></symbol>
+  <symbol id="g-skirt" viewBox="0 0 100 140"><path d="M30 20h40l14 110H16z M30 32h40" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></symbol>
+  <symbol id="g-short" viewBox="0 0 100 140"><path d="M20 30h60l6 74H56L50 60l-6 44H14z M20 42h60" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></symbol>
+  <symbol id="g-pant" viewBox="0 0 100 140"><path d="M24 10h52l10 124H58L50 44l-8 90H14z M24 22h52" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></symbol>
+  <symbol id="g-top" viewBox="0 0 100 140"><path d="M36 20v14L22 46v60h56V46L64 34V20M36 34c6 6 22 6 28 0" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></symbol>
+  <symbol id="g-tee" viewBox="0 0 100 140"><path d="M36 22 14 34l8 18 10-5v67h36V47l10 5 8-18-22-12c-2 8-26 8-28 0z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></symbol>
+  <symbol id="g-set" viewBox="0 0 100 140"><path d="M38 8l-14 8 5 12 6-3v28h30V25l6 3 5-12-14-8c-2 6-22 6-24 0z M30 64h40l8 66H58l-8-40-8 40H22z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></symbol>
+</svg>
+
+<div class="announce" aria-label="Beneficios">
+  <div class="announce-track">
+    <span>Envío en el día en Rosario</span><span>10% off con transferencia</span><span>Cambios hasta 7 días</span><span>Novedades cada jueves 20 h</span>
+    <span aria-hidden="true">Envío en el día en Rosario</span><span aria-hidden="true">10% off con transferencia</span><span aria-hidden="true">Cambios hasta 7 días</span><span aria-hidden="true">Novedades cada jueves 20 h</span>
+  </div>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <div class="left">
+      <button class="burger" id="open-menu" type="button" aria-label="Abrir menú" aria-haspopup="dialog"><span></span></button>
+      <span class="logo">Necca</span>
+    </div>
+    <button class="bag-btn" id="open-bag" type="button" aria-haspopup="dialog">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 13H7L6 8Zm3 0V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      <span class="bag-label">Tu bolsa</span>
+      <span class="count" id="count">0</span>
+    </button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" id="hero"></section>
+  <h2 class="filters" id="filters">Todo</h2>
+  <section class="grid" id="grid" aria-live="polite"></section>
+</main>
+
+<div class="info">
+  <div class="wrap">
+    <section id="pagos">
+      <h2>Medios de pago</h2>
+      <ul>
+        <li><b>Transferencia:</b> 10% off sobre el precio de lista.</li>
+        <li><b>Tarjeta de crédito o débito:</b> te mandamos un link de pago de Mercado Pago.</li>
+        <li><b>Efectivo:</b> al retirar en el punto de entrega.</li>
+      </ul>
+    </section>
+    <section id="envios">
+      <h2>Envíos y cambios</h2>
+      <ul>
+        <li>Pedidos antes de las 15 h: envío ese mismo día en Rosario.</li>
+        <li>Retiro gratis en punto de entrega, en horarios fijos.</li>
+        <li>Resto del país: Correo Argentino o Andreani.</li>
+        <li>Cambios de talle hasta 7 días después de recibir tu compra.</li>
+      </ul>
+    </section>
+    <section id="talles" class="wide">
+      <h2>Guía de talles</h2>
+      <p>Buscá tus medidas en la tabla para saber qué talle te corresponde. Si quedás entre dos, elegí el más grande para prendas entalladas y el más chico para las oversize.</p>
+      <div class="size-wrap">
+        <table class="size-table">
+          <thead><tr><th>Medida (cm)</th><th>XS</th><th>S</th><th>M</th><th>L</th><th>XL</th></tr></thead>
+          <tbody>
+            <tr><td>Busto</td><td>80</td><td>84</td><td>88</td><td>92</td><td>96</td></tr>
+            <tr><td>Cintura</td><td>62</td><td>66</td><td>70</td><td>74</td><td>78</td></tr>
+            <tr><td>Cadera</td><td>86</td><td>90</td><td>94</td><td>98</td><td>102</td></tr>
+            <tr><td>Equivale a</td><td>34</td><td>36</td><td>38</td><td>40</td><td>42</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="how">
+        <div><b>Busto</b><span>Pasá el centro por la parte más llena del busto, sin apretar.</span></div>
+        <div><b>Cintura</b><span>Medite en la parte más angosta, arriba del ombligo.</span></div>
+        <div><b>Cadera</b><span>Medí la parte más ancha, con los pies juntos.</span></div>
+        <div><b>Truco</b><span>Medí una prenda tuya que te quede bien y comparala con “Ver medidas en cm” de cada producto.</span></div>
+      </div>
+      <p class="small">S, M y L están en stock; XS y XL los traemos por encargo en la próxima tanda. Medidas de referencia: cada prenda tiene las suyas en su ficha.</p>
+    </section>
+    <section id="contacto">
+      <h2>Contacto</h2>
+      <div id="contact-body"></div>
+    </section>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>Necca · Rosario</span>
+    <span>Talles S, M y L en stock · XS y XL por encargo</span>
+    <button type="button" id="admin-link" style="border:0;background:transparent;color:var(--muted);font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:0">Acceso</button>
+  </div>
+</footer>
+
+<button type="button" class="edit-fab" id="edit-fab" hidden>Editar tienda</button>
+<div class="editbar" id="editbar" hidden>
+  <div class="eb-text" id="eb-text" aria-live="polite"></div>
+  <button type="button" id="eb-hero">Portada</button>
+  <button type="button" id="eb-contact">Contacto</button>
+  <button type="button" class="eb-save" id="eb-save">Guardar cambios</button>
+  <button type="button" id="eb-exit">Salir</button>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menú" hidden>
+  <div class="m-head">
+    <span class="logo">Necca</span>
+    <button class="x" id="close-menu" type="button" aria-label="Cerrar menú">×</button>
+  </div>
+  <nav class="m-nav">
+    <button type="button" class="m-item" data-go-cat="all">Shop</button>
+    <button type="button" class="m-item" id="cat-toggle" aria-expanded="true" aria-controls="cat-sub">Categorías <span class="chev" aria-hidden="true">›</span></button>
+    <div class="m-sub" id="cat-sub"></div>
+    <div class="m-sep"></div>
+    <button type="button" class="m-item" data-go="pagos">Medios de pago</button>
+    <button type="button" class="m-item" data-go="envios">Envíos y cambios</button>
+    <button type="button" class="m-item" data-go="talles">Guía de talles</button>
+    <button type="button" class="m-item" data-go="contacto">Contacto</button>
+    <div class="m-sep"></div>
+    <button type="button" class="m-item" data-go-bag="1">Tu bolsa</button>
+  </nav>
+</aside>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="bag-title" hidden>
+  <div class="d-head">
+    <h2 id="bag-title">Tu bolsa</h2>
+    <button class="x" id="close-bag" type="button" aria-label="Cerrar bolsa">×</button>
+  </div>
+  <div class="d-body" id="bag-body"></div>
+  <div class="d-foot" id="bag-foot"></div>
+</aside>
+<aside class="drawer" id="editor" role="dialog" aria-modal="true" aria-labelledby="ed-title" hidden>
+  <div class="d-head">
+    <h2 id="ed-title">Editar</h2>
+    <button class="x" id="close-editor" type="button" aria-label="Cerrar editor">×</button>
+  </div>
+  <div class="d-body" id="ed-body"></div>
+  <div class="d-foot" id="ed-foot"></div>
+</aside>
+
+<script type="application/json" id="necca-seed">{"hero":{"img":"/fotos/portada.jpg","alt":"Chica sentada en la barra de un bar con camisa blanca, chaleco negro con flecos y jean ancho","eyebrow":"Colección verano","title":"Nueva temporada"},"contact":{"instagram":"","whatsapp":"","email":""},"products":[{"id":"p1","name":"Vestido lencero midi","cat":"vestidos","color":"Turquesa","tint":"#4FB3AE","ink":"#0F3E3B","glyph":"g-dress","price":34900,"badge":"Nuevo","img":"","m":[["Busto","84","88","92"],["Largo","112","114","116"]]},{"id":"p2","name":"Vestido lencero corto","cat":"vestidos","color":"Negro","tint":"#2E2629","ink":"#E9D5C8","glyph":"g-dress","price":29900,"badge":"","img":"","m":[["Busto","84","88","92"],["Largo","86","88","90"]]},{"id":"p3","name":"Pollera midi satinada","cat":"vestidos","color":"Champagne","tint":"#E3CDB0","ink":"#5A4630","glyph":"g-skirt","price":27900,"badge":"","img":"","m":[["Cintura","66","70","74"],["Largo","78","80","82"]]},{"id":"p4","name":"Bermuda de jean","cat":"abajo","color":"Celeste claro","tint":"#A9C3D9","ink":"#24405A","glyph":"g-short","price":29900,"badge":"Nuevo","img":"","m":[["Cintura","70","74","78"],["Largo","44","45","46"]]},{"id":"p5","name":"Bermuda sastrera de lino","cat":"abajo","color":"Beige","tint":"#D9C7AE","ink":"#5A4A35","glyph":"g-short","price":27900,"badge":"","img":"","m":[["Cintura","68","72","76"],["Largo","46","47","48"]]},{"id":"p6","name":"Pantalón wide leg","cat":"abajo","color":"Blanco","tint":"#F1ECE6","ink":"#6E5D62","glyph":"g-pant","price":34900,"badge":"","img":"","m":[["Cintura","68","72","76"],["Largo","104","106","108"]]},{"id":"p7","name":"Top lencero de satén","cat":"tops","color":"Turquesa","tint":"#63BDB7","ink":"#0F3E3B","glyph":"g-top","price":18900,"badge":"Nuevo","img":"","m":[["Busto","82","86","90"],["Largo","48","50","52"]]},{"id":"p8","name":"Remera entallada","cat":"tops","color":"Blanco","tint":"#F4F0EB","ink":"#6E5D62","glyph":"g-tee","price":14900,"badge":"","img":"","m":[["Busto","80","84","88"],["Largo","56","58","60"]]},{"id":"p9","name":"Musculosa de morley","cat":"tops","color":"Rosa empolvado","tint":"#D8AFAE","ink":"#5E2633","glyph":"g-top","price":12900,"badge":"","img":"","m":[["Busto","80","84","88"],["Largo","52","54","56"]]},{"id":"p10","name":"Camisa de lino oversize","cat":"tops","color":"Arena","tint":"#E2D3BF","ink":"#5A4A35","glyph":"g-tee","price":26900,"badge":"","img":"","m":[["Busto","104","108","112"],["Largo","70","72","74"]]},{"id":"p11","name":"Conjunto de lino","cat":"conjuntos","color":"Beige","tint":"#D6C2A6","ink":"#5A4A35","glyph":"g-set","price":49900,"badge":"","img":"","m":[["Busto","100","104","108"],["Cintura","68","72","76"]]},{"id":"p12","name":"Conjunto top y pollera","cat":"conjuntos","color":"Negro","tint":"#332A2D","ink":"#E9D5C8","glyph":"g-set","price":44900,"badge":"","img":"","m":[["Busto","82","86","90"],["Cintura","66","70","74"]]}]}</script>
+<script>
+(function () {
+const TRANSFER_OFF = 0.10;
+const CATS = [
+  { id: 'all', label: 'Todo' },
+  { id: 'vestidos', label: 'Vestidos y polleras', glyph: 'g-dress' },
+  { id: 'abajo', label: 'Bermudas y pantalones', glyph: 'g-pant' },
+  { id: 'tops', label: 'Tops y remeras', glyph: 'g-top' },
+  { id: 'conjuntos', label: 'Conjuntos', glyph: 'g-set' }
+];
+const GLYPHS = ['g-dress', 'g-skirt', 'g-short', 'g-pant', 'g-top', 'g-tee', 'g-set'];
+const SIZES = ['XS', 'S', 'M', 'L', 'XL'];
+const ON_ORDER = new Set(['XS', 'XL']);
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const peso = n => '$' + Math.round(Number(n) || 0).toLocaleString('es-AR');
+const transferPrice = n => Math.round((Number(n) || 0) * (1 - TRANSFER_OFF) / 100) * 100;
+const safeImg = u => (typeof u === 'string' && (/^https:\/\/[a-z0-9-]+\.public\.blob\.vercel-storage\.com\/[A-Za-z0-9._\/-]+$/.test(u) || /^\/fotos\/[A-Za-z0-9._-]+$/.test(u))) ? u : '';
+const safeColor = c => (typeof c === 'string' && /^#[0-9a-fA-F]{6}$/.test(c)) ? c : '#2A2627';
+const safeGlyph = g => GLYPHS.includes(g) ? g : 'g-top';
+const clone = o => JSON.parse(JSON.stringify(o));
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+const sess = {
+  get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} },
+  del(k) { try { sessionStorage.removeItem(k); } catch (e) {} }
+};
+
+let saved;
+try { saved = JSON.parse($('#necca-seed').textContent); } catch (e) { saved = { hero: {}, contact: {}, products: [] }; }
+saved.hero = saved.hero || {}; saved.contact = saved.contact || {}; saved.products = Array.isArray(saved.products) ? saved.products : [];
+
+let editing = false;
+let draft = null;
+let changes = 0;
+const data = () => editing ? draft : saved;
+
+let cat = 'all';
+let picked = {};
+let cart = store.get('necca-cart', []);
+let delivery = 'retiro';
+let payment = 'transferencia';
+let showOrder = false;
+
+let adminKey = sess.get('necca-key') || '';
+let loaded = false;
+
+/* ---------- Rendering ---------- */
+function photoHTML(p, cls) {
+  const img = safeImg(p.img);
+  const inner = img
+    ? `<img src="${esc(img)}" alt="${esc(p.name)}" loading="lazy">`
+    : `<svg aria-hidden="true"><use href="#${safeGlyph(p.glyph)}"/></svg>${cls === 'ph' ? '<span class="ph-label">Foto de la prenda</span>' : ''}`;
+  const badge = cls === 'ph' && p.badge ? `<span class="badge">${esc(p.badge)}</span>` : '';
+  return `<div class="${cls}" style="background:${safeColor(p.tint)};color:${safeColor(p.ink)}">${inner}${badge}</div>`;
+}
+
+function renderHero() {
+  const h = data().hero;
+  const img = safeImg(h.img);
+  $('#hero').innerHTML = `
+    <div class="hero-img">${img ? `<img src="${esc(img)}" alt="${esc(h.alt || 'Foto de portada de Necca')}">` : '<span class="hero-ph">Foto de portada</span>'}</div>
+    <div class="hero-text">
+      <span class="eyebrow">${esc(h.eyebrow)}</span>
+      <h1 class="hero-title">${esc(h.title)}</h1>
+      <button type="button" class="hero-btn" id="hero-btn">Ver colección</button>
+    </div>
+    ${editing ? '<button type="button" class="ed-card ed-hero" id="ed-hero-btn">Editar portada</button>' : ''}`;
+}
+
+function renderFilters() { $('#filters').textContent = CATS.find(c => c.id === cat).label; }
+
+function renderGrid() {
+  const list = data().products.filter(p => cat === 'all' || p.cat === cat);
+  const cards = list.map(p => {
+    const sel = picked[p.id];
+    const rows = (p.m || []).filter(r => r && r[0]).map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td></tr>`).join('');
+    return `<article class="card" data-id="${esc(p.id)}">
+      ${editing ? `<button type="button" class="ed-card" data-edit="${esc(p.id)}">Editar</button>` : ''}
+      ${photoHTML(p, 'ph')}
+      <div>
+        <h3 class="name">${esc(p.name)}</h3>
+        <div class="color">${esc(p.color)}</div>
+      </div>
+      <div class="prices"><span class="price">${peso(p.price)}</span><span class="transfer">${peso(transferPrice(p.price))} con transferencia</span></div>
+      <div class="sizes" role="group" aria-label="Talle">
+        ${SIZES.map(s => `<button type="button" class="size${ON_ORDER.has(s) ? ' order' : ''}" data-size="${s}" aria-pressed="${sel === s}">${s}</button>`).join('')}
+      </div>
+      <div class="hint">${sel ? (ON_ORDER.has(sel) ? `Talle ${sel} por encargo: llega en la próxima tanda` : `Talle ${sel} disponible`) : 'Elegí tu talle'}</div>
+      ${rows ? `<details><summary>Ver medidas en cm</summary><table class="measures"><thead><tr><th></th><th>S</th><th>M</th><th>L</th></tr></thead><tbody>${rows}</tbody></table></details>` : ''}
+      <button type="button" class="add" data-add="${esc(p.id)}" ${sel ? '' : 'disabled'}>${sel ? 'Agregar a la bolsa' : 'Elegí un talle'}</button>
+    </article>`;
+  }).join('');
+  const addCard = editing ? '<button type="button" class="add-card" id="add-prod">+ Agregar prenda</button>' : '';
+  $('#grid').innerHTML = addCard + (cards || (editing ? '' : '<p class="empty-grid">Pronto vas a encontrar prendas nuevas acá.</p>'));
+}
+
+function renderContact() {
+  const c = data().contact;
+  const line = (label, val) => `<div class="contact-line"><b>${label}</b><span>${esc(val || 'A completar')}</span></div>`;
+  $('#contact-body').innerHTML = line('Instagram', c.instagram) + line('WhatsApp', c.whatsapp) + line('Mail', c.email) + line('Dónde', 'Rosario, Santa Fe · venta online');
+}
+
+const findP = id => saved.products.find(p => p.id === id);
+function cleanCart() { cart = cart.filter(l => findP(l.id)); }
+
+function totals() {
+  const sub = cart.reduce((s, l) => s + (Number(findP(l.id).price) || 0) * l.qty, 0);
+  const total = payment === 'transferencia' ? transferPrice(sub) : sub;
+  return { sub, total, items: cart.reduce((s, l) => s + l.qty, 0) };
+}
+
+function orderText() {
+  const t = totals();
+  const lines = cart.map(l => {
+    const p = findP(l.id);
+    return `• ${l.qty} x ${p.name} (${p.color}) talle ${l.size}${ON_ORDER.has(l.size) ? ' — por encargo' : ''}: ${peso(p.price * l.qty)}`;
+  }).join('\n');
+  return `¡Hola Necca! Quiero hacer este pedido:\n\n${lines}\n\nSubtotal: ${peso(t.sub)}\nPago: ${payment === 'transferencia' ? 'transferencia (10% off)' : 'tarjeta (link de pago)'}\nTotal: ${peso(t.total)}\nEntrega: ${delivery === 'retiro' ? 'retiro en punto de entrega' : 'envío en Rosario (costo a coordinar)'}\n\nMi nombre: \nMi dirección (si es envío): `;
+}
+
+function renderBag() {
+  cleanCart();
+  $('#count').textContent = totals().items;
+  const body = $('#bag-body'), foot = $('#bag-foot');
+  if (!cart.length) {
+    body.innerHTML = '<div class="empty"><p>Tu bolsa está vacía</p>Elegí un talle y tocá “Agregar a la bolsa”.</div>';
+    foot.innerHTML = '';
+    return;
+  }
+  const t = totals();
+  if (showOrder) {
+    const txt = orderText();
+    const num = String(saved.contact.whatsapp || '').replace(/\D/g, '');
+    const wa = num.length >= 8 ? `https://wa.me/${num}?text=${encodeURIComponent(txt)}` : '';
+    body.innerHTML = `<div class="order-box">
+      <p class="small">Copiá este mensaje y mandalo por WhatsApp o Instagram. Te respondemos con los datos para pagar y coordinar la entrega.</p>
+      <label for="order-text" class="small">Tu pedido</label>
+      <textarea id="order-text">${esc(txt)}</textarea>
+      <div class="order-actions">
+        <button type="button" class="ghost" id="copy">Copiar pedido</button>
+        ${wa ? `<a class="wa" href="${esc(wa)}" target="_blank" rel="noopener">Abrir WhatsApp</a>` : ''}
+      </div>
+      <p class="small" id="copy-msg" aria-live="polite"></p>
+    </div>`;
+    foot.innerHTML = '<button type="button" class="ghost" id="back">Volver a la bolsa</button>';
+    return;
+  }
+  body.innerHTML = cart.map((l, i) => {
+    const p = findP(l.id);
+    return `<div class="line">
+      ${photoHTML(p, 'thumb')}
+      <div>
+        <div class="l-name">${esc(p.name)}</div>
+        <div class="l-meta">${esc(p.color)} · Talle ${l.size}${ON_ORDER.has(l.size) ? ' · por encargo' : ''}</div>
+        <div class="qty"><button type="button" data-dec="${i}" aria-label="Quitar uno">−</button><span>${l.qty}</span><button type="button" data-inc="${i}" aria-label="Sumar uno">+</button></div>
+      </div>
+      <div><div class="l-price">${peso(p.price * l.qty)}</div><button type="button" class="rm" data-rm="${i}">Quitar</button></div>
+    </div>`;
+  }).join('') + `
+    <fieldset>
+      <legend>Entrega</legend>
+      <label class="opt"><input type="radio" name="delivery" id="d-retiro" value="retiro" ${delivery === 'retiro' ? 'checked' : ''}>Retiro en punto de entrega<small>Gratis</small></label>
+      <label class="opt"><input type="radio" name="delivery" id="d-envio" value="envio" ${delivery === 'envio' ? 'checked' : ''}>Envío en Rosario<small>En el día · a coordinar</small></label>
+    </fieldset>
+    <fieldset>
+      <legend>Pago</legend>
+      <label class="opt"><input type="radio" name="payment" id="p-transf" value="transferencia" ${payment === 'transferencia' ? 'checked' : ''}>Transferencia<small>10% off</small></label>
+      <label class="opt"><input type="radio" name="payment" id="p-card" value="tarjeta" ${payment === 'tarjeta' ? 'checked' : ''}>Tarjeta de crédito o débito<small>Link de pago</small></label>
+    </fieldset>`;
+  foot.innerHTML = `
+    <div class="row"><span>Subtotal</span><span>${peso(t.sub)}</span></div>
+    ${payment === 'transferencia' ? `<div class="row" style="color:var(--good)"><span>10% off transferencia</span><span>−${peso(t.sub - t.total)}</span></div>` : ''}
+    <div class="row total"><span>Total</span><span>${peso(t.total)}</span></div>
+    <button type="button" class="cta" id="checkout">Finalizar pedido</button>`;
+}
+
+function renderAll() { renderHero(); renderFilters(); renderGrid(); renderContact(); renderBag(); renderEditbar(); }
+
+/* ---------- Drawers ---------- */
+function anyOpen() { return !$('#menu').hidden || !$('#drawer').hidden || !$('#editor').hidden; }
+function syncScrim() { $('#scrim').hidden = !anyOpen(); }
+function openBag() { $('#drawer').hidden = false; syncScrim(); renderBag(); $('#close-bag').focus(); }
+function closeBag() { $('#drawer').hidden = true; showOrder = false; syncScrim(); }
+function openMenu() { $('#menu').hidden = false; syncScrim(); $('#close-menu').focus(); }
+function closeMenu() { $('#menu').hidden = true; syncScrim(); }
+function closeEditor() { $('#editor').hidden = true; syncScrim(); }
+
+/* ---------- Edit mode ---------- */
+function renderEditbar() {
+  $('#editbar').hidden = !editing;
+  $('#edit-fab').hidden = editing || !adminKey;
+  document.body.classList.toggle('editing', editing);
+  if (!editing) return;
+  if (!$('#eb-text').dataset.lock) {
+    $('#eb-text').innerHTML = `<b>Modo edición</b>${changes ? `${changes} ${changes === 1 ? 'cambio' : 'cambios'} sin guardar` : 'Tocá “Editar” en una prenda o agregá una nueva'}`;
+  }
+  $('#eb-save').disabled = !changes;
+}
+function setBarMsg(html, lock) {
+  const t = $('#eb-text');
+  if (lock) t.dataset.lock = '1'; else delete t.dataset.lock;
+  t.innerHTML = html;
+}
+function enterEdit() {
+  if (!adminKey) return;
+  editing = true; draft = clone(saved); changes = 0;
+  sess.set('necca-editing', '1');
+  setBarMsg('', false);
+  renderAll();
+}
+function exitEdit() {
+  editing = false; draft = null; changes = 0;
+  sess.del('necca-editing');
+  setBarMsg('', false);
+  closeEditor();
+  renderAll();
+}
+function markChanged() { changes++; renderAll(); }
+
+async function api(path, opts) {
+  const res = await fetch(path, opts);
+  let body = {};
+  try { body = await res.json(); } catch (e) {}
+  if (!res.ok) { const err = new Error(body.message || 'Error'); err.status = res.status; err.code = body.error; throw err; }
+  return body;
+}
+function lostAccess() {
+  adminKey = ''; sess.del('necca-key');
+}
+
+async function saveAll() {
+  if (!changes || !adminKey) return;
+  $('#eb-save').disabled = true;
+  setBarMsg('<b>Guardando…</b>', true);
+  try {
+    const res = await api('/api/store', { method: 'POST', headers: { 'content-type': 'application/json', 'x-admin-key': adminKey }, body: JSON.stringify(draft) });
+    saved = res.state; draft = clone(saved); changes = 0;
+    setBarMsg('<b>Guardado</b>Los cambios ya están en la página para todo el mundo.', true);
+    renderAll();
+    setTimeout(() => { setBarMsg('', false); renderEditbar(); }, 4000);
+  } catch (err) {
+    if (err.status === 401) { lostAccess(); setBarMsg('<b>Sesión vencida</b>Volvé a entrar con la contraseña desde “Acceso”, abajo de todo. Tus cambios siguen acá.', true); }
+    else setBarMsg('<b>No se pudo guardar</b>' + esc(err.message || 'Probá de nuevo en un momento.'), true);
+    $('#eb-save').disabled = false;
+    setTimeout(() => { setBarMsg('', false); renderEditbar(); }, 7000);
+  }
+}
+
+async function resizeImage(file) {
+  const maxSide = 1600;
+  try {
+    const bmp = await createImageBitmap(file);
+    const scale = Math.min(1, maxSide / Math.max(bmp.width, bmp.height));
+    const w = Math.round(bmp.width * scale), h = Math.round(bmp.height * scale);
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    canvas.getContext('2d').drawImage(bmp, 0, 0, w, h);
+    const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.85));
+    return blob || file;
+  } catch (e) { return file; }
+}
+async function uploadPhoto(file, msgEl) {
+  if (!file) return '';
+  if (!/^image\//.test(file.type)) { msgEl.className = 'ed-msg err'; msgEl.textContent = 'Elegí un archivo de imagen (JPG o PNG).'; return ''; }
+  msgEl.className = 'ed-msg'; msgEl.textContent = 'Subiendo foto…';
+  try {
+    const blob = await resizeImage(file);
+    const res = await api('/api/upload', { method: 'POST', headers: { 'content-type': blob.type || 'image/jpeg', 'x-admin-key': adminKey }, body: blob });
+    msgEl.textContent = 'Foto lista.';
+    return safeImg(res.url);
+  } catch (err) {
+    msgEl.className = 'ed-msg err';
+    if (err.status === 401) lostAccess();
+    msgEl.textContent = err.message || 'No se pudo subir la foto. Probá de nuevo.';
+    return '';
+  }
+}
+
+let edItem = null, edMode = null;
+function photoPreview(img) {
+  return img ? `<img src="${esc(img)}" alt="">` : '<span>Sin foto</span>';
+}
+function openProductEditor(id) {
+  edMode = 'product';
+  const p = id ? draft.products.find(x => x.id === id) : null;
+  edItem = p ? clone(p) : { id: 'p' + Date.now().toString(36), name: '', cat: cat !== 'all' ? cat : 'vestidos', color: '', price: '', badge: 'Nuevo', img: '', tint: '#2A2627', ink: '#ADA4A0', glyph: (CATS.find(c => c.id === (cat !== 'all' ? cat : 'vestidos')) || {}).glyph || 'g-top', m: [['Busto', '', '', ''], ['Largo', '', '', '']], isNew: true };
+  while ((edItem.m || []).length < 3) (edItem.m = edItem.m || []).push(['', '', '', '']);
+  $('#ed-title').textContent = p ? 'Editar prenda' : 'Nueva prenda';
+  $('#ed-body').innerHTML = `<div class="form">
+    <div class="field"><span class="field-label">Foto</span>
+      <div class="photo-row">
+        <div class="photo-prev" id="ed-prev">${photoPreview(safeImg(edItem.img))}</div>
+        <div class="photo-actions">
+          <label class="upload-btn">Subir foto<input type="file" id="ed-file" accept="image/*"></label>
+          <button type="button" class="ghost" id="ed-rmphoto" ${edItem.img ? '' : 'hidden'}>Quitar foto</button>
+        </div>
+      </div>
+      <div class="ed-msg" id="ed-msg" aria-live="polite"></div>
+    </div>
+    <label class="field"><span>Nombre</span><input type="text" id="ed-name" value="${esc(edItem.name)}" placeholder="Ej: Vestido lencero midi"></label>
+    <label class="field"><span>Categoría</span><select id="ed-cat">${CATS.filter(c => c.id !== 'all').map(c => `<option value="${c.id}" ${c.id === edItem.cat ? 'selected' : ''}>${c.label}</option>`).join('')}</select></label>
+    <label class="field"><span>Color</span><input type="text" id="ed-color" value="${esc(edItem.color)}" placeholder="Ej: Turquesa"></label>
+    <label class="field"><span>Precio de lista ($)</span><input type="number" id="ed-price" inputmode="numeric" min="0" step="100" value="${esc(edItem.price)}" placeholder="Ej: 34900"></label>
+    <label class="check"><input type="checkbox" id="ed-new" ${edItem.badge ? 'checked' : ''}>Mostrar etiqueta “Nuevo”</label>
+    <div class="field"><span class="field-label">Medidas en cm (opcional)</span>
+      <table class="m-table"><thead><tr><th>Medida</th><th>S</th><th>M</th><th>L</th></tr></thead><tbody>
+      ${edItem.m.slice(0, 3).map((r, i) => `<tr>${[0, 1, 2, 3].map(j => `<td><input type="${j ? 'text' : 'text'}" id="ed-m-${i}-${j}" value="${esc(r[j])}" ${j ? 'inputmode="numeric"' : ''} aria-label="${j ? ['', 'S', 'M', 'L'][j] + ' fila ' + (i + 1) : 'Medida fila ' + (i + 1)}" placeholder="${j ? '' : ['Busto', 'Largo', 'Cintura'][i]}"></td>`).join('')}</tr>`).join('')}
+      </tbody></table>
+    </div>
+  </div>`;
+  $('#ed-foot').innerHTML = `<div class="ed-msg err" id="ed-err" aria-live="polite"></div>
+    <div class="btn-row"><button type="button" class="cta" id="ed-done" style="flex:1">Listo</button>${p ? '<button type="button" class="ghost danger" id="ed-del">Borrar prenda</button>' : ''}</div>
+    <div id="ed-confirm"></div>`;
+  $('#editor').hidden = false; syncScrim();
+  $('#ed-name').focus();
+}
+function readProductForm() {
+  const name = $('#ed-name').value.trim();
+  const price = Math.round(Number($('#ed-price').value));
+  if (!name) return 'Escribí el nombre de la prenda.';
+  if (!(price > 0)) return 'Escribí el precio (solo números, sin puntos).';
+  edItem.name = name.slice(0, 80);
+  edItem.cat = $('#ed-cat').value;
+  edItem.color = $('#ed-color').value.trim().slice(0, 40);
+  edItem.price = price;
+  edItem.badge = $('#ed-new').checked ? 'Nuevo' : '';
+  edItem.m = [0, 1, 2].map(i => [0, 1, 2, 3].map(j => $(`#ed-m-${i}-${j}`).value.trim().slice(0, 20))).filter(r => r[0]);
+  if (edItem.isNew && !edItem.img) edItem.glyph = (CATS.find(c => c.id === edItem.cat) || {}).glyph || 'g-top';
+  return '';
+}
+function openLogin() {
+  edMode = 'login';
+  $('#ed-title').textContent = 'Acceso';
+  $('#ed-body').innerHTML = `<form class="form" id="login-form">
+    <p class="small">Entrá con la contraseña de la tienda para editar prendas, fotos y textos.</p>
+    <label class="field"><span>Contraseña</span><input type="password" id="ed-pass" autocomplete="current-password" style="height:44px;padding:0 12px;border:1px solid var(--line);border-radius:2px;background:var(--surface);color:var(--fg);font:15px var(--body)"></label>
+  </form>`;
+  $('#ed-foot').innerHTML = '<div class="ed-msg err" id="ed-err" aria-live="polite"></div><button type="button" class="cta" id="ed-login">Entrar</button>';
+  $('#editor').hidden = false; syncScrim();
+  $('#ed-pass').focus();
+}
+async function doLogin() {
+  const pass = $('#ed-pass').value;
+  if (!pass) { $('#ed-err').textContent = 'Escribí la contraseña.'; return; }
+  $('#ed-login').disabled = true; $('#ed-err').textContent = '';
+  try {
+    const res = await api('/api/login', { method: 'POST', headers: { 'x-admin-key': pass } });
+    adminKey = pass; sess.set('necca-key', pass);
+    closeEditor();
+    if (!res.storage) { setBarMsg('', false); }
+    enterEdit();
+    if (!res.storage) setBarMsg('<b>Falta un paso</b>Conectá el almacenamiento (Blob) en Vercel para poder guardar.', true);
+  } catch (err) {
+    $('#ed-err').textContent = err.status === 404 ? 'El editor solo funciona con la página publicada en Vercel.' : (err.message || 'No se pudo entrar.');
+    $('#ed-login').disabled = false;
+  }
+}
+
+function openHeroEditor() {
+  edMode = 'hero';
+  edItem = clone(draft.hero);
+  $('#ed-title').textContent = 'Portada';
+  $('#ed-body').innerHTML = `<div class="form">
+    <div class="field"><span class="field-label">Foto de portada</span>
+      <div class="photo-row">
+        <div class="photo-prev" id="ed-prev">${photoPreview(safeImg(edItem.img))}</div>
+        <div class="photo-actions"><label class="upload-btn">Cambiar foto<input type="file" id="ed-file" accept="image/*"></label></div>
+      </div>
+      <div class="ed-msg" id="ed-msg" aria-live="polite"></div>
+    </div>
+    <label class="field"><span>Texto chico</span><input type="text" id="ed-eyebrow" value="${esc(edItem.eyebrow)}" placeholder="Ej: Colección verano"></label>
+    <label class="field"><span>Título</span><input type="text" id="ed-htitle" value="${esc(edItem.title)}" placeholder="Ej: Nueva temporada"></label>
+  </div>`;
+  $('#ed-foot').innerHTML = '<div class="ed-msg err" id="ed-err"></div><button type="button" class="cta" id="ed-done">Listo</button>';
+  $('#editor').hidden = false; syncScrim();
+}
+function openContactEditor() {
+  edMode = 'contact';
+  edItem = clone(draft.contact);
+  $('#ed-title').textContent = 'Contacto';
+  $('#ed-body').innerHTML = `<div class="form">
+    <label class="field"><span>Instagram</span><input type="text" id="ed-ig" value="${esc(edItem.instagram)}" placeholder="@necca.ropa"></label>
+    <label class="field"><span>WhatsApp (con código de área)</span><input type="tel" id="ed-wa" value="${esc(edItem.whatsapp)}" placeholder="Ej: 549 341 123 4567"></label>
+    <p class="small">El botón “Abrir WhatsApp” del pedido usa este número. Escribilo con 549 adelante y sin el 15.</p>
+    <label class="field"><span>Mail</span><input type="email" id="ed-mail" value="${esc(edItem.email)}" placeholder="hola@necca.com"></label>
+  </div>`;
+  $('#ed-foot').innerHTML = '<div class="ed-msg err" id="ed-err"></div><button type="button" class="cta" id="ed-done">Listo</button>';
+  $('#editor').hidden = false; syncScrim();
+}
+
+$('#ed-body').addEventListener('change', async e => {
+  if (e.target.id !== 'ed-file') return;
+  const file = e.target.files && e.target.files[0];
+  const url = await uploadPhoto(file, $('#ed-msg'));
+  e.target.value = '';
+  if (!url) return;
+  edItem.img = url;
+  $('#ed-prev').innerHTML = photoPreview(url);
+  const rm = $('#ed-rmphoto'); if (rm) rm.hidden = false;
+});
+$('#ed-body').addEventListener('click', e => {
+  if (e.target.id === 'ed-rmphoto') { edItem.img = ''; $('#ed-prev').innerHTML = photoPreview(''); e.target.hidden = true; }
+});
+$('#ed-foot').addEventListener('click', e => {
+  const id = e.target.id;
+  if (id === 'ed-login') { doLogin(); return; }
+  if (id === 'ed-done') {
+    if (edMode === 'product') {
+      const err = readProductForm();
+      if (err) { $('#ed-err').textContent = err; return; }
+      const isNew = edItem.isNew; delete edItem.isNew;
+      if (isNew) draft.products.unshift(edItem);
+      else draft.products = draft.products.map(p => p.id === edItem.id ? edItem : p);
+    } else if (edMode === 'hero') {
+      edItem.eyebrow = $('#ed-eyebrow').value.trim().slice(0, 60);
+      edItem.title = $('#ed-htitle').value.trim().slice(0, 60);
+      draft.hero = edItem;
+    } else if (edMode === 'contact') {
+      edItem.instagram = $('#ed-ig').value.trim().slice(0, 60);
+      edItem.whatsapp = $('#ed-wa').value.trim().slice(0, 30);
+      edItem.email = $('#ed-mail').value.trim().slice(0, 80);
+      draft.contact = edItem;
+    }
+    closeEditor(); markChanged();
+  } else if (id === 'ed-del') {
+    $('#ed-confirm').innerHTML = '<div class="confirm"><span>¿Borrar esta prenda del catálogo?</span><div class="btn-row"><button type="button" class="ghost danger" id="ed-del-yes">Sí, borrar</button><button type="button" class="ghost" id="ed-del-no">Cancelar</button></div></div>';
+  } else if (id === 'ed-del-yes') {
+    draft.products = draft.products.filter(p => p.id !== edItem.id);
+    closeEditor(); markChanged();
+  } else if (id === 'ed-del-no') {
+    $('#ed-confirm').innerHTML = '';
+  }
+});
+$('#close-editor').addEventListener('click', closeEditor);
+$('#ed-body').addEventListener('submit', e => { e.preventDefault(); if (e.target.id === 'login-form') doLogin(); });
+
+$('#edit-fab').addEventListener('click', enterEdit);
+$('#eb-save').addEventListener('click', saveAll);
+$('#eb-hero').addEventListener('click', openHeroEditor);
+$('#eb-contact').addEventListener('click', openContactEditor);
+$('#eb-exit').addEventListener('click', () => {
+  if (!changes) { exitEdit(); return; }
+  setBarMsg(`<b>¿Salir sin guardar?</b>Vas a perder ${changes} ${changes === 1 ? 'cambio' : 'cambios'}. <button type="button" id="eb-discard" style="margin-left:8px">Descartar</button> <button type="button" id="eb-keep">Seguir editando</button>`, true);
+});
+$('#editbar').addEventListener('click', e => {
+  if (e.target.id === 'eb-discard') exitEdit();
+  if (e.target.id === 'eb-keep') { setBarMsg('', false); renderEditbar(); }
+});
+
+/* ---------- Shopper interactions ---------- */
+$('#cat-sub').innerHTML = CATS.filter(c => c.id !== 'all').map(c => `<button type="button" data-go-cat="${c.id}">${c.label}</button>`).join('');
+$('#open-menu').addEventListener('click', openMenu);
+$('#close-menu').addEventListener('click', () => { closeMenu(); $('#open-menu').focus(); });
+$('#cat-toggle').addEventListener('click', e => {
+  const open = e.currentTarget.getAttribute('aria-expanded') === 'true';
+  e.currentTarget.setAttribute('aria-expanded', String(!open));
+  $('#cat-sub').hidden = open;
+});
+$('#menu').addEventListener('click', e => {
+  const c = e.target.closest('[data-go-cat]');
+  const g = e.target.closest('[data-go]');
+  const b = e.target.closest('[data-go-bag]');
+  if (c) {
+    cat = c.dataset.goCat; renderFilters(); renderGrid(); closeMenu();
+    $('#filters').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else if (g) {
+    closeMenu();
+    const sec = document.getElementById(g.dataset.go);
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    sec.classList.remove('flash'); void sec.offsetWidth; sec.classList.add('flash');
+  } else if (b) {
+    closeMenu(); openBag();
+  }
+});
+$('#hero').addEventListener('click', e => {
+  if (e.target.id === 'hero-btn') $('#filters').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (e.target.id === 'ed-hero-btn') openHeroEditor();
+});
+$('#grid').addEventListener('click', e => {
+  if (e.target.id === 'add-prod') { openProductEditor(null); return; }
+  const ed = e.target.closest('[data-edit]');
+  if (ed) { openProductEditor(ed.dataset.edit); return; }
+  const card = e.target.closest('.card'); if (!card) return;
+  const id = card.dataset.id;
+  const s = e.target.closest('[data-size]');
+  if (s) { picked[id] = s.dataset.size; renderGrid(); return; }
+  const a = e.target.closest('[data-add]');
+  if (a && picked[id]) {
+    if (!findP(id)) { a.textContent = 'Guardá los cambios primero'; return; }
+    const size = picked[id];
+    const ex = cart.find(l => l.id === id && l.size === size);
+    if (ex) ex.qty++; else cart.push({ id, size, qty: 1 });
+    store.set('necca-cart', cart); renderBag();
+    a.textContent = 'Agregada ✓'; a.classList.add('done');
+    setTimeout(() => { a.textContent = 'Agregar a la bolsa'; a.classList.remove('done'); }, 1400);
+  }
+});
+$('#bag-body').addEventListener('click', e => {
+  const t = e.target;
+  if (t.dataset.inc) { cart[+t.dataset.inc].qty++; }
+  else if (t.dataset.dec) { const l = cart[+t.dataset.dec]; l.qty--; if (l.qty < 1) cart.splice(+t.dataset.dec, 1); }
+  else if (t.dataset.rm) { cart.splice(+t.dataset.rm, 1); }
+  else if (t.id === 'copy') {
+    const ta = $('#order-text');
+    const done = () => { $('#copy-msg').textContent = 'Pedido copiado. Pegalo en WhatsApp o Instagram.'; };
+    const fallback = () => { ta.focus(); ta.select(); $('#copy-msg').textContent = 'Seleccioné el texto: copialo con Copiar en tu teclado.'; };
+    try { navigator.clipboard.writeText(ta.value).then(done, fallback); } catch (err) { fallback(); }
+    return;
+  } else return;
+  store.set('necca-cart', cart); renderBag();
+});
+$('#bag-body').addEventListener('change', e => {
+  if (e.target.name === 'delivery') delivery = e.target.value;
+  if (e.target.name === 'payment') payment = e.target.value;
+  renderBag();
+});
+$('#bag-foot').addEventListener('click', e => {
+  if (e.target.id === 'checkout') { showOrder = true; renderBag(); }
+  if (e.target.id === 'back') { showOrder = false; renderBag(); }
+});
+$('#open-bag').addEventListener('click', openBag);
+$('#close-bag').addEventListener('click', () => { closeBag(); $('#open-bag').focus(); });
+$('#scrim').addEventListener('click', () => { closeMenu(); closeBag(); closeEditor(); });
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (!$('#editor').hidden) closeEditor(); else if (!$('#menu').hidden) closeMenu(); else if (!$('#drawer').hidden) closeBag();
+});
+
+renderAll();
+
+/* ---------- Load the saved catalog ---------- */
+$('#admin-link').addEventListener('click', () => { if (adminKey) enterEdit(); else openLogin(); });
+(async () => {
+  try {
+    const res = await api('/api/store', { cache: 'no-store' });
+    if (res && res.state && Array.isArray(res.state.products)) {
+      saved = res.state; loaded = true;
+      if (!editing) renderAll(); else renderBag();
+    }
+  } catch (e) { /* sin servidor: queda el catálogo inicial */ }
+  if (adminKey && sess.get('necca-editing') === '1' && !editing) enterEdit();
+})();
+})();
+</script>
+</body>
+</html>
