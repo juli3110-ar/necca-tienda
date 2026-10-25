@@ -31,7 +31,8 @@ export async function checkAdmin(request) {
 }
 
 export function blobReady() {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+  // Older stores give BLOB_READ_WRITE_TOKEN; newer ones connect with BLOB_STORE_ID.
+  return Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
 }
 
 const str = (v, max) => String(v == null ? '' : v).trim().slice(0, max);
