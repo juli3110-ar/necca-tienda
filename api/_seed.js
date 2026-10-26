@@ -72,7 +72,7 @@ export const SEED = {
   {
    "id": "p3",
    "name": "Pollera midi satinada",
-   "cat": "polleras",
+   "cat": "faldas",
    "color": "Champagne",
    "tint": "#E3CDB0",
    "ink": "#5A4630",
@@ -99,7 +99,7 @@ export const SEED = {
   {
    "id": "p4",
    "name": "Bermuda de jean",
-   "cat": "denim-cortos",
+   "cat": "denim-faldas",
    "color": "Celeste claro",
    "tint": "#A9C3D9",
    "ink": "#24405A",
@@ -126,7 +126,7 @@ export const SEED = {
   {
    "id": "p5",
    "name": "Bermuda sastrera de lino",
-   "cat": "shorts",
+   "cat": "faldas",
    "color": "Beige",
    "tint": "#D9C7AE",
    "ink": "#5A4A35",

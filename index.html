@@ -161,11 +161,19 @@ legend { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; colo
 .m-item:hover { background: rgba(244,238,232,.06); }
 .m-item .chev { font-size: 16px; transition: transform .2s; }
 .m-item[aria-expanded="true"] .chev { transform: rotate(90deg); }
-.m-sub { padding: 0 0 8px; }
-.m-group { margin: 14px 0 4px; padding: 0 24px 0 40px; font-size: 10.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--muted); }
-.m-group:first-child { margin-top: 2px; }
-.m-sub button { display: block; width: 100%; text-align: left; background: transparent; border: 0; color: var(--head-ink); padding: 10px 24px 10px 40px; font-size: 15px; opacity: .9; }
-.m-sub button:hover { background: rgba(244,238,232,.06); opacity: 1; }
+.m-shop { display: block; background: transparent; border: 0; color: var(--head-ink); padding: 18px 24px 6px; font-family: var(--display); font-weight: 500; font-size: 20px; letter-spacing: .14em; text-transform: uppercase; text-align: left; }
+.m-cols { display: grid; grid-template-columns: 1fr; gap: 8px 24px; padding: 4px 24px 12px; }
+.m-col { display: flex; flex-direction: column; align-items: flex-start; }
+.m-group { margin: 16px 0 6px; font-family: var(--display); font-weight: 400; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: var(--head-ink); }
+.m-col button { background: transparent; border: 0; color: var(--head-ink); padding: 7px 0; font-size: 15px; letter-spacing: .03em; opacity: .78; text-align: left; }
+.m-col button:hover { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
+@media (min-width: 760px) {
+  .menu { width: min(1000px, 92%); }
+  .m-shop { padding: 28px 40px 4px; font-size: 24px; }
+  .m-cols { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); padding: 4px 40px 20px; }
+  .m-nav .m-item { padding-left: 40px; }
+  .m-sep { margin-left: 40px; margin-right: 40px; }
+}
 .m-sep { height: 1px; background: var(--line); margin: 8px 24px; }
 
 /* Info */
@@ -293,6 +301,15 @@ body.editing { padding-bottom: 120px; }
 .photo-actions { display: flex; flex-direction: column; gap: 8px; }
 .upload-btn { position: relative; display: inline-flex; align-items: center; justify-content: center; height: 44px; padding: 0 16px; border-radius: 2px; background: var(--wine); color: var(--wine-ink); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; }
 .upload-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+.mg { border: 1px solid var(--line); border-radius: 4px; padding: 12px; margin: 14px 0; display: flex; flex-direction: column; gap: 8px; }
+.mg-head, .mc { display: flex; gap: 6px; align-items: center; }
+.mg-head input, .mc input { flex: 1; min-width: 0; height: 40px; padding: 0 10px; border: 1px solid var(--line); border-radius: 2px; background: var(--surface); color: var(--fg); font: 15px var(--body); }
+.mg-head input { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; }
+.mc { padding-left: 14px; }
+.mc-n { min-width: 22px; text-align: center; font-size: 12px; color: var(--muted); }
+.mini { width: 34px; height: 40px; flex: none; border: 1px solid var(--line); border-radius: 2px; background: transparent; color: var(--fg); font-size: 15px; }
+.mini:disabled { opacity: .3; }
+.mg-add { align-self: flex-start; margin-left: 14px; }
 .m-table { width: 100%; border-collapse: collapse; }
 .m-table th { font-size: 11px; letter-spacing: .12em; color: var(--muted); font-weight: 400; text-align: left; padding: 0 4px 6px; }
 .m-table td { padding: 3px 4px; }
@@ -419,6 +436,7 @@ body.editing { padding-bottom: 120px; }
   <button type="button" id="eb-hero">Portada</button>
   <button type="button" id="eb-contact">Contacto</button>
   <button type="button" id="eb-orders">Pedidos</button>
+  <button type="button" id="eb-menu">Categorías</button>
   <button type="button" class="eb-save" id="eb-save">Guardar cambios</button>
   <button type="button" id="eb-exit">Salir</button>
 </div>
@@ -440,9 +458,8 @@ body.editing { padding-bottom: 120px; }
     <button class="x" id="close-menu" type="button" aria-label="Cerrar menú">×</button>
   </div>
   <nav class="m-nav">
-    <button type="button" class="m-item" data-go-cat="all">Shop</button>
-    <button type="button" class="m-item" id="cat-toggle" aria-expanded="true" aria-controls="cat-sub">Categorías <span class="chev" aria-hidden="true">›</span></button>
-    <div class="m-sub" id="cat-sub"></div>
+    <button type="button" class="m-shop" data-go-cat="all">Shop</button>
+    <div class="m-cols" id="cat-sub"></div>
     <div class="m-sep"></div>
     <button type="button" class="m-item" data-go="pagos">Medios de pago</button>
     <button type="button" class="m-item" data-go="envios">Envíos y cambios</button>
@@ -469,38 +486,43 @@ body.editing { padding-bottom: 120px; }
   <div class="d-foot" id="ed-foot"></div>
 </aside>
 
-<script type="application/json" id="necca-seed">{"hero":{"img":"/fotos/portada.jpg","alt":"Chica con vestido negro de plumas agachada en un rincón de paredes de cemento","eyebrow":"Colección verano","title":"Nueva temporada"},"contact":{"instagram":"","whatsapp":"","email":"","alias":"","titular":"","envio":0},"products":[{"id":"p1","name":"Vestido lencero midi","cat":"vestidos","color":"Turquesa","tint":"#4FB3AE","ink":"#0F3E3B","glyph":"g-dress","price":34900,"badge":"Nuevo","img":"","m":[["Busto","84","88","92"],["Largo","112","114","116"]],"desc":"Vestido lencero de satén, largo midi y breteles finos regulables. Cae suelto sobre el cuerpo y tiene un brillo suave.\n\nSe usa de noche con sandalias de taco, o de día con una camisa de lino abierta encima."},{"id":"p2","name":"Vestido lencero corto","cat":"vestidos","color":"Negro","tint":"#2E2629","ink":"#E9D5C8","glyph":"g-dress","price":29900,"badge":"","img":"","m":[["Busto","84","88","92"],["Largo","86","88","90"]],"desc":"Vestido lencero corto de satén negro, con escote en V y breteles regulables. Un básico para salir que combina con todo."},{"id":"p3","name":"Pollera midi satinada","cat":"polleras","color":"Champagne","tint":"#E3CDB0","ink":"#5A4630","glyph":"g-skirt","price":27900,"badge":"","img":"","m":[["Cintura","66","70","74"],["Largo","78","80","82"]],"desc":"Pollera midi satinada de tiro alto, con cintura elástica y caída fluida. Va con remeras básicas o tops lenceros."},{"id":"p4","name":"Bermuda de jean","cat":"denim-cortos","color":"Celeste claro","tint":"#A9C3D9","ink":"#24405A","glyph":"g-short","price":29900,"badge":"Nuevo","img":"","m":[["Cintura","70","74","78"],["Largo","44","45","46"]],"desc":"Bermuda de jean de tiro alto, corte recto y largo a mitad de muslo. Jean rígido que no se estira con el uso."},{"id":"p5","name":"Bermuda sastrera de lino","cat":"shorts","color":"Beige","tint":"#D9C7AE","ink":"#5A4A35","glyph":"g-short","price":27900,"badge":"","img":"","m":[["Cintura","68","72","76"],["Largo","46","47","48"]],"desc":"Bermuda sastrera de lino con pinzas y tiro alto. Fresca para el verano y prolija para el trabajo o la facu."},{"id":"p6","name":"Pantalón wide leg","cat":"abajo","color":"Blanco","tint":"#F1ECE6","ink":"#6E5D62","glyph":"g-pant","price":34900,"badge":"","img":"","m":[["Cintura","68","72","76"],["Largo","104","106","108"]],"desc":"Pantalón wide leg de tiro alto con pierna amplia que llega al piso. Queda bien con tacos o con zapatillas."},{"id":"p7","name":"Top lencero de satén","cat":"tops","color":"Turquesa","tint":"#63BDB7","ink":"#0F3E3B","glyph":"g-top","price":18900,"badge":"Nuevo","img":"","m":[["Busto","82","86","90"],["Largo","48","50","52"]],"desc":"Top lencero de satén con escote recto y breteles regulables. Se usa solo o debajo de un blazer."},{"id":"p8","name":"Remera entallada","cat":"remeras","color":"Blanco","tint":"#F4F0EB","ink":"#6E5D62","glyph":"g-tee","price":14900,"badge":"","img":"","m":[["Busto","80","84","88"],["Largo","56","58","60"]],"desc":"Remera de algodón entallada, cuello redondo y manga corta. El básico que combina con todo el resto de la colección."},{"id":"p9","name":"Musculosa de morley","cat":"remeras","color":"Rosa empolvado","tint":"#D8AFAE","ink":"#5E2633","glyph":"g-top","price":12900,"badge":"","img":"","m":[["Busto","80","84","88"],["Largo","52","54","56"]],"desc":"Musculosa de morley con breteles anchos y calce al cuerpo. Suave y elástica."},{"id":"p10","name":"Camisa de lino oversize","cat":"camisas","color":"Arena","tint":"#E2D3BF","ink":"#5A4A35","glyph":"g-tee","price":26900,"badge":"","img":"","m":[["Busto","104","108","112"],["Largo","70","72","74"]],"desc":"Camisa de lino oversize con botones al frente y bolsillo en el pecho. Se usa abierta como abrigo liviano o cerrada."},{"id":"p11","name":"Conjunto de lino","cat":"conjuntos","color":"Beige","tint":"#D6C2A6","ink":"#5A4A35","glyph":"g-set","price":49900,"badge":"","img":"","m":[["Busto","100","104","108"],["Cintura","68","72","76"]],"desc":"Conjunto de lino: camisa manga corta y bermuda con cintura elástica. Se pueden usar juntas o por separado."},{"id":"p12","name":"Conjunto top y pollera","cat":"conjuntos","color":"Negro","tint":"#332A2D","ink":"#E9D5C8","glyph":"g-set","price":44900,"badge":"","img":"","m":[["Busto","82","86","90"],["Cintura","66","70","74"]],"desc":"Conjunto de top y pollera midi en el mismo tejido. Ideal para un evento o una salida."}]}</script>
+<script type="application/json" id="necca-seed">{"hero":{"img":"/fotos/portada.jpg","alt":"Chica con vestido negro de plumas agachada en un rincón de paredes de cemento","eyebrow":"Colección verano","title":"Nueva temporada"},"contact":{"instagram":"","whatsapp":"","email":"","alias":"","titular":"","envio":0},"products":[{"id":"p1","name":"Vestido lencero midi","cat":"vestidos","color":"Turquesa","tint":"#4FB3AE","ink":"#0F3E3B","glyph":"g-dress","price":34900,"badge":"Nuevo","img":"","m":[["Busto","84","88","92"],["Largo","112","114","116"]],"desc":"Vestido lencero de satén, largo midi y breteles finos regulables. Cae suelto sobre el cuerpo y tiene un brillo suave.\n\nSe usa de noche con sandalias de taco, o de día con una camisa de lino abierta encima."},{"id":"p2","name":"Vestido lencero corto","cat":"vestidos","color":"Negro","tint":"#2E2629","ink":"#E9D5C8","glyph":"g-dress","price":29900,"badge":"","img":"","m":[["Busto","84","88","92"],["Largo","86","88","90"]],"desc":"Vestido lencero corto de satén negro, con escote en V y breteles regulables. Un básico para salir que combina con todo."},{"id":"p3","name":"Pollera midi satinada","cat":"faldas","color":"Champagne","tint":"#E3CDB0","ink":"#5A4630","glyph":"g-skirt","price":27900,"badge":"","img":"","m":[["Cintura","66","70","74"],["Largo","78","80","82"]],"desc":"Pollera midi satinada de tiro alto, con cintura elástica y caída fluida. Va con remeras básicas o tops lenceros."},{"id":"p4","name":"Bermuda de jean","cat":"denim-faldas","color":"Celeste claro","tint":"#A9C3D9","ink":"#24405A","glyph":"g-short","price":29900,"badge":"Nuevo","img":"","m":[["Cintura","70","74","78"],["Largo","44","45","46"]],"desc":"Bermuda de jean de tiro alto, corte recto y largo a mitad de muslo. Jean rígido que no se estira con el uso."},{"id":"p5","name":"Bermuda sastrera de lino","cat":"faldas","color":"Beige","tint":"#D9C7AE","ink":"#5A4A35","glyph":"g-short","price":27900,"badge":"","img":"","m":[["Cintura","68","72","76"],["Largo","46","47","48"]],"desc":"Bermuda sastrera de lino con pinzas y tiro alto. Fresca para el verano y prolija para el trabajo o la facu."},{"id":"p6","name":"Pantalón wide leg","cat":"abajo","color":"Blanco","tint":"#F1ECE6","ink":"#6E5D62","glyph":"g-pant","price":34900,"badge":"","img":"","m":[["Cintura","68","72","76"],["Largo","104","106","108"]],"desc":"Pantalón wide leg de tiro alto con pierna amplia que llega al piso. Queda bien con tacos o con zapatillas."},{"id":"p7","name":"Top lencero de satén","cat":"tops","color":"Turquesa","tint":"#63BDB7","ink":"#0F3E3B","glyph":"g-top","price":18900,"badge":"Nuevo","img":"","m":[["Busto","82","86","90"],["Largo","48","50","52"]],"desc":"Top lencero de satén con escote recto y breteles regulables. Se usa solo o debajo de un blazer."},{"id":"p8","name":"Remera entallada","cat":"remeras","color":"Blanco","tint":"#F4F0EB","ink":"#6E5D62","glyph":"g-tee","price":14900,"badge":"","img":"","m":[["Busto","80","84","88"],["Largo","56","58","60"]],"desc":"Remera de algodón entallada, cuello redondo y manga corta. El básico que combina con todo el resto de la colección."},{"id":"p9","name":"Musculosa de morley","cat":"remeras","color":"Rosa empolvado","tint":"#D8AFAE","ink":"#5E2633","glyph":"g-top","price":12900,"badge":"","img":"","m":[["Busto","80","84","88"],["Largo","52","54","56"]],"desc":"Musculosa de morley con breteles anchos y calce al cuerpo. Suave y elástica."},{"id":"p10","name":"Camisa de lino oversize","cat":"camisas","color":"Arena","tint":"#E2D3BF","ink":"#5A4A35","glyph":"g-tee","price":26900,"badge":"","img":"","m":[["Busto","104","108","112"],["Largo","70","72","74"]],"desc":"Camisa de lino oversize con botones al frente y bolsillo en el pecho. Se usa abierta como abrigo liviano o cerrada."},{"id":"p11","name":"Conjunto de lino","cat":"conjuntos","color":"Beige","tint":"#D6C2A6","ink":"#5A4A35","glyph":"g-set","price":49900,"badge":"","img":"","m":[["Busto","100","104","108"],["Cintura","68","72","76"]],"desc":"Conjunto de lino: camisa manga corta y bermuda con cintura elástica. Se pueden usar juntas o por separado."},{"id":"p12","name":"Conjunto top y pollera","cat":"conjuntos","color":"Negro","tint":"#332A2D","ink":"#E9D5C8","glyph":"g-set","price":44900,"badge":"","img":"","m":[["Busto","82","86","90"],["Cintura","66","70","74"]],"desc":"Conjunto de top y pollera midi en el mismo tejido. Ideal para un evento o una salida."}]}</script>
 <script>
 (function () {
 const TRANSFER_OFF = 0.10;
-const CATS = [
-  { id: 'all', label: 'Todo' },
-  { id: 'vestidos', label: 'Vestidos', glyph: 'g-dress', group: 'Ropa' },
-  { id: 'polleras', label: 'Polleras', glyph: 'g-skirt', group: 'Ropa' },
-  { id: 'tops', label: 'Tops y bodies', glyph: 'g-top', group: 'Ropa' },
-  { id: 'remeras', label: 'Remeras y musculosas', glyph: 'g-tee', group: 'Ropa' },
-  { id: 'camisas', label: 'Camisas y blusas', glyph: 'g-tee', group: 'Ropa' },
-  { id: 'abajo', label: 'Pantalones', glyph: 'g-pant', group: 'Ropa' },
-  { id: 'shorts', label: 'Shorts y bermudas', glyph: 'g-short', group: 'Ropa' },
-  { id: 'conjuntos', label: 'Conjuntos', glyph: 'g-set', group: 'Ropa' },
-  { id: 'banio', label: 'Trajes de baño', glyph: 'g-top', group: 'Ropa' },
-  { id: 'jeans', label: 'Jeans', glyph: 'g-pant', group: 'Denim' },
-  { id: 'denim-cortos', label: 'Polleras y shorts de jean', glyph: 'g-short', group: 'Denim' },
-  { id: 'denim-arriba', label: 'Camisas y camperas de jean', glyph: 'g-tee', group: 'Denim' },
-  { id: 'carteras', label: 'Carteras', glyph: 'g-set', group: 'Accesorios' },
-  { id: 'cinturones', label: 'Cinturones', glyph: 'g-set', group: 'Accesorios' },
-  { id: 'bijou', label: 'Bijou', glyph: 'g-set', group: 'Accesorios' },
-  { id: 'calzado', label: 'Calzado', glyph: 'g-set', group: 'Accesorios' }
+const DEFAULT_MENU = [
+  { t: 'Colección', items: [
+    { id: 'remeras', label: 'Remeras' }, { id: 'tops', label: 'Bodies y tops' }, { id: 'camisas', label: 'Camisas y blusas' },
+    { id: 'blazers', label: 'Blazers y chalecos' }, { id: 'vestidos', label: 'Vestidos y monos' }, { id: 'abajo', label: 'Pantalones' },
+    { id: 'faldas', label: 'Faldas y shorts' }, { id: 'conjuntos', label: 'Conjuntos' }, { id: 'banio', label: 'Trajes de baño' },
+    { id: 'tejidos', label: 'Tejidos' }, { id: 'buzos', label: 'Buzos' }, { id: 'camperas', label: 'Sacos y camperas' } ] },
+  { t: 'Denim', items: [
+    { id: 'jeans', label: 'Jeans' }, { id: 'denim-faldas', label: 'Faldas y shorts' }, { id: 'denim-tops', label: 'Camisas y tops' },
+    { id: 'denim-camperas', label: 'Camperas y chalecos' } ] },
+  { t: 'Accesorios', items: [
+    { id: 'calzado', label: 'Calzados' }, { id: 'carteras', label: 'Carteras' }, { id: 'cinturones', label: 'Cinturones' },
+    { id: 'gorras', label: 'Gorras y sombreros' }, { id: 'panuelos', label: 'Pañuelos' }, { id: 'charms', label: 'Charms' },
+    { id: 'bufandas', label: 'Bufandas' }, { id: 'underwear', label: 'Underwear' }, { id: 'medias', label: 'Medias' } ] }
 ];
-const CAT_GROUPS = ['Ropa', 'Denim', 'Accesorios'];
+const curMenu = () => { const m = (editing && draft ? draft : saved).menu; return Array.isArray(m) && m.length ? m : DEFAULT_MENU; };
+const allCats = () => curMenu().flatMap(g => g.items || []);
+const catName = id => id === 'all' ? 'Todo' : ((allCats().find(c => c.id === id) || {}).label || 'Todo');
+function glyphFor(id) {
+  const l = ((allCats().find(c => c.id === id) || {}).label || '').toLowerCase();
+  if (/vestido|mono/.test(l)) return 'g-dress';
+  if (/falda|pollera/.test(l)) return 'g-skirt';
+  if (/short|bermuda/.test(l)) return 'g-short';
+  if (/pantal|jean/.test(l)) return 'g-pant';
+  if (/conjunto/.test(l)) return 'g-set';
+  if (/top|body|musculosa|baño/.test(l)) return 'g-top';
+  if (/remera|camisa|blusa|buzo|campera|saco|blazer|tejido|sweater/.test(l)) return 'g-tee';
+  return 'g-set';
+}
 function renderMenuCats() {
-  const list = editing ? draft.products : saved.products;
-  const used = new Set((list || []).map(p => p.cat));
-  const show = c => editing || used.has(c.id);
-  $('#cat-sub').innerHTML = CAT_GROUPS.map(g => {
-    const cs = CATS.filter(c => c.group === g && show(c));
-    return cs.length ? `<p class="m-group">${g}</p>` + cs.map(c => `<button type="button" data-go-cat="${c.id}">${c.label}</button>`).join('') : '';
-  }).join('');
+  $('#cat-sub').innerHTML = curMenu().map(g => `<div class="m-col">
+    <p class="m-group">${esc(g.t)}</p>
+    ${(g.items || []).map(c => `<button type="button" data-go-cat="${esc(c.id)}">${esc(c.label)}</button>`).join('')}
+  </div>`).join('');
 }
 const GLYPHS = ['g-dress', 'g-skirt', 'g-short', 'g-pant', 'g-top', 'g-tee', 'g-set'];
 const SIZES = ['XS', 'S', 'M', 'L', 'XL'];
@@ -569,7 +591,7 @@ function renderHero() {
     ${editing ? '<button type="button" class="ed-card ed-hero" id="ed-hero-btn">Editar portada</button>' : ''}`;
 }
 
-function renderFilters() { $('#filters').textContent = CATS.find(c => c.id === cat).label; }
+function renderFilters() { $('#filters').textContent = catName(cat); }
 
 function renderGrid() {
   const list = data().products.filter(p => cat === 'all' || p.cat === cat);
@@ -612,7 +634,7 @@ function renderProduct() {
   const p = data().products.find(x => x.id === pvId);
   if (!p) { closeProduct(); return; }
   const sel = picked[p.id];
-  const catLabel = (CATS.find(c => c.id === p.cat) || {}).label || '';
+  const catLabel = p.cat && allCats().some(c => c.id === p.cat) ? catName(p.cat) : '';
   const rows = (p.m || []).filter(r => r && r[0]).map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td></tr>`).join('');
   const img = safeImg(p.img);
   $('#pv-body').innerHTML = `
@@ -967,7 +989,7 @@ function photoPreview(img) {
 function openProductEditor(id) {
   edMode = 'product';
   const p = id ? draft.products.find(x => x.id === id) : null;
-  edItem = p ? clone(p) : { id: 'p' + Date.now().toString(36), name: '', cat: cat !== 'all' ? cat : 'vestidos', color: '', price: '', badge: 'Nuevo', img: '', tint: '#2A2627', ink: '#ADA4A0', glyph: (CATS.find(c => c.id === (cat !== 'all' ? cat : 'vestidos')) || {}).glyph || 'g-top', m: [['Busto', '', '', ''], ['Largo', '', '', '']], isNew: true };
+  edItem = p ? clone(p) : { id: 'p' + Date.now().toString(36), name: '', cat: cat !== 'all' ? cat : ((allCats()[0] || {}).id || ''), color: '', price: '', badge: 'Nuevo', img: '', tint: '#2A2627', ink: '#ADA4A0', glyph: 'g-top', m: [['Busto', '', '', ''], ['Largo', '', '', '']], isNew: true };
   while ((edItem.m || []).length < 3) (edItem.m = edItem.m || []).push(['', '', '', '']);
   $('#ed-title').textContent = p ? 'Editar prenda' : 'Nueva prenda';
   $('#ed-body').innerHTML = `<div class="form">
@@ -982,7 +1004,7 @@ function openProductEditor(id) {
       <div class="ed-msg" id="ed-msg" aria-live="polite"></div>
     </div>
     <label class="field"><span>Nombre</span><input type="text" id="ed-name" value="${esc(edItem.name)}" placeholder="Ej: Vestido lencero midi"></label>
-    <label class="field"><span>Categoría</span><select id="ed-cat">${CAT_GROUPS.map(g => `<optgroup label="${g}">${CATS.filter(c => c.group === g).map(c => `<option value="${c.id}" ${c.id === edItem.cat ? 'selected' : ''}>${c.label}</option>`).join('')}</optgroup>`).join('')}</select></label>
+    <label class="field"><span>Categoría</span><select id="ed-cat">${allCats().some(c => c.id === edItem.cat) ? '' : '<option value="" selected>Sin categoría</option>'}${curMenu().map(g => `<optgroup label="${esc(g.t)}">${(g.items || []).map(c => `<option value="${esc(c.id)}" ${c.id === edItem.cat ? 'selected' : ''}>${esc(c.label)}</option>`).join('')}</optgroup>`).join('')}</select></label>
     <label class="field"><span>Color</span><input type="text" id="ed-color" value="${esc(edItem.color)}" placeholder="Ej: Turquesa"></label>
     <label class="field"><span>Precio de lista ($)</span><input type="number" id="ed-price" inputmode="numeric" min="0" step="100" value="${esc(edItem.price)}" placeholder="Ej: 34900"></label>
     <label class="field"><span>Descripción</span><textarea id="ed-desc" rows="5" maxlength="800" placeholder="Ej: Vestido lencero de satén, con breteles regulables y largo midi. Ideal para salir o para un evento de día." style="padding:10px 12px;border:1px solid var(--line);border-radius:2px;background:var(--surface);color:var(--fg);font:15px/1.5 var(--body);resize:vertical">${esc(edItem.desc || '')}</textarea></label>
@@ -1011,7 +1033,7 @@ function readProductForm() {
   edItem.badge = $('#ed-new').checked ? 'Nuevo' : '';
   edItem.desc = $('#ed-desc').value.trim().slice(0, 800);
   edItem.m = [0, 1, 2].map(i => [0, 1, 2, 3].map(j => $(`#ed-m-${i}-${j}`).value.trim().slice(0, 20))).filter(r => r[0]);
-  if (edItem.isNew && !edItem.img) edItem.glyph = (CATS.find(c => c.id === edItem.cat) || {}).glyph || 'g-top';
+  if (edItem.isNew && !edItem.img) edItem.glyph = glyphFor(edItem.cat);
   return '';
 }
 function openLogin() {
@@ -1060,6 +1082,68 @@ function openHeroEditor() {
   $('#ed-foot').innerHTML = '<div class="ed-msg err" id="ed-err"></div><button type="button" class="cta" id="ed-done">Listo</button>';
   $('#editor').hidden = false; syncScrim();
 }
+function syncMenuForm() {
+  edItem.forEach((g, gi) => {
+    const t = $(`#mg-${gi}`); if (t) g.t = t.value.trim().slice(0, 30);
+    g.items.forEach((c, ci) => { const i = $(`#mc-${gi}-${ci}`); if (i) c.label = i.value.trim().slice(0, 40); });
+  });
+}
+function renderMenuForm(msg) {
+  const count = id => draft.products.filter(p => p.cat === id).length;
+  $('#ed-body').innerHTML = `<p class="small">Así se arma el menú de las tres rayitas. Cambiá los nombres, ordená con las flechas, agregá o borrá. Después tocá “Listo” y “Guardar cambios”.</p>
+  ${msg ? `<p class="ck-err" role="alert">${msg}</p>` : ''}
+  ${edItem.map((g, gi) => `<div class="mg">
+    <div class="mg-head">
+      <input type="text" id="mg-${gi}" value="${esc(g.t)}" placeholder="Nombre de la sección" aria-label="Nombre de la sección">
+      <button type="button" class="mini" data-mg-up="${gi}" aria-label="Subir sección" ${gi === 0 ? 'disabled' : ''}>↑</button>
+      <button type="button" class="mini" data-mg-down="${gi}" aria-label="Bajar sección" ${gi === edItem.length - 1 ? 'disabled' : ''}>↓</button>
+      <button type="button" class="mini" data-mg-del="${gi}" aria-label="Borrar sección">×</button>
+    </div>
+    ${g.items.map((c, ci) => `<div class="mc">
+      <input type="text" id="mc-${gi}-${ci}" value="${esc(c.label)}" placeholder="Nombre de la categoría" aria-label="Categoría">
+      <span class="mc-n" title="Prendas en esta categoría">${count(c.id)}</span>
+      <button type="button" class="mini" data-mc-up="${gi}-${ci}" aria-label="Subir" ${ci === 0 ? 'disabled' : ''}>↑</button>
+      <button type="button" class="mini" data-mc-down="${gi}-${ci}" aria-label="Bajar" ${ci === g.items.length - 1 ? 'disabled' : ''}>↓</button>
+      <button type="button" class="mini" data-mc-del="${gi}-${ci}" aria-label="Borrar categoría">×</button>
+    </div>`).join('')}
+    <button type="button" class="ghost mg-add" data-mc-add="${gi}">+ Agregar categoría</button>
+  </div>`).join('')}
+  <button type="button" class="ghost" data-mg-add="1">+ Agregar sección</button>`;
+}
+function openMenuEditor() {
+  edMode = 'menu';
+  edItem = clone(curMenu()).map(g => ({ t: g.t, items: (g.items || []).map(c => ({ id: c.id, label: c.label })) }));
+  $('#ed-title').textContent = 'Categorías';
+  renderMenuForm('');
+  $('#ed-foot').innerHTML = '<div class="ed-msg err" id="ed-err"></div><button type="button" class="cta" id="ed-done">Listo</button>';
+  $('#editor').hidden = false; syncScrim();
+}
+$('#ed-body').addEventListener('click', e => {
+  if (edMode !== 'menu') return;
+  const b = e.target.closest('button'); if (!b) return;
+  const d = b.dataset; syncMenuForm();
+  const swap = (arr, i, j) => { if (j < 0 || j >= arr.length) return; [arr[i], arr[j]] = [arr[j], arr[i]]; };
+  const pair = v => v.split('-').map(Number);
+  let msg = '';
+  if (d.mgUp) swap(edItem, +d.mgUp, +d.mgUp - 1);
+  else if (d.mgDown) swap(edItem, +d.mgDown, +d.mgDown + 1);
+  else if (d.mgDel) {
+    const g = edItem[+d.mgDel]; const n = draft.products.filter(p => g.items.some(c => c.id === p.cat)).length;
+    if (n) msg = `La sección “${esc(g.t)}” tiene ${n} ${n === 1 ? 'prenda' : 'prendas'}. Pasalas a otra categoría antes de borrarla.`;
+    else edItem.splice(+d.mgDel, 1);
+  }
+  else if (d.mgAdd) edItem.push({ t: 'Nueva sección', items: [] });
+  else if (d.mcAdd) { edItem[+d.mcAdd].items.push({ id: 'c' + Date.now().toString(36), label: '' }); }
+  else if (d.mcUp) { const [g, c] = pair(d.mcUp); swap(edItem[g].items, c, c - 1); }
+  else if (d.mcDown) { const [g, c] = pair(d.mcDown); swap(edItem[g].items, c, c + 1); }
+  else if (d.mcDel) {
+    const [g, c] = pair(d.mcDel); const it = edItem[g].items[c]; const n = draft.products.filter(p => p.cat === it.id).length;
+    if (n) msg = `“${esc(it.label)}” tiene ${n} ${n === 1 ? 'prenda' : 'prendas'}. Pasalas a otra categoría antes de borrarla.`;
+    else edItem[g].items.splice(c, 1);
+  } else return;
+  renderMenuForm(msg);
+  if (d.mcAdd) { const g = +d.mcAdd; const i = $(`#mc-${g}-${edItem[g].items.length - 1}`); if (i) i.focus(); }
+});
 function openContactEditor() {
   edMode = 'contact';
   edItem = clone(draft.contact);
@@ -1113,6 +1197,13 @@ $('#ed-foot').addEventListener('click', e => {
       edItem.titular = $('#ed-titular').value.trim().slice(0, 60);
       edItem.envio = Math.max(0, Math.round(Number($('#ed-envio').value) || 0));
       draft.contact = edItem;
+    } else if (edMode === 'menu') {
+      syncMenuForm();
+      const menu = edItem.map(g => ({ t: g.t, items: g.items.filter(c => c.label) })).filter(g => g.t || g.items.length);
+      if (menu.some(g => !g.t)) { $('#ed-err').textContent = 'Poné un nombre a cada sección.'; return; }
+      if (!menu.some(g => g.items.length)) { $('#ed-err').textContent = 'Dejá al menos una categoría.'; return; }
+      draft.menu = menu;
+      if (cat !== 'all' && !menu.some(g => g.items.some(c => c.id === cat))) cat = 'all';
     }
     closeEditor(); markChanged();
   } else if (id === 'ed-del') {
@@ -1174,6 +1265,7 @@ $('#ed-body').addEventListener('click', async e => {
     renderOrders('');
   } catch (err) { b.disabled = false; renderOrders(esc(err.message || 'No se pudo actualizar.')); }
 });
+$('#eb-menu').addEventListener('click', openMenuEditor);
 $('#eb-exit').addEventListener('click', () => {
   if (!changes) { exitEdit(); return; }
   setBarMsg(`<b>¿Salir sin guardar?</b>Vas a perder ${changes} ${changes === 1 ? 'cambio' : 'cambios'}. <button type="button" id="eb-discard" style="margin-left:8px">Descartar</button> <button type="button" id="eb-keep">Seguir editando</button>`, true);
@@ -1186,11 +1278,6 @@ $('#editbar').addEventListener('click', e => {
 /* ---------- Shopper interactions ---------- */
 $('#open-menu').addEventListener('click', openMenu);
 $('#close-menu').addEventListener('click', () => { closeMenu(); $('#open-menu').focus(); });
-$('#cat-toggle').addEventListener('click', e => {
-  const open = e.currentTarget.getAttribute('aria-expanded') === 'true';
-  e.currentTarget.setAttribute('aria-expanded', String(!open));
-  $('#cat-sub').hidden = open;
-});
 $('#menu').addEventListener('click', e => {
   const c = e.target.closest('[data-go-cat]');
   const g = e.target.closest('[data-go]');

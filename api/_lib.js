@@ -4,7 +4,6 @@ import { list as blobList } from '@vercel/blob';
 
 export { SEED };
 
-const CATS = ['vestidos', 'polleras', 'tops', 'remeras', 'camisas', 'abajo', 'shorts', 'conjuntos', 'banio', 'jeans', 'denim-cortos', 'denim-arriba', 'carteras', 'cinturones', 'bijou', 'calzado'];
 const GLYPHS = ['g-dress', 'g-skirt', 'g-short', 'g-pant', 'g-top', 'g-tee', 'g-set'];
 const BLOB_URL = /^https:\/\/[a-z0-9-]+\.public\.blob\.vercel-storage\.com\/[A-Za-z0-9._\/-]+$/;
 const LOCAL_URL = /^\/fotos\/[A-Za-z0-9._-]+$/;
@@ -47,7 +46,15 @@ export function cleanState(input) {
   const contact = s.contact || {};
   const products = Array.isArray(s.products) ? s.products.slice(0, 300) : [];
   const seen = new Set();
+  const menu = (Array.isArray(s.menu) ? s.menu : []).slice(0, 8).map(g => ({
+    t: str(g && g.t, 30),
+    items: (Array.isArray(g && g.items) ? g.items : []).slice(0, 40).map(c => ({
+      id: str(c && c.id, 40).replace(/[^A-Za-z0-9_-]/g, ''),
+      label: str(c && c.label, 40)
+    })).filter(c => c.id && c.label)
+  })).filter(g => g.t);
   return {
+    ...(menu.some(g => g.items.length) ? { menu } : {}),
     hero: {
       img: safeImg(hero.img),
       alt: str(hero.alt, 160),
@@ -70,7 +77,7 @@ export function cleanState(input) {
       return {
         id,
         name: str(p.name, 80),
-        cat: CATS.includes(p.cat) ? p.cat : 'tops',
+        cat: str(p.cat, 40).replace(/[^A-Za-z0-9_-]/g, ''),
         color: str(p.color, 40),
         price,
         badge: p.badge ? 'Nuevo' : '',
