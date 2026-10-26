@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="Kiva: ropa para chicas en Rosario. Envíos en el día.">
+<meta name="description" content="Kivara: ropa para chicas en Rosario. Envíos en el día.">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Kiva Tienda</title>
+<title>Kivara Tienda</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&display=swap">
@@ -478,7 +478,7 @@ body.editing { padding-bottom: 120px; }
   <div class="wrap">
     <div class="left">
       <button class="burger" id="open-menu" type="button" aria-label="Abrir menú" aria-haspopup="dialog"><span></span></button>
-      <span class="logo">Kiva</span>
+      <span class="logo">Kivara</span>
     </div>
     <button class="bag-btn" id="open-bag" type="button" aria-haspopup="dialog">
       <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 13H7L6 8Zm3 0V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
@@ -579,7 +579,7 @@ body.editing { padding-bottom: 120px; }
       </ul>
     </section>
     <section id="nosotros">
-      <h2>Acerca de Kiva</h2>
+      <h2>Acerca de Kivara</h2>
       <div id="about-body"></div>
     </section>
     <section id="arrepentimiento">
@@ -609,7 +609,7 @@ body.editing { padding-bottom: 120px; }
       <button type="button" data-go="faq">Preguntas frecuentes</button>
     </nav>
     <nav class="fcol" aria-label="Nosotros"><h3>Nosotros</h3>
-      <button type="button" data-go="nosotros">Acerca de Kiva</button>
+      <button type="button" data-go="nosotros">Acerca de Kivara</button>
     </nav>
     <nav class="fcol" aria-label="Atención al cliente"><h3>Atención al cliente</h3>
       <button type="button" data-go="contacto">Contacto</button>
@@ -620,7 +620,7 @@ body.editing { padding-bottom: 120px; }
     <div class="fcol"><h3>Seguinos</h3><div class="f-social" id="f-social"></div></div>
   </div>
   <div class="wrap foot-bottom">
-    <span>© Kiva · Rosario, Santa Fe</span>
+    <span>© Kivara · Rosario, Santa Fe</span>
     <button type="button" id="admin-link" style="border:0;background:transparent;color:var(--muted);font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:0">Acceso</button>
   </div>
 </footer>
@@ -642,7 +642,7 @@ body.editing { padding-bottom: 120px; }
   <div class="pv-bar">
     <div class="wrap">
       <button type="button" class="pv-back" id="pv-back"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>Volver</button>
-      <span class="logo" style="font-size:16px">Kiva</span>
+      <span class="logo" style="font-size:16px">Kivara</span>
       <button type="button" class="pv-back" id="pv-bag">Tu bolsa</button>
     </div>
   </div>
@@ -652,7 +652,7 @@ body.editing { padding-bottom: 120px; }
   <div class="pv-bar">
     <div class="wrap">
       <button type="button" class="pv-back" id="sp-back"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>Volver</button>
-      <span class="logo" style="font-size:16px">Kiva</span>
+      <span class="logo" style="font-size:16px">Kivara</span>
       <button type="button" class="pv-back" id="sp-bag">Tu bolsa</button>
     </div>
   </div>
@@ -661,7 +661,7 @@ body.editing { padding-bottom: 120px; }
 <div class="scrim" id="scrim" hidden></div>
 <aside class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menú" hidden>
   <div class="m-head">
-    <span class="logo">Kiva</span>
+    <span class="logo">Kivara</span>
     <button class="x" id="close-menu" type="button" aria-label="Cerrar menú">×</button>
   </div>
   <nav class="m-nav">
@@ -832,7 +832,7 @@ function renderHero() {
   const h = data().hero;
   const img = safeImg(h.img);
   $('#hero').innerHTML = `
-    <div class="hero-img">${img ? `<img src="${esc(img)}" alt="${esc(h.alt || 'Foto de portada de Kiva')}">` : '<span class="hero-ph">Foto de portada</span>'}</div>
+    <div class="hero-img">${img ? `<img src="${esc(img)}" alt="${esc(h.alt || 'Foto de portada de Kivara')}">` : '<span class="hero-ph">Foto de portada</span>'}</div>
     <div class="hero-text">
       <span class="eyebrow">${esc(h.eyebrow)}</span>
       <h1 class="hero-title">${esc(h.title)}</h1>
@@ -948,7 +948,7 @@ const ICONS = {
   mail: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 7l8.5 6 8.5-6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>'
 };
 const handle = v => String(v || '').trim().replace(/^https?:\/\/(www\.)?(instagram|tiktok)\.com\//i, '').replace(/^@/, '').replace(/[^A-Za-z0-9._]/g, '');
-const DEFAULT_ABOUT = 'KIVA es una tienda online de ropa para chicas, nacida en Rosario.\nElegimos cada prenda pensando en cómo se usa de verdad: en la calle, en la facu, para salir. Traemos tandas chicas y novedades todas las semanas, con envío en el día en Rosario.';
+const DEFAULT_ABOUT = 'KIVARA es una tienda online de ropa para chicas, nacida en Rosario.\nElegimos cada prenda pensando en cómo se usa de verdad: en la calle, en la facu, para salir. Traemos tandas chicas y novedades todas las semanas, con envío en el día en Rosario.';
 function renderFooter() {
   const c = data().contact || {};
   const ig = handle(c.instagram), tt = handle(c.tiktok), wa = waNumber();
@@ -959,10 +959,10 @@ function renderFooter() {
   if (c.email) links.push(`<a href="mailto:${esc(c.email)}" aria-label="Mail">${ICONS.mail}</a>`);
   $('#f-social').innerHTML = links.join('') || '<span class="small">Cargá Instagram y TikTok en Contacto.</span>';
   const cq = $('#f-consultas');
-  if (wa.length >= 8) { cq.href = `https://wa.me/${wa}?text=${encodeURIComponent('¡Hola Kiva! Tengo una consulta:')}`; cq.target = '_blank'; }
+  if (wa.length >= 8) { cq.href = `https://wa.me/${wa}?text=${encodeURIComponent('¡Hola Kivara! Tengo una consulta:')}`; cq.target = '_blank'; }
   else { cq.href = '#contacto'; cq.removeAttribute('target'); }
   $('#about-body').innerHTML = descHTML(c.about || DEFAULT_ABOUT);
-  const msg = encodeURIComponent('Hola Kiva, quiero cancelar mi compra. Número de pedido: ');
+  const msg = encodeURIComponent('Hola Kivara, quiero cancelar mi compra. Número de pedido: ');
   const acts = (wa.length >= 8 ? `<a class="arrep-btn" href="https://wa.me/${wa}?text=${msg}" target="_blank" rel="noopener">Cancelar por WhatsApp</a>` : '') + (c.email ? `<a class="arrep-btn" href="mailto:${esc(c.email)}?subject=${encodeURIComponent('Cancelación de compra')}">Cancelar por mail</a>` : '');
   $('#arrep-actions').innerHTML = acts || '<span class="small">Escribinos por Instagram con tu número de pedido.</span>';
 }
@@ -1123,7 +1123,7 @@ let ckBusy = false;
 let ckError = '';
 function orderText() {
   const o = lastOrder || {};
-  return `¡Hola Kiva! Hice el pedido #${o.id || ''} en la web${o.pago === 'transferencia' ? ' y te mando el comprobante de la transferencia' : ''}.\nNombre: ${buyer.nombre.trim()}\nTotal: ${peso(o.total || 0)}`;
+  return `¡Hola Kivara! Hice el pedido #${o.id || ''} en la web${o.pago === 'transferencia' ? ' y te mando el comprobante de la transferencia' : ''}.\nNombre: ${buyer.nombre.trim()}\nTotal: ${peso(o.total || 0)}`;
 }
 async function ckFetch(path, opts) {
   let res;
@@ -1634,12 +1634,12 @@ function openContactEditor() {
   edItem = clone(draft.contact);
   $('#ed-title').textContent = 'Contacto';
   $('#ed-body').innerHTML = `<div class="form">
-    <label class="field"><span>Instagram</span><input type="text" id="ed-ig" value="${esc(edItem.instagram)}" placeholder="@kiva.ropa"></label>
+    <label class="field"><span>Instagram</span><input type="text" id="ed-ig" value="${esc(edItem.instagram)}" placeholder="@kivara.ropa"></label>
     <label class="field"><span>WhatsApp (con código de área)</span><input type="tel" id="ed-wa" value="${esc(edItem.whatsapp)}" placeholder="Ej: 549 341 123 4567"></label>
     <p class="small">El botón “Enviar pedido por WhatsApp” usa este número. Escribilo con 549 adelante y sin el 15.</p>
-    <label class="field"><span>TikTok</span><input type="text" id="ed-tt" value="${esc(edItem.tiktok || '')}" placeholder="@kiva.store"></label>
-    <label class="field"><span>Mail</span><input type="email" id="ed-mail" value="${esc(edItem.email)}" placeholder="hola@kiva.com"></label>
-    <label class="field"><span>Acerca de Kiva (texto de “Nosotros”)</span><textarea id="ed-about" rows="5" maxlength="1200" style="padding:10px 12px;border:1px solid var(--line);border-radius:2px;background:var(--surface);color:var(--fg);font:15px/1.5 var(--body);resize:vertical">${esc(edItem.about || DEFAULT_ABOUT)}</textarea></label>
+    <label class="field"><span>TikTok</span><input type="text" id="ed-tt" value="${esc(edItem.tiktok || '')}" placeholder="@kivara.store"></label>
+    <label class="field"><span>Mail</span><input type="email" id="ed-mail" value="${esc(edItem.email)}" placeholder="hola@kivara.com"></label>
+    <label class="field"><span>Acerca de Kivara (texto de “Nosotros”)</span><textarea id="ed-about" rows="5" maxlength="1200" style="padding:10px 12px;border:1px solid var(--line);border-radius:2px;background:var(--surface);color:var(--fg);font:15px/1.5 var(--body);resize:vertical">${esc(edItem.about || DEFAULT_ABOUT)}</textarea></label>
 
   </div>`;
   $('#ed-foot').innerHTML = '<div class="ed-msg err" id="ed-err"></div><button type="button" class="cta" id="ed-done">Listo</button>';
