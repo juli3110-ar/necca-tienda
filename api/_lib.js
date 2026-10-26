@@ -92,6 +92,8 @@ export function cleanState(input) {
         badge: p.badge ? 'Nuevo' : '',
         desc: String(p.desc == null ? '' : p.desc).replace(/\r/g, '').trim().slice(0, 800),
         img: safeImg(p.img),
+        imgs: (Array.isArray(p.imgs) ? p.imgs : []).map(safeImg).filter(Boolean).slice(0, 6),
+        colors: (Array.isArray(p.colors) ? p.colors : []).slice(0, 12).map(c => ({ n: str(c && c.n, 30), h: color(c && c.h) })).filter(c => c.n),
         tint: color(p.tint),
         ink: color(p.ink),
         glyph: GLYPHS.includes(p.glyph) ? p.glyph : 'g-top',

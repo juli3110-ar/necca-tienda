@@ -84,7 +84,31 @@ input:focus, textarea:focus, select:focus { border-color: var(--fg) !important; 
 }
 
 /* Catalog */
-.filters { font-family: var(--display); font-weight: 300; font-size: 15px; letter-spacing: .32em; text-transform: uppercase; margin: 0 0 24px; padding-bottom: 12px; border-bottom: 1px solid var(--line); scroll-margin-top: 110px; }
+.filters { font-family: var(--display); font-weight: 300; font-size: 15px; letter-spacing: .32em; text-transform: uppercase; margin: 0 0 8px; padding-bottom: 12px; border-bottom: 1px solid var(--line); scroll-margin-top: 110px; }
+.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin: 0 0 20px; position: relative; z-index: 6; }
+.tb-cell { position: relative; }
+.tb-btn { height: 44px; padding: 0; border: 0; background: transparent; color: var(--fg); font-family: var(--display); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; }
+.tb-btn span { margin-left: 6px; color: var(--muted); }
+.pop { position: absolute; top: 100%; left: 0; width: min(320px, calc(100vw - 32px)); background: var(--surface); border-top: 1px solid var(--muted); box-shadow: var(--shadow); padding: 4px 0; }
+.pop-right { left: auto; right: 0; }
+.pop details { border-bottom: 1px solid var(--line); }
+.pop details:last-of-type { border-bottom: 0; }
+.pop summary { list-style: none; display: flex; align-items: center; gap: 14px; width: auto; padding: 16px 20px; cursor: pointer; color: var(--fg); font-family: var(--display); font-size: 14px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; }
+.pop summary::-webkit-details-marker { display: none; }
+.pop summary::before { content: '+'; width: 12px; font-weight: 400; }
+.pop details[open] summary::before { content: '−'; }
+.pop summary small { margin-left: auto; font-size: 11px; color: var(--muted); letter-spacing: .08em; text-transform: none; font-weight: 400; }
+.pop-opts { display: flex; flex-direction: column; padding: 0 20px 12px 46px; }
+.pop-opt { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 0; border: 0; background: transparent; color: var(--muted); font-size: 14px; text-align: left; }
+.pop-opt:hover, .pop-opt[aria-pressed="true"] { color: var(--fg); }
+.pop-opt[aria-pressed="true"]::after { content: '✓'; margin-left: auto; font-size: 13px; }
+.pop-opt i { width: 14px; height: 14px; border-radius: 50%; background: var(--sw); border: 1px solid rgba(244,238,232,.3); flex: none; }
+.pop-clear { display: block; margin: 8px 20px 12px; padding: 0; border: 0; background: transparent; color: var(--muted); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; text-decoration: underline; text-underline-offset: 4px; }
+.pop-sort { padding: 6px 20px; }
+.pop-sort .pop-opt { padding: 12px 0; font-size: 14px; }
+.mv { position: absolute; top: 8px; left: 8px; z-index: 2; display: flex; gap: 4px; }
+.mv button { width: 36px; height: 36px; border: 0; border-radius: 2px; background: var(--fg); color: var(--head); font-size: 15px; box-shadow: 0 4px 14px rgba(0,0,0,.4); }
+.mv button:disabled { opacity: .35; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 28px 20px; padding-bottom: 64px; }
 @media (min-width: 760px) { .grid { grid-template-columns: repeat(3, 1fr); gap: 40px 28px; } }
 .card { position: relative; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
@@ -100,7 +124,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--fg) !important; 
 .transfer { font-size: 13px; color: var(--good); }
 .sizes { display: flex; flex-wrap: wrap; gap: 6px; }
 .size { min-width: 40px; height: 36px; border: 1px solid var(--line); background: transparent; border-radius: 2px; font-size: 12px; font-weight: 400; letter-spacing: .06em; }
-.size.order { border-style: dashed; color: var(--muted); }
+.size.encargo { border-style: dashed; color: var(--muted); }
 .size[aria-pressed="true"] { background: var(--wine); color: var(--wine-ink); border-color: var(--wine); border-style: solid; }
 .hint { font-size: 12px; color: var(--muted); min-height: 18px; }
 details { font-size: 13px; }
@@ -282,30 +306,56 @@ footer .wrap { padding-block: 24px 40px; display: flex; flex-wrap: wrap; justify
 .pv-bar { position: sticky; top: 0; z-index: 2; background: var(--head); border-bottom: 1px solid var(--line); }
 .pv-bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 10px; }
 .pv-back { display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 4px; border: 0; background: transparent; color: var(--fg); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; }
-.pv-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 24px 64px; }
-.sp-body { padding-block: 40px 80px; max-width: 920px; }
-.sp-body section { scroll-margin-top: 0; }
-.sp-body h2 { font-family: var(--display); font-weight: 300; font-size: clamp(22px, 3vw, 30px); letter-spacing: .28em; text-transform: uppercase; margin: 0 0 28px; }
-.sp-body, .sp-body li, .sp-body p { font-size: 16.5px; line-height: 1.7; }
-.sp-body ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 10px; }
-.sp-body .calc { max-width: 460px; }
-.sp-body .faq-item summary { font-size: 17px; }
-.pv-photo { position: relative; aspect-ratio: 4 / 5; max-width: 100%; border-radius: 2px; overflow: hidden; display: grid; place-items: center; }
+.pv-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 20px 64px; }
+.pv-gallery { display: flex; flex-direction: column-reverse; gap: 10px; min-width: 0; }
+.pv-thumbs { display: flex; gap: 8px; overflow-x: auto; }
+.pv-thumb { flex: none; width: 72px; aspect-ratio: 4 / 5; padding: 0; border: 1px solid var(--line); border-radius: 2px; background: var(--surface); overflow: hidden; opacity: .55; }
+.pv-thumb[aria-pressed="true"] { opacity: 1; border-color: var(--fg); }
+.pv-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pv-photo { position: relative; aspect-ratio: 4 / 5; width: 100%; border-radius: 2px; overflow: hidden; display: grid; place-items: center; }
 .pv-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .pv-photo svg { width: 40%; height: auto; opacity: .55; }
-.pv-info { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-.pv-cat { font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: var(--muted); }
-.pv-name { margin: 0; font-weight: 300; font-size: clamp(24px, 3.4vw, 34px); letter-spacing: .06em; line-height: 1.2; text-wrap: balance; }
-.pv-color { color: var(--muted); font-size: 14px; }
-.pv-info .prices .price { font-size: 20px; }
-.pv-desc { border-top: 1px solid var(--line); padding-top: 16px; font-size: 15px; line-height: 1.7; max-width: 62ch; }
+.pv-info { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.pv-name { margin: 0; font-weight: 400; font-size: clamp(20px, 2.4vw, 26px); letter-spacing: .04em; line-height: 1.25; text-transform: uppercase; text-wrap: balance; }
+.pv-prices { display: flex; flex-direction: column; gap: 4px; }
+.pv-price { font-size: 22px; letter-spacing: .08em; font-variant-numeric: tabular-nums; }
+.pv-sub { font-size: 14px; color: var(--muted); letter-spacing: .04em; }
+.pv-rule { height: 1px; background: var(--muted); opacity: .6; }
+.pv-row { display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: center; gap: 12px; }
+.pv-label { font-size: 12.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--fg); margin: 0; }
+.pv-opts { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; min-width: 0; }
+.pv-colname { font-size: 13px; color: var(--muted); }
+.sws { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.sw { width: 16px; height: 16px; padding: 0; border-radius: 50%; border: 1px solid rgba(244,238,232,.3); background: var(--sw); cursor: pointer; }
+.sw[aria-pressed="true"] { outline: 1.5px solid var(--fg); outline-offset: 2px; }
+.sws.big { gap: 14px; }
+.sws.big .sw { width: 30px; height: 30px; }
+.sws.big .sw[aria-pressed="true"] { outline-offset: 3px; }
+.tsizes { display: flex; flex-wrap: wrap; gap: 4px; }
+.tsize { min-width: 44px; height: 40px; padding: 0 8px; border: 1px solid transparent; background: transparent; color: var(--fg); font-size: 14px; letter-spacing: .06em; border-radius: 2px; }
+.tsize.encargo { color: var(--muted); }
+.tsize:hover { border-color: var(--line); }
+.tsize[aria-pressed="true"] { border-color: var(--fg); }
+.pv-info .add.pv-add { height: 56px; font-size: 13px; letter-spacing: .26em; }
+.pv-head { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; font-weight: 500; margin: 0 0 12px; }
+.pv-desc { padding-top: 8px; font-size: 15px; line-height: 1.7; max-width: 62ch; }
 .pv-desc p { margin: 0 0 10px; }
-.pv-label { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
-.pv-info .add { margin-top: 4px; height: 50px; }
-.pv-perks { list-style: none; margin: 0; padding: 16px 0 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: var(--muted); }
+.pv-accs { display: flex; flex-direction: column; }
+.pv-acc { border-top: 1px solid var(--line); }
+.pv-acc:last-child { border-bottom: 1px solid var(--line); }
+.pv-acc summary { list-style: none; display: block; width: auto; cursor: pointer; padding: 16px 0; color: var(--fg); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; }
+.pv-acc summary::-webkit-details-marker { display: none; }
+.pv-acc summary::before { content: '+'; display: inline-block; width: 18px; }
+.pv-acc[open] summary::before { content: '−'; }
+.pv-acc > *:not(summary) { margin-bottom: 16px; }
+.pv-perks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--muted); }
 .pv-perks li::before { content: "— "; }
+.pv-share { align-self: flex-start; color: var(--fg); font-size: 12.5px; letter-spacing: .16em; text-transform: uppercase; text-decoration: underline; text-underline-offset: 5px; }
 @media (min-width: 860px) {
-  .pv-body { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 56px; align-items: start; padding-top: 40px; }
+  .pv-body { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 56px; align-items: start; padding-top: 36px; }
+  .pv-gallery { flex-direction: row; align-items: flex-start; }
+  .pv-thumbs { flex-direction: column; width: 96px; flex: none; overflow: visible; }
+  .pv-thumb { width: 96px; }
   .pv-info { position: sticky; top: 100px; }
 }
 
@@ -340,6 +390,15 @@ body.editing { padding-bottom: 120px; }
 .mg-head input, .mc input { flex: 1; min-width: 0; height: 40px; padding: 0 10px; border: 1px solid var(--line); border-radius: 2px; background: var(--surface); color: var(--fg); font: 15px var(--body); }
 .mg-head input { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; }
 .mc { padding-left: 14px; }
+.ec { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.ec input[type="color"] { width: 40px; height: 40px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: none; overflow: hidden; flex: none; }
+.ec input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+.ec input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 50%; }
+.ec input[type="text"] { flex: 1; min-width: 0; height: 40px; padding: 0 10px; border: 1px solid var(--line); border-radius: 2px; background: var(--surface); color: var(--fg); font: 15px var(--body); }
+.ed-extra { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.ex { position: relative; width: 72px; aspect-ratio: 4 / 5; border-radius: 2px; overflow: hidden; background: var(--surface); }
+.ex img { width: 100%; height: 100%; object-fit: cover; }
+.ex .mini { position: absolute; top: 4px; right: 4px; width: 26px; height: 26px; background: rgba(0,0,0,.65); font-size: 13px; }
 .mg textarea { width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 2px; background: var(--surface); color: var(--fg); font: 14.5px/1.5 var(--body); resize: vertical; }
 .mg .field { margin: 0; }
 .mc-n { min-width: 22px; text-align: center; font-size: 12px; color: var(--muted); }
@@ -385,8 +444,8 @@ body.editing { padding-bottom: 120px; }
 
 <div class="announce" aria-label="Beneficios">
   <div class="announce-track">
-    <span>Envío en el día en Rosario</span><span>10% off con transferencia</span><span>Cambios hasta 7 días</span><span>Novedades cada jueves 20 h</span>
-    <span aria-hidden="true">Envío en el día en Rosario</span><span aria-hidden="true">10% off con transferencia</span><span aria-hidden="true">Cambios hasta 7 días</span><span aria-hidden="true">Novedades cada jueves 20 h</span>
+    <span>Envío en el día en Rosario</span><span>Pagá con Mercado Pago</span><span>Cambios hasta 7 días</span><span>Novedades cada jueves 20 h</span>
+    <span aria-hidden="true">Envío en el día en Rosario</span><span aria-hidden="true">Pagá con Mercado Pago</span><span aria-hidden="true">Cambios hasta 7 días</span><span aria-hidden="true">Novedades cada jueves 20 h</span>
   </div>
 </div>
 
@@ -407,6 +466,16 @@ body.editing { padding-bottom: 120px; }
 <section class="hero" id="hero"></section>
 <main class="wrap">
   <h2 class="filters" id="filters">Todo</h2>
+  <div class="toolbar">
+    <div class="tb-cell">
+      <button type="button" class="tb-btn" id="f-open" aria-expanded="false" aria-controls="f-panel">Filtros<span id="f-count"></span></button>
+      <div class="pop" id="f-panel" hidden></div>
+    </div>
+    <div class="tb-cell tb-right">
+      <button type="button" class="tb-btn" id="s-open" aria-expanded="false" aria-controls="s-panel">Ordenar por<span id="s-label"></span></button>
+      <div class="pop pop-right" id="s-panel" hidden></div>
+    </div>
+  </div>
   <section class="grid" id="grid" aria-live="polite"></section>
 </main>
 
@@ -415,8 +484,7 @@ body.editing { padding-bottom: 120px; }
     <section id="pagos">
       <h2>Medios de pago</h2>
       <ul>
-        <li><b>Transferencia:</b> 10% off sobre el precio de lista.</li>
-        <li id="info-online" hidden><b>Tarjeta o Mercado Pago:</b> pagás en el momento desde la página, con crédito, débito o dinero en cuenta.</li>
+        <li id="info-online"><b>Mercado Pago:</b> pagás en el momento desde la página, con tarjeta de crédito, débito o dinero en cuenta.</li>
         <li><b>Efectivo:</b> al retirar en el punto de entrega.</li>
       </ul>
     </section>
@@ -597,6 +665,14 @@ const transferPrice = n => Math.round((Number(n) || 0) * (1 - TRANSFER_OFF) / 10
 const safeImg = u => (typeof u === 'string' && (/^https:\/\/[a-z0-9-]+\.public\.blob\.vercel-storage\.com\/[A-Za-z0-9._\/-]+$/.test(u) || /^\/fotos\/[A-Za-z0-9._-]+$/.test(u))) ? u : '';
 const safeColor = c => (typeof c === 'string' && /^#[0-9a-fA-F]{6}$/.test(c)) ? c : '#2A2627';
 const safeGlyph = g => GLYPHS.includes(g) ? g : 'g-top';
+const COLOR_HEX = { negro: '#111111', blanco: '#F4F1EC', crudo: '#EDE6D8', beige: '#D9C7AE', arena: '#E2D3BF', nude: '#E0C3B0', champagne: '#E3CDB0', camel: '#C19A6B', marron: '#6B4A35', 'marrón': '#6B4A35', chocolate: '#4A2E22', turquesa: '#4FB3AE', celeste: '#A9C3D9', 'celeste claro': '#A9C3D9', azul: '#2C4A7A', jean: '#5B7BA3', verde: '#4F7A55', oliva: '#7A7A45', rosa: '#E3A9B5', 'rosa empolvado': '#D8AFAE', fucsia: '#C2185B', rojo: '#B3261E', bordo: '#6B1E2E', 'bordó': '#6B1E2E', lila: '#B9A3D0', violeta: '#6A4C93', amarillo: '#E8C547', naranja: '#E07A3A', gris: '#8A8A8A', plateado: '#C0C0C0', dorado: '#C9A54C' };
+const guessHex = name => COLOR_HEX[String(name || '').trim().toLowerCase()] || '';
+/* Colors of a garment: the list the owner set, or the old single "color" text. */
+function colorsOf(p) {
+  if (Array.isArray(p.colors) && p.colors.length) return p.colors.filter(c => c && c.n).map(c => ({ n: String(c.n), h: safeColor(c.h || guessHex(c.n) || p.tint) }));
+  return p.color ? [{ n: String(p.color), h: safeColor(guessHex(p.color) || p.tint) }] : [];
+}
+const photosOf = p => [safeImg(p.img)].concat(Array.isArray(p.imgs) ? p.imgs.map(safeImg) : []).filter(Boolean);
 const clone = o => JSON.parse(JSON.stringify(o));
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
@@ -619,6 +695,16 @@ const data = () => editing ? draft : saved;
 
 let cat = 'all';
 let picked = {};
+let pickedColor = {};
+let fColor = '', fPrice = '', sortBy = 'dest', fOpen = false;
+const PRICE_RANGES = [{ k: 'a', t: 'Hasta $20.000', ok: n => n <= 20000 }, { k: 'b', t: '$20.000 a $35.000', ok: n => n > 20000 && n <= 35000 }, { k: 'c', t: 'Más de $35.000', ok: n => n > 35000 }];
+let pvPhoto = 0;
+const colorSel = p => { const cs = colorsOf(p); return cs.some(c => c.n === pickedColor[p.id]) ? pickedColor[p.id] : (cs[0] ? cs[0].n : ''); };
+function swatches(p, big) {
+  const cs = colorsOf(p); if (!cs.length) return '';
+  const sel = colorSel(p);
+  return `<div class="sws${big ? ' big' : ''}" role="group" aria-label="Color">${cs.map(c => `<button type="button" class="sw" data-color="${esc(c.n)}" aria-pressed="${c.n === sel}" title="${esc(c.n)}" aria-label="${esc(c.n)}" style="--sw:${c.h}"></button>`).join('')}</div>`;
+}
 let cart = store.get('necca-cart', []);
 let delivery = null;
 let payment = null;
@@ -655,21 +741,60 @@ function renderHero() {
 
 function renderFilters() { $('#filters').textContent = catName(cat); }
 
+function shownProducts() {
+  const all = data().products;
+  let list = all.filter(p => cat === 'all' || p.cat === cat);
+  if (editing) return list;
+  if (fColor) list = list.filter(p => colorsOf(p).some(c => c.n.toLowerCase() === fColor));
+  const pr = PRICE_RANGES.find(r => r.k === fPrice); if (pr) list = list.filter(p => pr.ok(Number(p.price) || 0));
+  const idx = p => all.indexOf(p);
+  if (sortBy === 'new') list = list.slice().sort((a, b) => (b.badge ? 1 : 0) - (a.badge ? 1 : 0) || idx(a) - idx(b));
+  else if (sortBy === 'asc') list = list.slice().sort((a, b) => a.price - b.price);
+  else if (sortBy === 'desc') list = list.slice().sort((a, b) => b.price - a.price);
+  else if (sortBy === 'az') list = list.slice().sort((a, b) => String(a.name).localeCompare(String(b.name), 'es'));
+  return list;
+}
+const SORTS = [{ k: 'dest', t: 'Destacados' }, { k: 'new', t: 'Más nuevos' }, { k: 'asc', t: 'Menor precio' }, { k: 'desc', t: 'Mayor precio' }, { k: 'az', t: 'Nombre A-Z' }];
+let fOpenGroup = '', sOpen = false;
+function renderToolbar() {
+  const n = (cat !== 'all' ? 1 : 0) + (fColor ? 1 : 0) + (fPrice ? 1 : 0);
+  $('#f-count').textContent = n ? `(${n})` : '';
+  $('#f-open').setAttribute('aria-expanded', String(fOpen));
+  $('#s-open').setAttribute('aria-expanded', String(sOpen));
+  $('#s-label').textContent = sortBy !== 'dest' ? '· ' + SORTS.find(x => x.k === sortBy).t : '';
+  $('#s-open').disabled = editing;
+  const sp = $('#s-panel'); sp.hidden = !sOpen;
+  if (sOpen) sp.innerHTML = `<div class="pop-sort">${SORTS.map(o => `<button type="button" class="pop-opt" data-sort="${o.k}" aria-pressed="${sortBy === o.k}">${o.t}</button>`).join('')}</div>`;
+  const panel = $('#f-panel'); panel.hidden = !fOpen;
+  if (!fOpen) return;
+  const prods = data().products;
+  const used = new Set(prods.map(p => p.cat));
+  const cats = allCats().filter(c => used.has(c.id));
+  const cols = []; prods.forEach(p => colorsOf(p).forEach(c => { if (!cols.some(x => x.n.toLowerCase() === c.n.toLowerCase())) cols.push(c); }));
+  const grp = (k, title, chosen, body) => `<details data-grp="${k}" ${fOpenGroup === k ? 'open' : ''}><summary>${title}${chosen ? `<small>${esc(chosen)}</small>` : ''}</summary><div class="pop-opts">${body}</div></details>`;
+  const catLabel = c => { const dup = cats.filter(x => x.label === c.label).length > 1; const g = (curMenu().find(gr => (gr.items || []).some(it => it.id === c.id)) || {}).t; return esc(c.label) + (dup && g ? ' · ' + esc(g) : ''); };
+  panel.innerHTML =
+    grp('cat', 'Categoría', cat !== 'all' ? catName(cat) : '', cats.map(c => `<button type="button" class="pop-opt" data-fcat="${esc(c.id)}" aria-pressed="${cat === c.id}">${catLabel(c)}</button>`).join('')) +
+    (cols.length ? grp('color', 'Color', fColor ? (cols.find(c => c.n.toLowerCase() === fColor) || {}).n : '', cols.map(c => `<button type="button" class="pop-opt" data-fcolor="${esc(c.n.toLowerCase())}" aria-pressed="${fColor === c.n.toLowerCase()}"><i style="--sw:${c.h}"></i>${esc(c.n)}</button>`).join('')) : '') +
+    grp('price', 'Precio', fPrice ? PRICE_RANGES.find(r => r.k === fPrice).t : '', PRICE_RANGES.map(r => `<button type="button" class="pop-opt" data-fprice="${r.k}" aria-pressed="${fPrice === r.k}">${r.t}</button>`).join('')) +
+    (n ? '<button type="button" class="pop-clear" id="f-clear">Limpiar filtros</button>' : '');
+}
 function renderGrid() {
-  const list = data().products.filter(p => cat === 'all' || p.cat === cat);
+  renderToolbar();
+  const list = shownProducts();
   const cards = list.map(p => {
     const sel = picked[p.id];
     const rows = (p.m || []).filter(r => r && r[0]).map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td></tr>`).join('');
     return `<article class="card" data-id="${esc(p.id)}">
-      ${editing ? `<button type="button" class="ed-card" data-edit="${esc(p.id)}">Editar</button>` : ''}
+      ${editing ? `<button type="button" class="ed-card" data-edit="${esc(p.id)}">Editar</button>${cat === 'all' ? `<div class="mv"><button type="button" data-mv="-1" aria-label="Mover antes" ${data().products[0] === p ? 'disabled' : ''}>←</button><button type="button" data-mv="1" aria-label="Mover después" ${data().products.at(-1) === p ? 'disabled' : ''}>→</button></div>` : ''}` : ''}
       <button type="button" class="open-link" data-open="${esc(p.id)}" aria-label="Ver ${esc(p.name)}">${photoHTML(p, 'ph')}</button>
       <div>
         <h3 class="name"><button type="button" class="open-link" data-open="${esc(p.id)}">${esc(p.name)}</button></h3>
-        <div class="color">${esc(p.color)}</div>
+        ${colorsOf(p).length > 1 ? swatches(p, false) : `<div class="color">${esc(colorSel(p))}</div>`}
       </div>
-      <div class="prices"><span class="price">${peso(p.price)}</span><span class="transfer">${peso(transferPrice(p.price))} con transferencia</span></div>
+      <div class="prices"><span class="price">${peso(p.price)}</span></div>
       <div class="sizes" role="group" aria-label="Talle">
-        ${SIZES.map(s => `<button type="button" class="size${ON_ORDER.has(s) ? ' order' : ''}" data-size="${s}" aria-pressed="${sel === s}">${s}</button>`).join('')}
+        ${SIZES.map(s => `<button type="button" class="size${ON_ORDER.has(s) ? ' encargo' : ''}" data-size="${s}" aria-pressed="${sel === s}">${s}</button>`).join('')}
       </div>
       <div class="hint">${sel ? (ON_ORDER.has(sel) ? `Talle ${sel} por encargo: llega en la próxima tanda` : `Talle ${sel} disponible`) : 'Elegí tu talle'}</div>
       ${rows ? `<details><summary>Ver medidas en cm</summary><table class="measures"><thead><tr><th></th><th>S</th><th>M</th><th>L</th></tr></thead><tbody>${rows}</tbody></table></details>` : ''}
@@ -681,7 +806,7 @@ function renderGrid() {
 }
 
 const DEFAULT_FAQ = [
-  { q: '¿Cuáles son los métodos de pago?', a: 'Podés pagar con transferencia, con 10% de descuento sobre el precio de lista, o en efectivo cuando retirás tu pedido.' },
+  { q: '¿Cuáles son los métodos de pago?', a: 'Pagás desde la página con Mercado Pago: tarjeta de crédito, débito o dinero en cuenta. Si retirás tu pedido, también podés pagar en efectivo.' },
   { q: '¿Cuáles son los métodos de envío?', a: 'En Rosario: si pedís antes de las 15 h, te lo llevamos ese mismo día. También podés retirarlo gratis en nuestro punto de entrega.\nAl resto del país enviamos por Correo Argentino o Andreani.' },
   { q: '¿Las prendas tienen cambio?', a: 'Sí. Podés cambiar el talle hasta 7 días después de recibir tu compra, con la prenda sin usar y con su etiqueta.' },
   { q: '¿Cómo sé qué talle soy?', a: 'Mirá la guía de talles de esta página y las medidas en cm que tiene cada prenda. Si quedás entre dos talles, escribinos y te ayudamos.' },
@@ -727,34 +852,43 @@ function renderProduct() {
   const p = data().products.find(x => x.id === pvId);
   if (!p) { closeProduct(); return; }
   const sel = picked[p.id];
-  const catLabel = p.cat && allCats().some(c => c.id === p.cat) ? catName(p.cat) : '';
+  const col = colorSel(p);
   const rows = (p.m || []).filter(r => r && r[0]).map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td></tr>`).join('');
-  const img = safeImg(p.img);
+  const photos = photosOf(p);
+  if (pvPhoto >= photos.length) pvPhoto = 0;
+  const main = photos[pvPhoto];
+  let shareUrl = ''; try { shareUrl = location.origin + location.pathname + '#' + p.id; } catch (e) {}
   $('#pv-body').innerHTML = `
-    <div class="pv-photo" style="background:${safeColor(p.tint)};color:${safeColor(p.ink)}">
-      ${img ? `<img src="${esc(img)}" alt="${esc(p.name)}">` : `<svg aria-hidden="true"><use href="#${safeGlyph(p.glyph)}"/></svg>`}
-      ${p.badge ? `<span class="badge">${esc(p.badge)}</span>` : ''}
+    <div class="pv-gallery">
+      ${photos.length > 1 ? `<div class="pv-thumbs">${photos.map((u, i) => `<button type="button" class="pv-thumb" data-ph="${i}" aria-pressed="${i === pvPhoto}" aria-label="Foto ${i + 1}"><img src="${esc(u)}" alt=""></button>`).join('')}</div>` : ''}
+      <div class="pv-photo" style="background:${safeColor(p.tint)};color:${safeColor(p.ink)}">
+        ${main ? `<img src="${esc(main)}" alt="${esc(p.name)}">` : `<svg aria-hidden="true"><use href="#${safeGlyph(p.glyph)}"/></svg>`}
+        ${p.badge ? `<span class="badge">${esc(p.badge)}</span>` : ''}
+      </div>
     </div>
     <div class="pv-info">
-      <span class="pv-cat">${esc(catLabel)}</span>
       <h1 class="pv-name" id="pv-title">${esc(p.name)}</h1>
-      ${p.color ? `<span class="pv-color">Color: ${esc(p.color)}</span>` : ''}
-      <div class="prices"><span class="price">${peso(p.price)}</span><span class="transfer">${peso(transferPrice(p.price))} con transferencia</span></div>
-      <div>
-        <p class="pv-label">Talle</p>
-        <div class="sizes" role="group" aria-label="Talle">
-          ${SIZES.map(s => `<button type="button" class="size${ON_ORDER.has(s) ? ' order' : ''}" data-size="${s}" aria-pressed="${sel === s}">${s}</button>`).join('')}
-        </div>
-        <div class="hint" style="margin-top:8px">${sel ? (ON_ORDER.has(sel) ? `Talle ${sel} por encargo: llega en la próxima tanda` : `Talle ${sel} disponible`) : 'Elegí tu talle'}</div>
+      <div class="pv-prices">
+        <span class="pv-price">${peso(p.price)}</span>
       </div>
-      <button type="button" class="add" data-add="${esc(p.id)}" ${sel ? '' : 'disabled'}>${sel ? 'Agregar a la bolsa' : 'Elegí un talle'}</button>
-      ${p.desc ? `<div class="pv-desc"><p class="pv-label">Descripción</p>${descHTML(p.desc)}</div>` : ''}
-      ${rows ? `<div><p class="pv-label">Medidas en cm</p><table class="measures"><thead><tr><th></th><th>S</th><th>M</th><th>L</th></tr></thead><tbody>${rows}</tbody></table></div>` : ''}
-      <ul class="pv-perks"><li>Envío en el día en Rosario</li><li>Cambios hasta 7 días</li><li>10% off pagando con transferencia</li></ul>
+      <div class="pv-rule"></div>
+      ${colorsOf(p).length ? `<div class="pv-row"><span class="pv-label">Color</span><div class="pv-opts">${swatches(p, true)}<span class="pv-colname">${esc(col)}</span></div></div>` : ''}
+      <div class="pv-row"><span class="pv-label">Talle</span>
+        <div class="pv-opts"><div class="tsizes" role="group" aria-label="Talle">${SIZES.map(s => `<button type="button" class="tsize${ON_ORDER.has(s) ? ' encargo' : ''}" data-size="${s}" aria-pressed="${sel === s}">${s}</button>`).join('')}</div></div>
+      </div>
+      <div class="hint">${sel ? (ON_ORDER.has(sel) ? `Talle ${sel} por encargo: llega en la próxima tanda` : `Talle ${sel} disponible`) : 'Elegí tu talle'}</div>
+      <button type="button" class="add pv-add" data-add="${esc(p.id)}" ${sel ? '' : 'disabled'}>${sel ? 'Agregar a la bolsa' : 'Elegí un talle'}</button>
+      ${p.desc ? `<div class="pv-desc"><p class="pv-head">Detalle del producto</p>${descHTML(p.desc)}</div>` : ''}
+      <div class="pv-accs">
+        ${rows ? `<details class="pv-acc"><summary>Medidas de la prenda</summary><table class="measures"><thead><tr><th></th><th>S</th><th>M</th><th>L</th></tr></thead><tbody>${rows}</tbody></table></details>` : ''}
+        <details class="pv-acc"><summary>Tabla de talles</summary><table class="measures"><thead><tr><th>cm</th>${SIZES.map(s => `<th>${s}</th>`).join('')}</tr></thead><tbody><tr><td>Busto</td><td>80</td><td>84</td><td>88</td><td>92</td><td>96</td></tr><tr><td>Cintura</td><td>62</td><td>66</td><td>70</td><td>74</td><td>78</td></tr><tr><td>Cadera</td><td>86</td><td>90</td><td>94</td><td>98</td><td>102</td></tr></tbody></table></details>
+        <details class="pv-acc"><summary>Envíos y cambios</summary><ul class="pv-perks"><li>Envío en el día en Rosario</li><li>Al resto del país por Correo Argentino o Andreani</li><li>Cambios hasta 7 días</li></ul></details>
+      </div>
+      <a class="pv-share" href="https://wa.me/?text=${encodeURIComponent(p.name + ' ' + shareUrl)}" target="_blank" rel="noopener">Compartir por WhatsApp</a>
     </div>`;
 }
 function openProduct(id) {
-  pvId = id;
+  pvId = id; pvPhoto = 0;
   renderProduct();
   $('#pv').hidden = false;
   $('#pv').scrollTop = 0;
@@ -775,8 +909,9 @@ function closeProduct() {
 function addToCart(id, btn) {
   if (!findP(id)) { btn.textContent = 'Guardá los cambios primero'; return; }
   const size = picked[id];
-  const ex = cart.find(l => l.id === id && l.size === size);
-  if (ex) ex.qty++; else cart.push({ id, size, qty: 1 });
+  const color = colorSel(findP(id));
+  const ex = cart.find(l => l.id === id && l.size === size && (l.color || '') === color);
+  if (ex) ex.qty++; else cart.push({ id, size, color, qty: 1 });
   store.set('necca-cart', cart); renderBag();
   btn.textContent = 'Agregada ✓'; btn.classList.add('done');
   setTimeout(() => { btn.textContent = 'Agregar a la bolsa'; btn.classList.remove('done'); }, 1400);
@@ -798,13 +933,13 @@ const quoteText = q => q.price ? peso(q.price) : 'A coordinar';
 function totals() {
   const sub = cart.reduce((s, l) => s + (Number(findP(l.id).price) || 0) * l.qty, 0);
   const envio = delivery === 'envio' ? shipQuote(buyer.provincia, buyer.cp).price : 0;
-  const total = (payment === 'transferencia' ? transferPrice(sub) : sub) + envio;
+  const total = sub + envio;
   return { sub, envio, total, items: cart.reduce((s, l) => s + l.qty, 0) };
 }
 
 const PAY = {
   transferencia: { t: 'Transferencia', s: '10% off sobre el total' },
-  online: { t: 'Tarjeta o Mercado Pago', s: 'Pagás ahora: crédito, débito o dinero en cuenta' },
+  online: { t: 'Mercado Pago', s: 'Pagás ahora: tarjeta de crédito, débito o dinero en cuenta' },
   efectivo: { t: 'Efectivo', s: 'Pagás cuando retirás' }
 };
 const SHIP = {
@@ -862,7 +997,7 @@ async function submitOrder() {
   try {
     const res = await ckFetch('/api/pedido', {
       method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ items: cart.map(l => ({ id: l.id, size: l.size, qty: l.qty })), entrega: delivery, pago: payment, nombre: buyer.nombre, direccion: buyer.direccion, detalle: buyer.detalle, provincia: buyer.provincia, ciudad: buyer.ciudad, cp: buyer.cp })
+      body: JSON.stringify({ items: cart.map(l => ({ id: l.id, size: l.size, color: l.color || '', qty: l.qty })), entrega: delivery, pago: payment, nombre: buyer.nombre, direccion: buyer.direccion, detalle: buyer.detalle, provincia: buyer.provincia, ciudad: buyer.ciudad, cp: buyer.cp })
     });
     lastOrder = { id: res.id, total: res.total, pago: res.pago };
     try { sessionStorage.setItem('necca-last-order', JSON.stringify(lastOrder)); } catch (e) {}
@@ -931,14 +1066,13 @@ function renderBag() {
         ${photoHTML(p, 'thumb')}
         <div>
           <div class="l-name">${esc(p.name)}</div>
-          <div class="l-meta">${esc(p.color)} · Talle ${l.size}${ON_ORDER.has(l.size) ? ' · por encargo' : ''}</div>
+          <div class="l-meta">${esc(l.color || colorSel(p))} · Talle ${l.size}${ON_ORDER.has(l.size) ? ' · por encargo' : ''}</div>
           <div class="qty"><button type="button" data-dec="${i}" aria-label="Quitar uno">−</button><span>${l.qty}</span><button type="button" data-inc="${i}" aria-label="Sumar uno">+</button></div>
         </div>
         <div><div class="l-price">${peso(p.price * l.qty)}</div><button type="button" class="rm" data-rm="${i}">Quitar</button></div>
       </div>`;
     }).join('');
     foot.innerHTML = `<div class="row total"><span>Subtotal</span><span>${peso(t.sub)}</span></div>
-      <p class="small">Pagando con transferencia: ${peso(transferPrice(t.sub))}</p>
       <button type="button" class="cta" data-step="next">Continuar</button>`;
     return;
   }
@@ -967,10 +1101,11 @@ function renderBag() {
     if (payment === 'efectivo' && delivery !== 'retiro') payment = null;
     body.innerHTML = stepsBar() + `<h3 class="ck-title">¿Cómo pagás?</h3>
       <div class="choices">
-        ${choice('payment', 'transferencia', PAY.transferencia, peso(transferPrice(sub)))}
-        ${onlinePay && (delivery !== 'envio' || t.envio) ? choice('payment', 'online', PAY.online, peso(sub)) : ''}
+        ${delivery !== 'envio' || t.envio ? choice('payment', 'online', PAY.online, peso(sub + t.envio)) : ''}
         ${delivery === 'retiro' ? choice('payment', 'efectivo', PAY.efectivo, peso(sub)) : ''}
-      </div>`;
+      </div>
+      ${delivery === 'envio' && !t.envio ? `<p class="small">Para tu zona el costo del envío se coordina aparte. ${waNumber().length >= 8 ? `<a href="https://wa.me/${waNumber()}" target="_blank" rel="noopener">Escribinos por WhatsApp</a> y te pasamos el total.` : 'Escribinos y te pasamos el total.'}</p>` : ''}`;
+    if (payment === 'transferencia') payment = null;
     foot.innerHTML = `<div class="btn-row">${back}<button type="button" class="cta" style="flex:1" data-step="next" ${payment ? '' : 'disabled'}>Continuar</button></div>`;
     return;
   }
@@ -978,7 +1113,7 @@ function renderBag() {
   // step 3: confirm and pay
   body.innerHTML = stepsBar() + `<h3 class="ck-title">Revisá tu pedido</h3>
     <div class="summary">
-      ${cart.map(l => { const p = findP(l.id); return `<div class="row"><span>${l.qty} × ${esc(p.name)} · ${l.size}</span><span>${peso(p.price * l.qty)}</span></div>`; }).join('')}
+      ${cart.map(l => { const p = findP(l.id); return `<div class="row"><span>${l.qty} × ${esc(p.name)}${l.color ? ' · ' + esc(l.color) : ''} · ${l.size}</span><span>${peso(p.price * l.qty)}</span></div>`; }).join('')}
       <div class="sum-sep"></div>
       <div class="row"><span>Entrega</span><span>${delivery === 'envio' ? `${esc(buyer.ciudad)}, ${esc(buyer.provincia)} · CP ${esc(cp4(buyer.cp))}` : 'Retiro · gratis'}</span></div>
       ${delivery === 'envio' ? `<div class="row"><span>Envío</span><span>${t.envio ? peso(t.envio) : 'A coordinar'}</span></div>` : ''}
@@ -994,7 +1129,7 @@ function renderBag() {
     <div class="btn-row">${back}</div>`;
 }
 
-function renderAll() { renderMenuCats(); $('#info-online').hidden = !onlinePay; if (!onlinePay && payment === 'online') payment = null; renderHero(); renderFilters(); renderGrid(); renderContact(); renderFaq(); renderBag(); renderEditbar(); if (pvId) renderProduct(); }
+function renderAll() { renderMenuCats(); renderHero(); renderFilters(); renderGrid(); renderContact(); renderFaq(); renderBag(); renderEditbar(); if (pvId) renderProduct(); }
 
 /* ---------- Drawers ---------- */
 function anyOpen() { return !$('#menu').hidden || !$('#drawer').hidden || !$('#editor').hidden; }
@@ -1012,7 +1147,7 @@ function renderEditbar() {
   document.body.classList.toggle('editing', editing);
   if (!editing) return;
   if (!$('#eb-text').dataset.lock) {
-    $('#eb-text').innerHTML = `<b>Modo edición</b>${changes ? `${changes} ${changes === 1 ? 'cambio' : 'cambios'} sin guardar` : 'Tocá “Editar” en una prenda o agregá una nueva'}`;
+    $('#eb-text').innerHTML = `<b>Modo edición</b>${changes ? `${changes} ${changes === 1 ? 'cambio' : 'cambios'} sin guardar` : 'Tocá “Editar” en una prenda, o usá las flechas ← → para cambiar el orden'}`;
   }
   $('#eb-save').disabled = !changes;
 }
@@ -1105,6 +1240,9 @@ function openProductEditor(id) {
   const p = id ? draft.products.find(x => x.id === id) : null;
   edItem = p ? clone(p) : { id: 'p' + Date.now().toString(36), name: '', cat: cat !== 'all' ? cat : ((allCats()[0] || {}).id || ''), color: '', price: '', badge: 'Nuevo', img: '', tint: '#2A2627', ink: '#ADA4A0', glyph: 'g-top', m: [['Busto', '', '', ''], ['Largo', '', '', '']], isNew: true };
   while ((edItem.m || []).length < 3) (edItem.m = edItem.m || []).push(['', '', '', '']);
+  edItem.colors = colorsOf(edItem).map(c => ({ n: c.n, h: c.h }));
+  if (!edItem.colors.length) edItem.colors = [{ n: '', h: '#111111' }];
+  edItem.imgs = (Array.isArray(edItem.imgs) ? edItem.imgs : []).filter(u => safeImg(u));
   $('#ed-title').textContent = p ? 'Editar prenda' : 'Nueva prenda';
   $('#ed-body').innerHTML = `<div class="form">
     <div class="field"><span class="field-label">Foto</span>
@@ -1119,7 +1257,16 @@ function openProductEditor(id) {
     </div>
     <label class="field"><span>Nombre</span><input type="text" id="ed-name" value="${esc(edItem.name)}" placeholder="Ej: Vestido lencero midi"></label>
     <label class="field"><span>Categoría</span><select id="ed-cat">${allCats().some(c => c.id === edItem.cat) ? '' : '<option value="" selected>Sin categoría</option>'}${curMenu().map(g => `<optgroup label="${esc(g.t)}">${(g.items || []).map(c => `<option value="${esc(c.id)}" ${c.id === edItem.cat ? 'selected' : ''}>${esc(c.label)}</option>`).join('')}</optgroup>`).join('')}</select></label>
-    <label class="field"><span>Color</span><input type="text" id="ed-color" value="${esc(edItem.color)}" placeholder="Ej: Turquesa"></label>
+    <div class="field"><span class="field-label">Colores</span>
+      <div id="ed-colors"></div>
+      <button type="button" class="ghost" id="ed-addcolor" style="align-self:flex-start">+ Agregar color</button>
+      <p class="small">Escribí el nombre (ej: Negro) y elegí el color del circulito tocándolo.</p>
+    </div>
+    <div class="field"><span class="field-label">Más fotos (opcional)</span>
+      <div class="ed-extra" id="ed-extra"></div>
+      <label class="upload-btn" style="align-self:flex-start">Agregar otra foto<input type="file" id="ed-file2" accept="image/*"></label>
+      <div class="ed-msg" id="ed-msg2" aria-live="polite"></div>
+    </div>
     <label class="field"><span>Precio de lista ($)</span><input type="number" id="ed-price" inputmode="numeric" min="0" step="100" value="${esc(edItem.price)}" placeholder="Ej: 34900"></label>
     <label class="field"><span>Descripción</span><textarea id="ed-desc" rows="5" maxlength="800" placeholder="Ej: Vestido lencero de satén, con breteles regulables y largo midi. Ideal para salir o para un evento de día." style="padding:10px 12px;border:1px solid var(--line);border-radius:2px;background:var(--surface);color:var(--fg);font:15px/1.5 var(--body);resize:vertical">${esc(edItem.desc || '')}</textarea></label>
     <label class="check"><input type="checkbox" id="ed-new" ${edItem.badge ? 'checked' : ''}>Mostrar etiqueta “Nuevo”</label>
@@ -1133,7 +1280,17 @@ function openProductEditor(id) {
     <div class="btn-row"><button type="button" class="cta" id="ed-done" style="flex:1">Listo</button>${p ? '<button type="button" class="ghost danger" id="ed-del">Borrar prenda</button>' : ''}</div>
     <div id="ed-confirm"></div>`;
   $('#editor').hidden = false; syncScrim();
+  renderEdColors(); renderEdExtra();
   $('#ed-name').focus();
+}
+function syncEdColors() {
+  edItem.colors.forEach((c, i) => { const n = $(`#ec-n-${i}`), h = $(`#ec-h-${i}`); if (n) c.n = n.value.trim().slice(0, 30); if (h) c.h = h.value; });
+}
+function renderEdColors() {
+  $('#ed-colors').innerHTML = edItem.colors.map((c, i) => `<div class="ec"><input type="color" id="ec-h-${i}" value="${safeColor(c.h)}" aria-label="Color ${i + 1}"><input type="text" id="ec-n-${i}" value="${esc(c.n)}" placeholder="Ej: Negro" aria-label="Nombre del color ${i + 1}"><button type="button" class="mini" data-ec-del="${i}" aria-label="Quitar color">×</button></div>`).join('');
+}
+function renderEdExtra() {
+  $('#ed-extra').innerHTML = edItem.imgs.map((u, i) => `<div class="ex"><img src="${esc(u)}" alt=""><button type="button" class="mini" data-ex-del="${i}" aria-label="Quitar foto">×</button></div>`).join('');
 }
 function readProductForm() {
   const name = $('#ed-name').value.trim();
@@ -1142,7 +1299,9 @@ function readProductForm() {
   if (!(price > 0)) return 'Escribí el precio (solo números, sin puntos).';
   edItem.name = name.slice(0, 80);
   edItem.cat = $('#ed-cat').value;
-  edItem.color = $('#ed-color').value.trim().slice(0, 40);
+  syncEdColors();
+  edItem.colors = edItem.colors.filter(c => c.n).slice(0, 12).map(c => ({ n: c.n, h: safeColor(c.h) }));
+  edItem.color = edItem.colors.map(c => c.n).join(', ').slice(0, 40);
   edItem.price = price;
   edItem.badge = $('#ed-new').checked ? 'Nuevo' : '';
   edItem.desc = $('#ed-desc').value.trim().slice(0, 800);
@@ -1328,16 +1487,24 @@ function openContactEditor() {
     <label class="field"><span>WhatsApp (con código de área)</span><input type="tel" id="ed-wa" value="${esc(edItem.whatsapp)}" placeholder="Ej: 549 341 123 4567"></label>
     <p class="small">El botón “Enviar pedido por WhatsApp” usa este número. Escribilo con 549 adelante y sin el 15.</p>
     <label class="field"><span>Mail</span><input type="email" id="ed-mail" value="${esc(edItem.email)}" placeholder="hola@kiva.com"></label>
-    <label class="field"><span>Alias para transferencias</span><input type="text" id="ed-alias" value="${esc(edItem.alias)}" placeholder="Ej: kiva.ropa.mp"></label>
-    <label class="field"><span>Titular de la cuenta</span><input type="text" id="ed-titular" value="${esc(edItem.titular)}" placeholder="Nombre que aparece al transferir"></label>
-    <p class="small">El alias aparece cuando la clienta elige pagar con transferencia, con un botón para copiarlo.</p>
 
   </div>`;
   $('#ed-foot').innerHTML = '<div class="ed-msg err" id="ed-err"></div><button type="button" class="cta" id="ed-done">Listo</button>';
   $('#editor').hidden = false; syncScrim();
 }
 
+$('#ed-body').addEventListener('input', e => {
+  const m = e.target.id && e.target.id.match(/^ec-n-(\d+)$/);
+  if (m && edMode === 'product') { const h = $(`#ec-h-${m[1]}`), g = guessHex(e.target.value); if (h && g) h.value = g; }
+});
 $('#ed-body').addEventListener('change', async e => {
+  if (e.target.id === 'ed-file2') {
+    const file = e.target.files && e.target.files[0];
+    const url = await uploadPhoto(file, $('#ed-msg2'));
+    e.target.value = '';
+    if (url) { edItem.imgs.push(url); edItem.imgs = edItem.imgs.slice(0, 6); renderEdExtra(); }
+    return;
+  }
   if (e.target.id !== 'ed-file') return;
   const file = e.target.files && e.target.files[0];
   const url = await uploadPhoto(file, $('#ed-msg'));
@@ -1348,6 +1515,11 @@ $('#ed-body').addEventListener('change', async e => {
   const rm = $('#ed-rmphoto'); if (rm) rm.hidden = false;
 });
 $('#ed-body').addEventListener('click', e => {
+  if (edMode === 'product') {
+    if (e.target.id === 'ed-addcolor') { syncEdColors(); edItem.colors.push({ n: '', h: '#111111' }); renderEdColors(); const i = $(`#ec-n-${edItem.colors.length - 1}`); if (i) i.focus(); return; }
+    const dc = e.target.closest('[data-ec-del]'); if (dc) { syncEdColors(); edItem.colors.splice(+dc.dataset.ecDel, 1); renderEdColors(); return; }
+    const dx = e.target.closest('[data-ex-del]'); if (dx) { edItem.imgs.splice(+dx.dataset.exDel, 1); renderEdExtra(); return; }
+  }
   if (e.target.id === 'ed-rmphoto') { edItem.img = ''; $('#ed-prev').innerHTML = photoPreview(''); e.target.hidden = true; }
 });
 $('#ed-foot').addEventListener('click', e => {
@@ -1368,8 +1540,6 @@ $('#ed-foot').addEventListener('click', e => {
       edItem.instagram = $('#ed-ig').value.trim().slice(0, 60);
       edItem.whatsapp = $('#ed-wa').value.trim().slice(0, 30);
       edItem.email = $('#ed-mail').value.trim().slice(0, 80);
-      edItem.alias = $('#ed-alias').value.trim().slice(0, 60);
-      edItem.titular = $('#ed-titular').value.trim().slice(0, 60);
       draft.contact = edItem;
     } else if (edMode === 'ship') {
       const n = v => Math.max(0, Math.round(Number(v) || 0));
@@ -1415,7 +1585,7 @@ function renderOrders(msg) {
   $('#ed-body').innerHTML = (msg ? `<p class="small">${msg}</p>` : '') + (ordList.length ? `<div class="orders">${ordList.map(o => `<div class="order">
     <div class="order-top"><b>#${esc(o.id)}</b><span class="chip ${esc(o.estado)}">${ORD_EST[o.estado] || esc(o.estado)}</span></div>
     <span class="small">${fmt(o.fecha)} · ${esc(o.nombre)}</span>
-    <ul>${(o.items || []).map(i => `<li>${i.cantidad} × ${esc(i.nombre)} · ${esc(i.talle)}</li>`).join('')}</ul>
+    <ul>${(o.items || []).map(i => `<li>${i.cantidad} × ${esc(i.nombre)}${i.color ? ' · ' + esc(i.color) : ''} · ${esc(i.talle)}</li>`).join('')}</ul>
     <span>${o.entrega === 'envio' ? 'Envío: ' + esc(o.direccion) + (o.detalle ? ' (' + esc(o.detalle) + ')' : '') + (o.ciudad ? ', ' + esc(o.ciudad) : '') + (o.provincia ? ', ' + esc(o.provincia) : '') + (o.cp ? ' · CP ' + esc(o.cp) : '') + (o.envio ? '' : ' · costo a coordinar') : 'Retira en persona'}</span>
     <span><b style="font-weight:500">${peso(o.total || 0)}</b> · ${ORD_PAGO[o.pago] || esc(o.pago)}${o.email ? ' · ' + esc(o.email) : ''}</span>
     <div class="btn-row">
@@ -1483,6 +1653,30 @@ $('#hero').addEventListener('click', e => {
   if (e.target.id === 'hero-btn') $('#filters').scrollIntoView({ behavior: 'smooth', block: 'start' });
   if (e.target.id === 'ed-hero-btn') openHeroEditor();
 });
+$('#f-open').addEventListener('click', e => { e.stopPropagation(); fOpen = !fOpen; sOpen = false; renderToolbar(); });
+$('#s-open').addEventListener('click', e => { e.stopPropagation(); sOpen = !sOpen; fOpen = false; renderToolbar(); });
+$('#s-panel').addEventListener('click', e => {
+  const b = e.target.closest('[data-sort]'); if (!b) return;
+  sortBy = b.dataset.sort; sOpen = false; renderGrid();
+});
+$('#f-panel').addEventListener('toggle', e => {
+  const d = e.target; if (!d.dataset || !d.dataset.grp) return;
+  if (d.open) { fOpenGroup = d.dataset.grp; document.querySelectorAll('#f-panel details').forEach(x => { if (x !== d) x.open = false; }); }
+  else if (fOpenGroup === d.dataset.grp) fOpenGroup = '';
+}, true);
+$('#f-panel').addEventListener('click', e => {
+  e.stopPropagation();
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.fcat) { cat = cat === b.dataset.fcat ? 'all' : b.dataset.fcat; renderFilters(); }
+  else if (b.dataset.fcolor) fColor = fColor === b.dataset.fcolor ? '' : b.dataset.fcolor;
+  else if (b.dataset.fprice) fPrice = fPrice === b.dataset.fprice ? '' : b.dataset.fprice;
+  else if (b.id === 'f-clear') { cat = 'all'; fColor = ''; fPrice = ''; fOpenGroup = ''; renderFilters(); }
+  else return;
+  renderGrid();
+});
+document.addEventListener('click', e => {
+  if ((fOpen || sOpen) && !e.target.closest('.toolbar')) { fOpen = false; sOpen = false; renderToolbar(); }
+});
 $('#grid').addEventListener('click', e => {
   if (e.target.id === 'add-prod') { openProductEditor(null); return; }
   const ed = e.target.closest('[data-edit]');
@@ -1491,8 +1685,18 @@ $('#grid').addEventListener('click', e => {
   if (op) { openProduct(op.dataset.open); return; }
   const card = e.target.closest('.card'); if (!card) return;
   const id = card.dataset.id;
+  const mv = e.target.closest('[data-mv]');
+  if (mv && editing) {
+    const arr = draft.products, i = arr.findIndex(p => p.id === id), j = i + Number(mv.dataset.mv);
+    if (i < 0 || j < 0 || j >= arr.length) return;
+    [arr[i], arr[j]] = [arr[j], arr[i]]; markChanged();
+    const again = document.querySelector(`.card[data-id="${CSS.escape(id)}"] [data-mv="${mv.dataset.mv}"]`); if (again && !again.disabled) again.focus();
+    return;
+  }
   const s = e.target.closest('[data-size]');
   if (s) { picked[id] = s.dataset.size; renderGrid(); return; }
+  const sw = e.target.closest('[data-color]');
+  if (sw) { pickedColor[id] = sw.dataset.color; renderGrid(); return; }
   const a = e.target.closest('[data-add]');
   if (a && picked[id]) addToCart(id, a);
 });
@@ -1501,6 +1705,10 @@ $('#pv').addEventListener('click', e => {
   if (e.target.closest('#pv-bag')) { openBag(); return; }
   const s = e.target.closest('[data-size]');
   if (s && pvId) { picked[pvId] = s.dataset.size; renderProduct(); renderGrid(); return; }
+  const sw = e.target.closest('[data-color]');
+  if (sw && pvId) { pickedColor[pvId] = sw.dataset.color; renderProduct(); renderGrid(); return; }
+  const th = e.target.closest('[data-ph]');
+  if (th) { pvPhoto = +th.dataset.ph; renderProduct(); return; }
   const a = e.target.closest('[data-add]');
   if (a && pvId && picked[pvId]) addToCart(pvId, a);
 });
@@ -1549,6 +1757,7 @@ $('#close-bag').addEventListener('click', () => { closeBag(); $('#open-bag').foc
 $('#scrim').addEventListener('click', () => { closeMenu(); closeBag(); closeEditor(); });
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
+  if (fOpen || sOpen) { fOpen = false; sOpen = false; renderToolbar(); return; }
   if (!$('#editor').hidden) closeEditor(); else if (!$('#menu').hidden) closeMenu(); else if (!$('#drawer').hidden) closeBag(); else if (!$('#pv').hidden) closeProduct(); else if (!$('#sp').hidden) closeSection();
 });
 

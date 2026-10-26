@@ -41,14 +41,16 @@ export async function POST(request) {
     const p = state.products.find(x => x.id === l.id);
     const qty = Math.max(1, Math.min(10, Math.round(Number(l.qty) || 0)));
     if (!p || !SIZES.includes(l.size)) continue;
-    items.push({ id: p.id, nombre: p.name, color: p.color, talle: l.size, cantidad: qty, precio: p.price });
+    const names = (Array.isArray(p.colors) && p.colors.length ? p.colors.map(c => c.n) : [p.color]).filter(Boolean);
+    const col = names.includes(l.color) ? l.color : (names[0] || '');
+    items.push({ id: p.id, nombre: p.name, color: col, talle: l.size, cantidad: qty, precio: p.price });
   }
   if (!items.length) return json({ error: 'empty', message: 'Tu bolsa está vacía o esas prendas ya no están.' }, 400);
 
   const subtotal = items.reduce((s, i) => s + i.precio * i.cantidad, 0);
   const descuento = pago === 'transferencia' ? subtotal - transferPrice(subtotal) : 0;
   const envio = entrega === 'envio' ? shipQuote(state, provincia, cp).price : 0;
-  if (pago === 'online' && entrega === 'envio' && !envio) return json({ error: 'no_ship', message: 'Para tu zona el envío se coordina aparte. Elegí transferencia.' }, 400);
+  if (pago === 'online' && entrega === 'envio' && !envio) return json({ error: 'no_ship', message: 'Para tu zona el envío se coordina aparte. Escribinos por WhatsApp.' }, 400);
   const total = subtotal - descuento + envio;
 
   const id = Date.now().toString(36).toUpperCase().slice(-5) + randomBytes(2).toString('hex').toUpperCase();
@@ -66,12 +68,12 @@ export async function POST(request) {
   }
 
   const token = process.env.MP_ACCESS_TOKEN;
-  if (!token) return json({ error: 'no_mp', message: 'El pago online todavía no está activado. Elegí transferencia o escribinos.' }, 500);
+  if (!token) return json({ error: 'no_mp', message: 'El pago online todavía no está activado. Escribinos por WhatsApp y lo coordinamos.' }, 500);
 
   const origin = new URL(request.url).origin;
   const mpItems = items.map(i => ({
     id: i.id,
-    title: `${i.nombre} · Talle ${i.talle}`.slice(0, 250),
+    title: `${i.nombre}${i.color ? ' · ' + i.color : ''} · Talle ${i.talle}`.slice(0, 250),
     quantity: i.cantidad,
     unit_price: i.precio,
     currency_id: 'ARS'
