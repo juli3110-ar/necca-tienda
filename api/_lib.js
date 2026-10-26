@@ -4,7 +4,7 @@ import { list as blobList } from '@vercel/blob';
 
 export { SEED };
 
-const CATS = ['vestidos', 'abajo', 'tops', 'conjuntos'];
+const CATS = ['vestidos', 'polleras', 'tops', 'remeras', 'camisas', 'abajo', 'shorts', 'conjuntos', 'banio', 'jeans', 'denim-cortos', 'denim-arriba', 'carteras', 'cinturones', 'bijou', 'calzado'];
 const GLYPHS = ['g-dress', 'g-skirt', 'g-short', 'g-pant', 'g-top', 'g-tee', 'g-set'];
 const BLOB_URL = /^https:\/\/[a-z0-9-]+\.public\.blob\.vercel-storage\.com\/[A-Za-z0-9._\/-]+$/;
 const LOCAL_URL = /^\/fotos\/[A-Za-z0-9._-]+$/;

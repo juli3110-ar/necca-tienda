@@ -72,7 +72,7 @@ export const SEED = {
   {
    "id": "p3",
    "name": "Pollera midi satinada",
-   "cat": "vestidos",
+   "cat": "polleras",
    "color": "Champagne",
    "tint": "#E3CDB0",
    "ink": "#5A4630",
@@ -99,7 +99,7 @@ export const SEED = {
   {
    "id": "p4",
    "name": "Bermuda de jean",
-   "cat": "abajo",
+   "cat": "denim-cortos",
    "color": "Celeste claro",
    "tint": "#A9C3D9",
    "ink": "#24405A",
@@ -126,7 +126,7 @@ export const SEED = {
   {
    "id": "p5",
    "name": "Bermuda sastrera de lino",
-   "cat": "abajo",
+   "cat": "shorts",
    "color": "Beige",
    "tint": "#D9C7AE",
    "ink": "#5A4A35",
@@ -207,7 +207,7 @@ export const SEED = {
   {
    "id": "p8",
    "name": "Remera entallada",
-   "cat": "tops",
+   "cat": "remeras",
    "color": "Blanco",
    "tint": "#F4F0EB",
    "ink": "#6E5D62",
@@ -234,7 +234,7 @@ export const SEED = {
   {
    "id": "p9",
    "name": "Musculosa de morley",
-   "cat": "tops",
+   "cat": "remeras",
    "color": "Rosa empolvado",
    "tint": "#D8AFAE",
    "ink": "#5E2633",
@@ -261,7 +261,7 @@ export const SEED = {
   {
    "id": "p10",
    "name": "Camisa de lino oversize",
-   "cat": "tops",
+   "cat": "camisas",
    "color": "Arena",
    "tint": "#E2D3BF",
    "ink": "#5A4A35",
