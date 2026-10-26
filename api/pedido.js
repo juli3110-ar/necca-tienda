@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto';
-import { json, blobReady, loadState, transferPrice, PAGOS } from './_lib.js';
+import { json, blobReady, loadState, transferPrice, PAGOS, PROVINCIAS, cp4, shipQuote } from './_lib.js';
 import { saveOrder, findOrder } from './_orders.js';
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL'];
@@ -25,9 +25,12 @@ export async function POST(request) {
   const nombre = str(body.nombre, 80);
   const direccion = str(body.direccion, 120);
   const detalle = str(body.detalle, 80);
+  const provincia = PROVINCIAS.includes(body.provincia) ? body.provincia : '';
+  const ciudad = str(body.ciudad, 60);
+  const cp = cp4(body.cp);
   if (!pago || !entrega) return json({ error: 'missing', message: 'Elegí cómo lo recibís y cómo pagás.' }, 400);
   if (nombre.length < 2) return json({ error: 'missing', message: 'Escribí tu nombre.' }, 400);
-  if (entrega === 'envio' && direccion.length < 4) return json({ error: 'missing', message: 'Escribí la dirección de envío.' }, 400);
+  if (entrega === 'envio' && (direccion.length < 4 || ciudad.length < 2 || !provincia || !cp)) return json({ error: 'missing', message: 'Completá provincia, código postal, ciudad y dirección.' }, 400);
   if (pago === 'efectivo' && entrega !== 'retiro') return json({ error: 'bad_pay', message: 'El efectivo es solo para retiro.' }, 400);
 
   let state;
@@ -44,7 +47,8 @@ export async function POST(request) {
 
   const subtotal = items.reduce((s, i) => s + i.precio * i.cantidad, 0);
   const descuento = pago === 'transferencia' ? subtotal - transferPrice(subtotal) : 0;
-  const envio = entrega === 'envio' ? (state.contact.envio || 0) : 0;
+  const envio = entrega === 'envio' ? shipQuote(state, provincia, cp).price : 0;
+  if (pago === 'online' && entrega === 'envio' && !envio) return json({ error: 'no_ship', message: 'Para tu zona el envío se coordina aparte. Elegí transferencia.' }, 400);
   const total = subtotal - descuento + envio;
 
   const id = Date.now().toString(36).toUpperCase().slice(-5) + randomBytes(2).toString('hex').toUpperCase();
@@ -52,7 +56,7 @@ export async function POST(request) {
     id, key: randomBytes(12).toString('hex'),
     fecha: new Date().toISOString(),
     estado: pago === 'online' ? 'pendiente' : 'a_confirmar',
-    nombre, entrega, direccion, detalle, pago,
+    nombre, entrega, direccion, detalle, ciudad: entrega === 'envio' ? ciudad : '', provincia: entrega === 'envio' ? provincia : '', cp: entrega === 'envio' ? cp : '', pago,
     items, subtotal, descuento, envio, total
   };
 
@@ -72,7 +76,7 @@ export async function POST(request) {
     unit_price: i.precio,
     currency_id: 'ARS'
   }));
-  if (envio > 0) mpItems.push({ id: 'envio', title: 'Envío a domicilio en Rosario', quantity: 1, unit_price: envio, currency_id: 'ARS' });
+  if (envio > 0) mpItems.push({ id: 'envio', title: `Envío a ${ciudad}, ${provincia}`.slice(0, 250), quantity: 1, unit_price: envio, currency_id: 'ARS' });
 
   const pref = {
     items: mpItems,
@@ -86,7 +90,7 @@ export async function POST(request) {
     },
     auto_return: 'approved',
     notification_url: `${origin}/api/mp-webhook`,
-    metadata: { pedido: id, entrega, direccion, detalle }
+    metadata: { pedido: id, entrega, direccion, detalle, ciudad, provincia, cp }
   };
 
   let mp;
