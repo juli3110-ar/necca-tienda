@@ -2,14 +2,17 @@
 export const SEED = {
  "hero": {
   "img": "/fotos/portada.jpg",
-  "alt": "Chica sentada en la barra de un bar con camisa blanca, chaleco negro con flecos y jean ancho",
+  "alt": "Chica con vestido negro de plumas agachada en un rincón de paredes de cemento",
   "eyebrow": "Colección verano",
   "title": "Nueva temporada"
  },
  "contact": {
   "instagram": "",
   "whatsapp": "",
-  "email": ""
+  "email": "",
+  "alias": "",
+  "titular": "",
+  "envio": 0
  },
  "products": [
   {
@@ -36,7 +39,8 @@ export const SEED = {
      "114",
      "116"
     ]
-   ]
+   ],
+   "desc": "Vestido lencero de satén, largo midi y breteles finos regulables. Cae suelto sobre el cuerpo y tiene un brillo suave.\n\nSe usa de noche con sandalias de taco, o de día con una camisa de lino abierta encima."
   },
   {
    "id": "p2",
@@ -62,7 +66,8 @@ export const SEED = {
      "88",
      "90"
     ]
-   ]
+   ],
+   "desc": "Vestido lencero corto de satén negro, con escote en V y breteles regulables. Un básico para salir que combina con todo."
   },
   {
    "id": "p3",
@@ -88,7 +93,8 @@ export const SEED = {
      "80",
      "82"
     ]
-   ]
+   ],
+   "desc": "Pollera midi satinada de tiro alto, con cintura elástica y caída fluida. Va con remeras básicas o tops lenceros."
   },
   {
    "id": "p4",
@@ -114,7 +120,8 @@ export const SEED = {
      "45",
      "46"
     ]
-   ]
+   ],
+   "desc": "Bermuda de jean de tiro alto, corte recto y largo a mitad de muslo. Jean rígido que no se estira con el uso."
   },
   {
    "id": "p5",
@@ -140,7 +147,8 @@ export const SEED = {
      "47",
      "48"
     ]
-   ]
+   ],
+   "desc": "Bermuda sastrera de lino con pinzas y tiro alto. Fresca para el verano y prolija para el trabajo o la facu."
   },
   {
    "id": "p6",
@@ -166,7 +174,8 @@ export const SEED = {
      "106",
      "108"
     ]
-   ]
+   ],
+   "desc": "Pantalón wide leg de tiro alto con pierna amplia que llega al piso. Queda bien con tacos o con zapatillas."
   },
   {
    "id": "p7",
@@ -192,7 +201,8 @@ export const SEED = {
      "50",
      "52"
     ]
-   ]
+   ],
+   "desc": "Top lencero de satén con escote recto y breteles regulables. Se usa solo o debajo de un blazer."
   },
   {
    "id": "p8",
@@ -218,7 +228,8 @@ export const SEED = {
      "58",
      "60"
     ]
-   ]
+   ],
+   "desc": "Remera de algodón entallada, cuello redondo y manga corta. El básico que combina con todo el resto de la colección."
   },
   {
    "id": "p9",
@@ -244,7 +255,8 @@ export const SEED = {
      "54",
      "56"
     ]
-   ]
+   ],
+   "desc": "Musculosa de morley con breteles anchos y calce al cuerpo. Suave y elástica."
   },
   {
    "id": "p10",
@@ -270,7 +282,8 @@ export const SEED = {
      "72",
      "74"
     ]
-   ]
+   ],
+   "desc": "Camisa de lino oversize con botones al frente y bolsillo en el pecho. Se usa abierta como abrigo liviano o cerrada."
   },
   {
    "id": "p11",
@@ -296,7 +309,8 @@ export const SEED = {
      "72",
      "76"
     ]
-   ]
+   ],
+   "desc": "Conjunto de lino: camisa manga corta y bermuda con cintura elástica. Se pueden usar juntas o por separado."
   },
   {
    "id": "p12",
@@ -322,7 +336,8 @@ export const SEED = {
      "70",
      "74"
     ]
-   ]
+   ],
+   "desc": "Conjunto de top y pollera midi en el mismo tejido. Ideal para un evento o una salida."
   }
  ]
 };

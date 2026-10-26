@@ -1,5 +1,6 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { SEED } from './_seed.js';
+import { list as blobList } from '@vercel/blob';
 
 export { SEED };
 
@@ -56,7 +57,10 @@ export function cleanState(input) {
     contact: {
       instagram: str(contact.instagram, 60),
       whatsapp: str(contact.whatsapp, 30),
-      email: str(contact.email, 80)
+      email: str(contact.email, 80),
+      alias: str(contact.alias, 60),
+      titular: str(contact.titular, 60),
+      envio: Math.max(0, Math.round(Number(contact.envio) || 0))
     },
     products: products.map(p => {
       let id = str(p && p.id, 40).replace(/[^A-Za-z0-9_-]/g, '');
@@ -70,6 +74,7 @@ export function cleanState(input) {
         color: str(p.color, 40),
         price,
         badge: p.badge ? 'Nuevo' : '',
+        desc: String(p.desc == null ? '' : p.desc).replace(/\r/g, '').trim().slice(0, 800),
         img: safeImg(p.img),
         tint: color(p.tint),
         ink: color(p.ink),
@@ -81,3 +86,21 @@ export function cleanState(input) {
     }).filter(p => p.name && p.price > 0)
   };
 }
+
+/* ---------- Catálogo guardado ---------- */
+
+/** Reads the latest saved catalog, or the starting one. */
+export async function loadState() {
+  if (!blobReady()) return SEED;
+  const { blobs } = await blobList({ prefix: 'data/store', limit: 100 });
+  if (!blobs.length) return SEED;
+  blobs.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
+  const res = await fetch(blobs[0].url, { cache: 'no-store' });
+  if (!res.ok) throw new Error('read ' + res.status);
+  return cleanState(await res.json());
+}
+
+/* ---------- Pedidos ---------- */
+export const transferPrice = n => Math.round(n * 0.9 / 100) * 100;
+export const PAGOS = { transferencia: 'Transferencia', online: 'Tarjeta o Mercado Pago', efectivo: 'Efectivo al retirar' };
+export const ESTADOS = { a_confirmar: 'A confirmar', pendiente: 'Esperando el pago', pagado: 'Pagado', rechazado: 'Pago rechazado' };
