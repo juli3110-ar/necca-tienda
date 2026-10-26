@@ -361,7 +361,7 @@ body.editing { padding-bottom: 120px; }
       <h2>Medios de pago</h2>
       <ul>
         <li><b>Transferencia:</b> 10% off sobre el precio de lista.</li>
-        <li><b>Tarjeta o Mercado Pago:</b> pagás en el momento desde la página, con crédito, débito o dinero en cuenta.</li>
+        <li id="info-online" hidden><b>Tarjeta o Mercado Pago:</b> pagás en el momento desde la página, con crédito, débito o dinero en cuenta.</li>
         <li><b>Efectivo:</b> al retirar en el punto de entrega.</li>
       </ul>
     </section>
@@ -514,6 +514,7 @@ let picked = {};
 let cart = store.get('necca-cart', []);
 let delivery = null;
 let payment = null;
+let onlinePay = false;
 let step = 0;
 let showOrder = false;
 let buyer = Object.assign({ nombre: '', direccion: '', detalle: '' }, store.get('necca-buyer', {}));
@@ -807,7 +808,7 @@ function renderBag() {
     body.innerHTML = stepsBar() + `<h3 class="ck-title">¿Cómo pagás?</h3>
       <div class="choices">
         ${choice('payment', 'transferencia', PAY.transferencia, peso(transferPrice(sub)))}
-        ${choice('payment', 'online', PAY.online, peso(sub))}
+        ${onlinePay ? choice('payment', 'online', PAY.online, peso(sub)) : ''}
         ${delivery === 'retiro' ? choice('payment', 'efectivo', PAY.efectivo, peso(sub)) : ''}
       </div>`;
     foot.innerHTML = `<div class="btn-row">${back}<button type="button" class="cta" style="flex:1" data-step="next" ${payment ? '' : 'disabled'}>Continuar</button></div>`;
@@ -833,7 +834,7 @@ function renderBag() {
     <div class="btn-row">${back}</div>`;
 }
 
-function renderAll() { renderHero(); renderFilters(); renderGrid(); renderContact(); renderBag(); renderEditbar(); if (pvId) renderProduct(); }
+function renderAll() { $('#info-online').hidden = !onlinePay; if (!onlinePay && payment === 'online') payment = null; renderHero(); renderFilters(); renderGrid(); renderContact(); renderBag(); renderEditbar(); if (pvId) renderProduct(); }
 
 /* ---------- Drawers ---------- */
 function anyOpen() { return !$('#menu').hidden || !$('#drawer').hidden || !$('#editor').hidden; }
@@ -1280,7 +1281,7 @@ $('#admin-link').addEventListener('click', () => { if (adminKey) enterEdit(); el
   try {
     const res = await api('/api/store', { cache: 'no-store' });
     if (res && res.state && Array.isArray(res.state.products)) {
-      saved = res.state; loaded = true;
+      saved = res.state; loaded = true; onlinePay = Boolean(res.pagos_online);
       if (!editing) renderAll(); else renderBag();
     }
   } catch (e) { /* sin servidor: queda el catálogo inicial */ }

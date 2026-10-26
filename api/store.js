@@ -10,14 +10,16 @@ async function latest() {
 }
 
 // Everyone: read the catalog.
+const online = () => Boolean(process.env.MP_ACCESS_TOKEN);
+
 export async function GET() {
-  if (!blobReady()) return json({ state: SEED, source: 'seed' });
+  if (!blobReady()) return json({ state: SEED, source: 'seed', pagos_online: online() });
   try {
     const blobs = await latest();
-    if (!blobs.length) return json({ state: SEED, source: 'seed' });
+    if (!blobs.length) return json({ state: SEED, source: 'seed', pagos_online: online() });
     const res = await fetch(blobs[0].url, { cache: 'no-store' });
     if (!res.ok) throw new Error('read ' + res.status);
-    return json({ state: cleanState(await res.json()), source: 'saved' });
+    return json({ state: cleanState(await res.json()), source: 'saved', pagos_online: online() });
   } catch (err) {
     return json({ error: 'read_failed', message: 'No se pudo leer el catálogo.' }, 502);
   }
