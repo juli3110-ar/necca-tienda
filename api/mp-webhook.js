@@ -1,4 +1,4 @@
-import { json } from './_lib.js';
+import { json, updateStock } from './_lib.js';
 import { findOrder, saveOrder } from './_orders.js';
 
 const STATUS = { approved: 'pagado', authorized: 'pagado', rejected: 'rechazado', cancelled: 'rechazado', refunded: 'rechazado', charged_back: 'rechazado' };
@@ -24,6 +24,10 @@ export async function POST(request) {
     const order = await findOrder(pay.external_reference);
     if (!order) return json({ ok: true, sin_pedido: true });
     order.estado = STATUS[pay.status] || 'pendiente';
+    try {
+      if (order.estado === 'pagado' && !order.stock) { await updateStock(order.items || [], -1); order.stock = true; }
+      else if (order.estado === 'rechazado' && order.stock) { await updateStock(order.items || [], 1); order.stock = false; }
+    } catch (e) { console.error('stock', e && e.message); }
     order.mp_pago = String(pay.id);
     order.mp_estado = pay.status;
     if (pay.payer && pay.payer.email) order.email = String(pay.payer.email).slice(0, 120);

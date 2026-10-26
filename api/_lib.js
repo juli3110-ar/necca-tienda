@@ -1,6 +1,6 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { SEED } from './_seed.js';
-import { list as blobList } from '@vercel/blob';
+import { list as blobList, put as blobPut, del as blobDel } from '@vercel/blob';
 
 export { SEED };
 
@@ -92,6 +92,7 @@ export function cleanState(input) {
         badge: p.badge ? 'Nuevo' : '',
         desc: String(p.desc == null ? '' : p.desc).replace(/\r/g, '').trim().slice(0, 800),
         img: safeImg(p.img),
+        sizes: cleanSizes(p.sizes),
         imgs: (Array.isArray(p.imgs) ? p.imgs : []).map(safeImg).filter(Boolean).slice(0, 6),
         colors: (Array.isArray(p.colors) ? p.colors : []).slice(0, 12).map(c => ({ n: str(c && c.n, 30), h: color(c && c.h) })).filter(c => c.n),
         tint: color(p.tint),
@@ -132,4 +133,50 @@ export function shipQuote(state, prov, cp) {
   const d = cp4(cp);
   if (d && local.includes(d)) return { local: true, price: Number(state.contact && state.contact.envio) || 0 };
   return { local: false, price: Number(ship.prov && ship.prov[prov]) || 0 };
+}
+
+/* ---------- Talles y stock ---------- */
+export const SIZES = ['XS', 'S', 'M', 'L', 'XL'];
+function cleanSizes(z) {
+  if (!z || typeof z !== 'object') return undefined;
+  const out = {};
+  for (const s of SIZES) {
+    const v = z[s];
+    out[s] = v === 'no' || v === 'enc' || v === 'si' ? v : (v !== '' && v != null && Number.isFinite(Number(v)) ? Math.max(0, Math.min(9999, Math.round(Number(v)))) : 'no');
+  }
+  return out;
+}
+/** What a size allows: 'no', 'enc', 'si' or a number of units. Old products (no sizes set) work as before. */
+export function sizeVal(p, s) {
+  if (!p.sizes) return s === 'XS' || s === 'XL' ? 'enc' : 'si';
+  return p.sizes[s] == null ? 'no' : p.sizes[s];
+}
+/** Units still free of a size (Infinity when not counted, 0 when not offered). */
+export function sizeLeft(p, s) {
+  const v = sizeVal(p, s);
+  if (v === 'si' || v === 'enc') return Infinity;
+  return typeof v === 'number' ? v : 0;
+}
+/** Adds (sign 1) or takes away (sign -1) the units of an order from the counted sizes. */
+export function moveStock(state, items, sign) {
+  let changed = false;
+  for (const i of items) {
+    const p = state.products.find(x => x.id === i.id);
+    if (!p || !p.sizes || typeof p.sizes[i.talle] !== 'number') continue;
+    p.sizes[i.talle] = Math.max(0, p.sizes[i.talle] + sign * i.cantidad);
+    changed = true;
+  }
+  return changed;
+}
+/** Saves the whole catalog as a new file and removes the old ones. */
+export async function saveState(state) {
+  const saved = await blobPut('data/store.json', JSON.stringify(cleanState(state)), { access: 'public', addRandomSuffix: true, contentType: 'application/json' });
+  const { blobs } = await blobList({ prefix: 'data/store', limit: 100 });
+  const old = blobs.filter(b => b.url !== saved.url).map(b => b.url);
+  if (old.length) await blobDel(old);
+}
+/** Re-reads the catalog and applies a stock change for an order. */
+export async function updateStock(items, sign) {
+  const state = await loadState();
+  if (moveStock(state, items, sign)) await saveState(state);
 }

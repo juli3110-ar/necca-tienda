@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto';
-import { json, blobReady, loadState, transferPrice, PAGOS, PROVINCIAS, cp4, shipQuote } from './_lib.js';
+import { json, blobReady, loadState, transferPrice, PAGOS, PROVINCIAS, cp4, shipQuote, sizeLeft, updateStock } from './_lib.js';
 import { saveOrder, findOrder } from './_orders.js';
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL'];
@@ -46,6 +46,12 @@ export async function POST(request) {
     items.push({ id: p.id, nombre: p.name, color: col, talle: l.size, cantidad: qty, precio: p.price });
   }
   if (!items.length) return json({ error: 'empty', message: 'Tu bolsa está vacía o esas prendas ya no están.' }, 400);
+  for (const i of items) {
+    const p = state.products.find(x => x.id === i.id);
+    const want = items.filter(x => x.id === i.id && x.talle === i.talle).reduce((a, x) => a + x.cantidad, 0);
+    const left = sizeLeft(p, i.talle);
+    if (want > left) return json({ error: 'no_stock', message: left > 0 ? `De ${i.nombre} talle ${i.talle} queda${left === 1 ? '' : 'n'} ${left}. Cambiá la cantidad en tu bolsa.` : `${i.nombre} en talle ${i.talle} se agotó. Sacalo de tu bolsa para seguir.` }, 409);
+  }
 
   const subtotal = items.reduce((s, i) => s + i.precio * i.cantidad, 0);
   const descuento = pago === 'transferencia' ? subtotal - transferPrice(subtotal) : 0;
@@ -63,6 +69,7 @@ export async function POST(request) {
   };
 
   if (pago !== 'online') {
+    try { await updateStock(items, -1); order.stock = true; } catch (e) { console.error('stock', e && e.message); }
     await saveOrder(order);
     return json({ ok: true, id, total, pago });
   }

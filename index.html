@@ -292,7 +292,7 @@ footer .wrap { padding-block: 24px 40px; display: flex; flex-wrap: wrap; justify
 .chip { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; padding: 4px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
 .chip.pagado { color: var(--good); border-color: var(--good); }
 .chip.entregado { color: var(--fg); border-color: var(--fg); }
-.chip.rechazado { color: var(--warn); border-color: var(--warn); }
+.chip.rechazado, .chip.cancelado { color: var(--warn); border-color: var(--warn); }
 .chip.pendiente, .chip.a_confirmar { color: #E5C98A; border-color: #8A7A55; }
 .order ul { margin: 0; padding-left: 18px; color: var(--muted); }
 .cta-link { display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
@@ -336,6 +336,7 @@ footer .wrap { padding-block: 24px 40px; display: flex; flex-wrap: wrap; justify
 .tsize.encargo { color: var(--muted); }
 .tsize:hover { border-color: var(--line); }
 .tsize[aria-pressed="true"] { border-color: var(--fg); }
+.size.agotado, .tsize.agotado { text-decoration: line-through; opacity: .35; cursor: not-allowed; }
 .pv-info .add.pv-add { height: 56px; font-size: 13px; letter-spacing: .26em; }
 .pv-head { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; font-weight: 500; margin: 0 0 12px; }
 .pv-desc { padding-top: 8px; font-size: 15px; line-height: 1.7; max-width: 62ch; }
@@ -390,6 +391,10 @@ body.editing { padding-bottom: 120px; }
 .mg-head input, .mc input { flex: 1; min-width: 0; height: 40px; padding: 0 10px; border: 1px solid var(--line); border-radius: 2px; background: var(--surface); color: var(--fg); font: 15px var(--body); }
 .mg-head input { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; }
 .mc { padding-left: 14px; }
+.st-grid { display: grid; gap: 8px; }
+.st-row { display: grid; grid-template-columns: 36px minmax(0, 1fr) 90px; gap: 8px; align-items: center; }
+.st-row b { font-weight: 500; letter-spacing: .06em; }
+.st-row select, .st-row input { height: 40px; padding: 0 10px; border: 1px solid var(--line); border-radius: 2px; background: var(--surface); color: var(--fg); font: 15px var(--body); width: 100%; }
 .ec { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
 .ec input[type="color"] { width: 40px; height: 40px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: none; overflow: hidden; flex: none; }
 .ec input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
@@ -657,6 +662,30 @@ function renderMenuCats() {
 const GLYPHS = ['g-dress', 'g-skirt', 'g-short', 'g-pant', 'g-top', 'g-tee', 'g-set'];
 const SIZES = ['XS', 'S', 'M', 'L', 'XL'];
 const ON_ORDER = new Set(['XS', 'XL']);
+/* Sizes of a garment: 'no' (not offered), 'enc' (on order), 'si' (available, not counted) or a number (units in stock). */
+function sizesOf(p) {
+  const z = p && p.sizes && typeof p.sizes === 'object' ? p.sizes : null;
+  const out = {};
+  SIZES.forEach(s => {
+    const v = z ? z[s] : (ON_ORDER.has(s) ? 'enc' : 'si');
+    out[s] = v === 'no' || v === 'enc' || v === 'si' ? v : (Number.isFinite(Number(v)) && v !== '' && v != null ? Math.max(0, Math.round(Number(v))) : 'no');
+  });
+  return out;
+}
+const sizeInfo = (p, s) => { const v = sizesOf(p)[s]; return { show: v !== 'no', ok: v === 'si' || v === 'enc' || v > 0, enc: v === 'enc', left: typeof v === 'number' ? v : Infinity }; };
+function sizeButtons(p, cls) {
+  const sel = picked[p.id];
+  return SIZES.filter(s => sizeInfo(p, s).show).map(s => { const i = sizeInfo(p, s); return `<button type="button" class="${cls}${i.enc ? ' encargo' : ''}${i.ok ? '' : ' agotado'}" data-size="${s}" aria-pressed="${sel === s}" ${i.ok ? '' : 'disabled title="Sin stock"'}>${s}</button>`; }).join('');
+}
+function sizeHint(p) {
+  const sel = picked[p.id];
+  if (!SIZES.some(s => sizeInfo(p, s).ok)) return 'Sin stock por ahora';
+  if (!sel) return 'Elegí tu talle';
+  const i = sizeInfo(p, sel);
+  if (i.enc) return `Talle ${sel} por encargo: llega en la próxima tanda`;
+  if (i.left <= 2) return `Talle ${sel}: ${i.left === 1 ? 'queda 1' : 'quedan ' + i.left}`;
+  return `Talle ${sel} disponible`;
+}
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -696,7 +725,7 @@ const data = () => editing ? draft : saved;
 let cat = 'all';
 let picked = {};
 let pickedColor = {};
-let fColor = '', fPrice = '', sortBy = 'dest', fOpen = false;
+let fColor = '', fPrice = '', fSize = '', sortBy = 'dest', fOpen = false;
 const PRICE_RANGES = [{ k: 'a', t: 'Hasta $20.000', ok: n => n <= 20000 }, { k: 'b', t: '$20.000 a $35.000', ok: n => n > 20000 && n <= 35000 }, { k: 'c', t: 'Más de $35.000', ok: n => n > 35000 }];
 let pvPhoto = 0;
 const colorSel = p => { const cs = colorsOf(p); return cs.some(c => c.n === pickedColor[p.id]) ? pickedColor[p.id] : (cs[0] ? cs[0].n : ''); };
@@ -746,6 +775,7 @@ function shownProducts() {
   let list = all.filter(p => cat === 'all' || p.cat === cat);
   if (editing) return list;
   if (fColor) list = list.filter(p => colorsOf(p).some(c => c.n.toLowerCase() === fColor));
+  if (fSize) list = list.filter(p => sizeInfo(p, fSize).ok);
   const pr = PRICE_RANGES.find(r => r.k === fPrice); if (pr) list = list.filter(p => pr.ok(Number(p.price) || 0));
   const idx = p => all.indexOf(p);
   if (sortBy === 'new') list = list.slice().sort((a, b) => (b.badge ? 1 : 0) - (a.badge ? 1 : 0) || idx(a) - idx(b));
@@ -757,7 +787,7 @@ function shownProducts() {
 const SORTS = [{ k: 'dest', t: 'Destacados' }, { k: 'new', t: 'Más nuevos' }, { k: 'asc', t: 'Menor precio' }, { k: 'desc', t: 'Mayor precio' }, { k: 'az', t: 'Nombre A-Z' }];
 let fOpenGroup = '', sOpen = false;
 function renderToolbar() {
-  const n = (cat !== 'all' ? 1 : 0) + (fColor ? 1 : 0) + (fPrice ? 1 : 0);
+  const n = (cat !== 'all' ? 1 : 0) + (fColor ? 1 : 0) + (fPrice ? 1 : 0) + (fSize ? 1 : 0);
   $('#f-count').textContent = n ? `(${n})` : '';
   $('#f-open').setAttribute('aria-expanded', String(fOpen));
   $('#s-open').setAttribute('aria-expanded', String(sOpen));
@@ -775,11 +805,13 @@ function renderToolbar() {
   const catLabel = c => { const dup = cats.filter(x => x.label === c.label).length > 1; const g = (curMenu().find(gr => (gr.items || []).some(it => it.id === c.id)) || {}).t; return esc(c.label) + (dup && g ? ' · ' + esc(g) : ''); };
   panel.innerHTML =
     grp('cat', 'Categoría', cat !== 'all' ? catName(cat) : '', cats.map(c => `<button type="button" class="pop-opt" data-fcat="${esc(c.id)}" aria-pressed="${cat === c.id}">${catLabel(c)}</button>`).join('')) +
+    grp('size', 'Talle', fSize, SIZES.filter(z => prods.some(p => sizeInfo(p, z).ok)).map(z => `<button type="button" class="pop-opt" data-fsize="${z}" aria-pressed="${fSize === z}">${z}</button>`).join('')) +
     (cols.length ? grp('color', 'Color', fColor ? (cols.find(c => c.n.toLowerCase() === fColor) || {}).n : '', cols.map(c => `<button type="button" class="pop-opt" data-fcolor="${esc(c.n.toLowerCase())}" aria-pressed="${fColor === c.n.toLowerCase()}"><i style="--sw:${c.h}"></i>${esc(c.n)}</button>`).join('')) : '') +
     grp('price', 'Precio', fPrice ? PRICE_RANGES.find(r => r.k === fPrice).t : '', PRICE_RANGES.map(r => `<button type="button" class="pop-opt" data-fprice="${r.k}" aria-pressed="${fPrice === r.k}">${r.t}</button>`).join('')) +
     (n ? '<button type="button" class="pop-clear" id="f-clear">Limpiar filtros</button>' : '');
 }
 function renderGrid() {
+  Object.keys(picked).forEach(id => { const p = data().products.find(x => x.id === id); if (!p || !sizeInfo(p, picked[id]).ok) delete picked[id]; });
   renderToolbar();
   const list = shownProducts();
   const cards = list.map(p => {
@@ -794,9 +826,9 @@ function renderGrid() {
       </div>
       <div class="prices"><span class="price">${peso(p.price)}</span></div>
       <div class="sizes" role="group" aria-label="Talle">
-        ${SIZES.map(s => `<button type="button" class="size${ON_ORDER.has(s) ? ' encargo' : ''}" data-size="${s}" aria-pressed="${sel === s}">${s}</button>`).join('')}
+        ${sizeButtons(p, 'size')}
       </div>
-      <div class="hint">${sel ? (ON_ORDER.has(sel) ? `Talle ${sel} por encargo: llega en la próxima tanda` : `Talle ${sel} disponible`) : 'Elegí tu talle'}</div>
+      <div class="hint">${sizeHint(p)}</div>
       ${rows ? `<details><summary>Ver medidas en cm</summary><table class="measures"><thead><tr><th></th><th>S</th><th>M</th><th>L</th></tr></thead><tbody>${rows}</tbody></table></details>` : ''}
       <button type="button" class="add" data-add="${esc(p.id)}" ${sel ? '' : 'disabled'}>${sel ? 'Agregar a la bolsa' : 'Elegí un talle'}</button>
     </article>`;
@@ -874,9 +906,9 @@ function renderProduct() {
       <div class="pv-rule"></div>
       ${colorsOf(p).length ? `<div class="pv-row"><span class="pv-label">Color</span><div class="pv-opts">${swatches(p, true)}<span class="pv-colname">${esc(col)}</span></div></div>` : ''}
       <div class="pv-row"><span class="pv-label">Talle</span>
-        <div class="pv-opts"><div class="tsizes" role="group" aria-label="Talle">${SIZES.map(s => `<button type="button" class="tsize${ON_ORDER.has(s) ? ' encargo' : ''}" data-size="${s}" aria-pressed="${sel === s}">${s}</button>`).join('')}</div></div>
+        <div class="pv-opts"><div class="tsizes" role="group" aria-label="Talle">${sizeButtons(p, 'tsize')}</div></div>
       </div>
-      <div class="hint">${sel ? (ON_ORDER.has(sel) ? `Talle ${sel} por encargo: llega en la próxima tanda` : `Talle ${sel} disponible`) : 'Elegí tu talle'}</div>
+      <div class="hint">${sizeHint(p)}</div>
       <button type="button" class="add pv-add" data-add="${esc(p.id)}" ${sel ? '' : 'disabled'}>${sel ? 'Agregar a la bolsa' : 'Elegí un talle'}</button>
       ${p.desc ? `<div class="pv-desc"><p class="pv-head">Detalle del producto</p>${descHTML(p.desc)}</div>` : ''}
       <div class="pv-accs">
@@ -910,6 +942,9 @@ function addToCart(id, btn) {
   if (!findP(id)) { btn.textContent = 'Guardá los cambios primero'; return; }
   const size = picked[id];
   const color = colorSel(findP(id));
+  const info = sizeInfo(findP(id), size);
+  const inCart = cart.filter(l => l.id === id && l.size === size).reduce((a, l) => a + l.qty, 0);
+  if (!info.ok || inCart >= info.left) { btn.textContent = inCart ? 'No hay más de ese talle' : 'Sin stock'; setTimeout(() => { btn.textContent = 'Agregar a la bolsa'; }, 1600); return; }
   const ex = cart.find(l => l.id === id && l.size === size && (l.color || '') === color);
   if (ex) ex.qty++; else cart.push({ id, size, color, qty: 1 });
   store.set('necca-cart', cart); renderBag();
@@ -1066,7 +1101,7 @@ function renderBag() {
         ${photoHTML(p, 'thumb')}
         <div>
           <div class="l-name">${esc(p.name)}</div>
-          <div class="l-meta">${esc(l.color || colorSel(p))} · Talle ${l.size}${ON_ORDER.has(l.size) ? ' · por encargo' : ''}</div>
+          <div class="l-meta">${esc(l.color || colorSel(p))} · Talle ${l.size}${sizeInfo(p, l.size).enc ? ' · por encargo' : ''}</div>
           <div class="qty"><button type="button" data-dec="${i}" aria-label="Quitar uno">−</button><span>${l.qty}</span><button type="button" data-inc="${i}" aria-label="Sumar uno">+</button></div>
         </div>
         <div><div class="l-price">${peso(p.price * l.qty)}</div><button type="button" class="rm" data-rm="${i}">Quitar</button></div>
@@ -1257,6 +1292,10 @@ function openProductEditor(id) {
     </div>
     <label class="field"><span>Nombre</span><input type="text" id="ed-name" value="${esc(edItem.name)}" placeholder="Ej: Vestido lencero midi"></label>
     <label class="field"><span>Categoría</span><select id="ed-cat">${allCats().some(c => c.id === edItem.cat) ? '' : '<option value="" selected>Sin categoría</option>'}${curMenu().map(g => `<optgroup label="${esc(g.t)}">${(g.items || []).map(c => `<option value="${esc(c.id)}" ${c.id === edItem.cat ? 'selected' : ''}>${esc(c.label)}</option>`).join('')}</optgroup>`).join('')}</select></label>
+    <div class="field"><span class="field-label">Talles y stock</span>
+      <div class="st-grid">${SIZES.map(z => { const v = sizesOf(edItem)[z]; const mode = typeof v === 'number' ? 'n' : v; return `<div class="st-row"><b>${z}</b><select id="st-m-${z}" aria-label="Talle ${z}"><option value="n" ${mode === 'n' ? 'selected' : ''}>En stock</option><option value="si" ${mode === 'si' ? 'selected' : ''}>Sí, sin contar</option><option value="enc" ${mode === 'enc' ? 'selected' : ''}>Por encargo</option><option value="no" ${mode === 'no' ? 'selected' : ''}>No lo traigo</option></select><input type="number" id="st-n-${z}" min="0" step="1" inputmode="numeric" value="${typeof v === 'number' ? v : ''}" placeholder="Cant." aria-label="Unidades talle ${z}" ${mode === 'n' ? '' : 'hidden'}></div>`; }).join('')}</div>
+      <p class="small">“En stock”: poné cuántas tenés; se descuenta sola con cada venta y en 0 aparece tachado. “Sí, sin contar”: se vende sin límite. “No lo traigo”: no aparece.</p>
+    </div>
     <div class="field"><span class="field-label">Colores</span>
       <div id="ed-colors"></div>
       <button type="button" class="ghost" id="ed-addcolor" style="align-self:flex-start">+ Agregar color</button>
@@ -1299,6 +1338,10 @@ function readProductForm() {
   if (!(price > 0)) return 'Escribí el precio (solo números, sin puntos).';
   edItem.name = name.slice(0, 80);
   edItem.cat = $('#ed-cat').value;
+  const sz = {};
+  SIZES.forEach(z => { const m = $(`#st-m-${z}`).value; sz[z] = m === 'n' ? Math.max(0, Math.round(Number($(`#st-n-${z}`).value) || 0)) : m; });
+  if (SIZES.every(z => sz[z] === 'no')) return 'Elegí al menos un talle que traigas.';
+  edItem.sizes = sz;
   syncEdColors();
   edItem.colors = edItem.colors.filter(c => c.n).slice(0, 12).map(c => ({ n: c.n, h: safeColor(c.h) }));
   edItem.color = edItem.colors.map(c => c.n).join(', ').slice(0, 40);
@@ -1493,6 +1536,10 @@ function openContactEditor() {
   $('#editor').hidden = false; syncScrim();
 }
 
+$('#ed-body').addEventListener('change', e => {
+  const m = e.target.id && e.target.id.match(/^st-m-(\w+)$/);
+  if (m) { const n = $(`#st-n-${m[1]}`); n.hidden = e.target.value !== 'n'; if (!n.hidden) n.focus(); }
+});
 $('#ed-body').addEventListener('input', e => {
   const m = e.target.id && e.target.id.match(/^ec-n-(\d+)$/);
   if (m && edMode === 'product') { const h = $(`#ec-h-${m[1]}`), g = guessHex(e.target.value); if (h && g) h.value = g; }
@@ -1578,7 +1625,7 @@ $('#eb-save').addEventListener('click', saveAll);
 $('#eb-hero').addEventListener('click', openHeroEditor);
 $('#eb-contact').addEventListener('click', openContactEditor);
 const ORD_PAGO = { transferencia: 'Transferencia', online: 'Mercado Pago', efectivo: 'Efectivo' };
-const ORD_EST = { a_confirmar: 'A confirmar', pendiente: 'Esperando pago', pagado: 'Pagado', rechazado: 'Rechazado', entregado: 'Entregado' };
+const ORD_EST = { a_confirmar: 'A confirmar', pendiente: 'Esperando pago', pagado: 'Pagado', rechazado: 'Rechazado', entregado: 'Entregado', cancelado: 'Cancelado' };
 let ordList = [];
 function renderOrders(msg) {
   const fmt = d => { try { return new Date(d).toLocaleString('es-AR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; } };
@@ -1589,8 +1636,9 @@ function renderOrders(msg) {
     <span>${o.entrega === 'envio' ? 'Envío: ' + esc(o.direccion) + (o.detalle ? ' (' + esc(o.detalle) + ')' : '') + (o.ciudad ? ', ' + esc(o.ciudad) : '') + (o.provincia ? ', ' + esc(o.provincia) : '') + (o.cp ? ' · CP ' + esc(o.cp) : '') + (o.envio ? '' : ' · costo a coordinar') : 'Retira en persona'}</span>
     <span><b style="font-weight:500">${peso(o.total || 0)}</b> · ${ORD_PAGO[o.pago] || esc(o.pago)}${o.email ? ' · ' + esc(o.email) : ''}</span>
     <div class="btn-row">
-      ${o.estado !== 'pagado' && o.estado !== 'entregado' ? `<button type="button" class="ghost" data-ord="${esc(o.id)}" data-est="pagado">Marcar pagado</button>` : ''}
+      ${o.estado !== 'pagado' && o.estado !== 'entregado' && o.estado !== 'cancelado' ? `<button type="button" class="ghost" data-ord="${esc(o.id)}" data-est="pagado">Marcar pagado</button>` : ''}
       ${o.estado !== 'entregado' ? `<button type="button" class="ghost" data-ord="${esc(o.id)}" data-est="entregado">Marcar entregado</button>` : ''}
+      ${o.estado !== 'entregado' && o.estado !== 'cancelado' ? `<button type="button" class="ghost danger" data-ord="${esc(o.id)}" data-est="cancelado">Cancelar</button>` : ''}
     </div></div>`).join('')}</div>` : '<p>Todavía no hay pedidos. Cuando alguien compre, aparece acá.</p>');
 }
 async function openOrders() {
@@ -1670,7 +1718,8 @@ $('#f-panel').addEventListener('click', e => {
   if (b.dataset.fcat) { cat = cat === b.dataset.fcat ? 'all' : b.dataset.fcat; renderFilters(); }
   else if (b.dataset.fcolor) fColor = fColor === b.dataset.fcolor ? '' : b.dataset.fcolor;
   else if (b.dataset.fprice) fPrice = fPrice === b.dataset.fprice ? '' : b.dataset.fprice;
-  else if (b.id === 'f-clear') { cat = 'all'; fColor = ''; fPrice = ''; fOpenGroup = ''; renderFilters(); }
+  else if (b.dataset.fsize) fSize = fSize === b.dataset.fsize ? '' : b.dataset.fsize;
+  else if (b.id === 'f-clear') { cat = 'all'; fColor = ''; fPrice = ''; fSize = ''; fOpenGroup = ''; renderFilters(); }
   else return;
   renderGrid();
 });
@@ -1721,7 +1770,7 @@ function copyText(text, okMsg) {
 function onBagClick(e) {
   const t = e.target.closest('button, a');
   if (!t) return;
-  if (t.dataset.inc) { cart[+t.dataset.inc].qty++; }
+  if (t.dataset.inc) { const l = cart[+t.dataset.inc], p = findP(l.id), used = cart.filter(x => x.id === l.id && x.size === l.size).reduce((a, x) => a + x.qty, 0); if (!p || used < sizeInfo(p, l.size).left) l.qty++; }
   else if (t.dataset.dec) { const l = cart[+t.dataset.dec]; l.qty--; if (l.qty < 1) cart.splice(+t.dataset.dec, 1); }
   else if (t.dataset.rm) { cart.splice(+t.dataset.rm, 1); }
   else if (t.dataset.choice) {

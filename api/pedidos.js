@@ -1,4 +1,4 @@
-import { json, checkAdmin, blobReady } from './_lib.js';
+import { json, checkAdmin, blobReady, updateStock } from './_lib.js';
 import { listOrders, findOrder, saveOrder } from './_orders.js';
 
 // Owner only: list orders, newest first.
@@ -20,10 +20,13 @@ export async function POST(request) {
   if (denied) return denied;
   let body = {};
   try { body = await request.json(); } catch {}
-  const estados = ['a_confirmar', 'pagado', 'entregado'];
+  const estados = ['a_confirmar', 'pagado', 'entregado', 'cancelado'];
   if (!estados.includes(body.estado)) return json({ error: 'bad_state', message: 'Estado no válido.' }, 400);
   const o = await findOrder(body.id);
   if (!o) return json({ error: 'not_found', message: 'No encontramos ese pedido.' }, 404);
+  if (body.estado === 'cancelado' && o.stock) {
+    try { await updateStock(o.items || [], 1); o.stock = false; } catch (e) { return json({ error: 'stock', message: 'No se pudo devolver el stock. Probá de nuevo.' }, 502); }
+  }
   o.estado = body.estado;
   await saveOrder(o);
   const { key, ...pub } = o;
