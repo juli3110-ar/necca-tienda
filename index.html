@@ -249,8 +249,18 @@ legend { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; colo
 .flash { animation: flash 1.2s ease-out; }
 @keyframes flash { from { background: rgba(201,192,186,.25); } to { background: transparent; } }
 
-footer { border-top: 1px solid var(--line); }
-footer .wrap { padding-block: 24px 40px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--muted); }
+.info { display: none; }
+footer { background: var(--head); border-top: 1px solid var(--line); }
+.foot-cols { padding-block: 48px 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 36px 28px; }
+.fcol { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.fcol h3 { margin: 0 0 14px; font-family: var(--display); font-weight: 500; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--fg); }
+.fcol button, .fcol a { padding: 7px 0; border: 0; background: transparent; color: var(--fg); opacity: .85; font-family: var(--display); font-size: 13px; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; text-align: left; cursor: pointer; }
+.fcol button:hover, .fcol a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
+.f-social { display: flex; gap: 22px; flex-wrap: wrap; }
+.f-social a { padding: 0; opacity: .9; display: inline-flex; }
+.f-social svg { width: 30px; height: 30px; }
+.f-social .small { opacity: 1; text-transform: none; }
+.foot-bottom { padding-block: 18px 36px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; font-size: 12.5px; color: var(--muted); }
 
 /* Checkout */
 .steps { list-style: none; margin: 0 0 4px; padding: 0; display: flex; gap: 6px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
@@ -359,6 +369,16 @@ footer .wrap { padding-block: 24px 40px; display: flex; flex-wrap: wrap; justify
   .pv-thumb { width: 96px; }
   .pv-info { position: sticky; top: 100px; }
 }
+
+.sp-body { padding-block: 40px 80px; max-width: 920px; }
+.sp-body section { scroll-margin-top: 0; }
+.sp-body h2 { font-family: var(--display); font-weight: 300; font-size: clamp(22px, 3vw, 30px); letter-spacing: .28em; text-transform: uppercase; margin: 0 0 28px; }
+.sp-body, .sp-body li, .sp-body p { font-size: 16.5px; line-height: 1.7; }
+.sp-body ol.steps-list { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 14px; }
+.sp-body .arrep-btn { display: inline-flex; align-items: center; height: 50px; padding: 0 24px; margin: 12px 8px 0 0; background: var(--fg); color: var(--head); text-decoration: none; font-size: 12.5px; letter-spacing: .18em; text-transform: uppercase; border-radius: 2px; }
+.sp-body ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 10px; }
+.sp-body .calc { max-width: 460px; }
+.sp-body .faq-item summary { font-size: 17px; }
 
 /* Edit mode (owner only) */
 .edit-fab { position: fixed; z-index: 15; left: max(16px, env(safe-area-inset-left, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); height: 44px; padding: 0 18px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); border-radius: 999px; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; box-shadow: var(--shadow); }
@@ -499,6 +519,7 @@ body.editing { padding-bottom: 120px; }
         <li>Pedidos antes de las 15 h: envío ese mismo día en Rosario.</li>
         <li>Retiro gratis en punto de entrega, en horarios fijos.</li>
         <li>Resto del país: Correo Argentino o Andreani.</li>
+        <li>Cuando despachamos tu pedido te mandamos el número de seguimiento por WhatsApp.</li>
         <li>Cambios de talle hasta 7 días después de recibir tu compra.</li>
       </ul>
       <div class="calc-box">
@@ -537,6 +558,40 @@ body.editing { padding-bottom: 120px; }
       <h2>Preguntas frecuentes</h2>
       <div class="faq" id="faq-body"></div>
     </section>
+    <section id="comprar">
+      <h2>Cómo comprar</h2>
+      <ol class="steps-list">
+        <li><b>Elegí la prenda</b>, el color y tu talle. Si dudás, mirá la tabla de talles.</li>
+        <li><b>Agregala a la bolsa</b> y seguí mirando, o tocá “Tu bolsa” para terminar.</li>
+        <li><b>Elegí cómo la recibís:</b> retiro gratis en Rosario o envío a domicilio. El costo del envío se suma solo.</li>
+        <li><b>Pagá con Mercado Pago</b> (tarjeta de crédito, débito o dinero en cuenta), o en efectivo si retirás.</li>
+        <li><b>Listo:</b> te escribimos por WhatsApp para coordinar la entrega.</li>
+      </ol>
+    </section>
+    <section id="cambios">
+      <h2>Cambios y devoluciones</h2>
+      <ul>
+        <li>Podés cambiar el talle o la prenda <b>hasta 7 días</b> después de recibirla.</li>
+        <li>La prenda tiene que estar sin uso, sin lavar y con su etiqueta.</li>
+        <li>Escribinos por WhatsApp con tu número de pedido y coordinamos el cambio.</li>
+        <li>Si la prenda tiene una falla, el envío del cambio corre por nuestra cuenta.</li>
+        <li>Si te arrepentiste de la compra, mirá “Cancelá tu compra”.</li>
+      </ul>
+    </section>
+    <section id="nosotros">
+      <h2>Acerca de Kiva</h2>
+      <div id="about-body"></div>
+    </section>
+    <section id="arrepentimiento">
+      <h2>Cancelá tu compra</h2>
+      <p>Tenés <b>10 días corridos</b> desde que recibís tu compra para cancelarla, sin tener que explicar el motivo. Es tu derecho de arrepentimiento (Ley 24.240 de Defensa del Consumidor).</p>
+      <ul>
+        <li>La prenda tiene que estar sin uso y con su etiqueta.</li>
+        <li>Te devolvemos el total por el mismo medio con el que pagaste.</li>
+        <li>Mandanos tu número de pedido y tu nombre:</li>
+      </ul>
+      <p id="arrep-actions"></p>
+    </section>
     <section id="contacto">
       <h2>Contacto</h2>
       <div id="contact-body"></div>
@@ -545,9 +600,27 @@ body.editing { padding-bottom: 120px; }
 </div>
 
 <footer>
-  <div class="wrap">
-    <span>Kiva · Rosario</span>
-    <span>Talles S, M y L en stock · XS y XL por encargo</span>
+  <div class="wrap foot-cols">
+    <nav class="fcol" aria-label="Políticas"><h3>Políticas</h3>
+      <button type="button" data-go="comprar">Cómo comprar</button>
+      <button type="button" data-go="envios">Envíos y seguimiento</button>
+      <button type="button" data-go="pagos">Formas de pago</button>
+      <button type="button" data-go="cambios">Cambios y devoluciones</button>
+      <button type="button" data-go="faq">Preguntas frecuentes</button>
+    </nav>
+    <nav class="fcol" aria-label="Nosotros"><h3>Nosotros</h3>
+      <button type="button" data-go="nosotros">Acerca de Kiva</button>
+    </nav>
+    <nav class="fcol" aria-label="Atención al cliente"><h3>Atención al cliente</h3>
+      <button type="button" data-go="contacto">Contacto</button>
+      <a id="f-consultas" href="#contacto" target="_blank" rel="noopener">Consultas</a>
+      <button type="button" data-go="talles">Tabla de talles</button>
+      <button type="button" data-go="arrepentimiento">Cancelá tu compra</button>
+    </nav>
+    <div class="fcol"><h3>Seguinos</h3><div class="f-social" id="f-social"></div></div>
+  </div>
+  <div class="wrap foot-bottom">
+    <span>© Kiva · Rosario, Santa Fe</span>
     <button type="button" id="admin-link" style="border:0;background:transparent;color:var(--muted);font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:0">Acceso</button>
   </div>
 </footer>
@@ -868,6 +941,31 @@ $('#calc-form').addEventListener('submit', e => {
   $('#c-out').classList.remove('flash'); void $('#c-out').offsetWidth; $('#c-out').classList.add('flash');
   try { $('#c-out').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (err) {}
 });
+const ICONS = {
+  instagram: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/></svg>',
+  tiktok: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M14 3c.4 2.6 2.2 4.4 5 4.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  whatsapp: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5l1.1-3.6A8 8 0 1 1 8.6 19z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 8.5c0 3.3 2.9 6.5 6.4 6.6l.9-1.4-1.9-.9-.8.9c-1.1-.4-2.3-1.6-2.7-2.7l.9-.8-.9-1.9-1.4.9z" fill="currentColor"/></svg>',
+  mail: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 7l8.5 6 8.5-6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>'
+};
+const handle = v => String(v || '').trim().replace(/^https?:\/\/(www\.)?(instagram|tiktok)\.com\//i, '').replace(/^@/, '').replace(/[^A-Za-z0-9._]/g, '');
+const DEFAULT_ABOUT = 'KIVA es una tienda online de ropa para chicas, nacida en Rosario.\nElegimos cada prenda pensando en cómo se usa de verdad: en la calle, en la facu, para salir. Traemos tandas chicas y novedades todas las semanas, con envío en el día en Rosario.';
+function renderFooter() {
+  const c = data().contact || {};
+  const ig = handle(c.instagram), tt = handle(c.tiktok), wa = waNumber();
+  const links = [];
+  if (ig) links.push(`<a href="https://instagram.com/${esc(ig)}" target="_blank" rel="noopener" aria-label="Instagram">${ICONS.instagram}</a>`);
+  if (tt) links.push(`<a href="https://www.tiktok.com/@${esc(tt)}" target="_blank" rel="noopener" aria-label="TikTok">${ICONS.tiktok}</a>`);
+  if (wa.length >= 8) links.push(`<a href="https://wa.me/${wa}" target="_blank" rel="noopener" aria-label="WhatsApp">${ICONS.whatsapp}</a>`);
+  if (c.email) links.push(`<a href="mailto:${esc(c.email)}" aria-label="Mail">${ICONS.mail}</a>`);
+  $('#f-social').innerHTML = links.join('') || '<span class="small">Cargá Instagram y TikTok en Contacto.</span>';
+  const cq = $('#f-consultas');
+  if (wa.length >= 8) { cq.href = `https://wa.me/${wa}?text=${encodeURIComponent('¡Hola Kiva! Tengo una consulta:')}`; cq.target = '_blank'; }
+  else { cq.href = '#contacto'; cq.removeAttribute('target'); }
+  $('#about-body').innerHTML = descHTML(c.about || DEFAULT_ABOUT);
+  const msg = encodeURIComponent('Hola Kiva, quiero cancelar mi compra. Número de pedido: ');
+  const acts = (wa.length >= 8 ? `<a class="arrep-btn" href="https://wa.me/${wa}?text=${msg}" target="_blank" rel="noopener">Cancelar por WhatsApp</a>` : '') + (c.email ? `<a class="arrep-btn" href="mailto:${esc(c.email)}?subject=${encodeURIComponent('Cancelación de compra')}">Cancelar por mail</a>` : '');
+  $('#arrep-actions').innerHTML = acts || '<span class="small">Escribinos por Instagram con tu número de pedido.</span>';
+}
 function renderContact() {
   const c = data().contact;
   const line = (label, val) => `<div class="contact-line"><b>${label}</b><span>${esc(val || 'A completar')}</span></div>`;
@@ -1008,7 +1106,17 @@ function stepsBar() {
   return `<ol class="steps" aria-label="Pasos del pedido">${names.map((n, i) => `<li class="${i === step ? 'now' : i < step ? 'done' : ''}" ${i === step ? 'aria-current="step"' : ''}><span>${i + 1}</span>${n}</li>`).join('')}</ol>`;
 }
 const shipOk = () => delivery && buyer.nombre.trim().length > 1 && (delivery === 'retiro' || (buyer.direccion.trim().length > 3 && buyer.ciudad.trim().length > 1 && cp4(buyer.cp) && PROVINCIAS.includes(buyer.provincia)));
-const waNumber = () => String(saved.contact.whatsapp || '').replace(/\D/g, '');
+/* WhatsApp links need 549 + area code + number; accept it written any common way (0341 15…, 341…, +54 9…). */
+const waNumber = () => {
+  let d = String(saved.contact.whatsapp || '').replace(/\D/g, '');
+  if (!d) return '';
+  if (d.startsWith('549')) return d;
+  if (d.startsWith('54')) return '549' + d.slice(2);
+  d = d.replace(/^0/, '');
+  const m = d.match(/^(\d{2,4})15(\d{6,8})$/);
+  if (m && (m[1] + m[2]).length === 10) d = m[1] + m[2];
+  return d.length === 10 ? '549' + d : d;
+};
 
 let lastOrder = null;
 let ckBusy = false;
@@ -1164,7 +1272,7 @@ function renderBag() {
     <div class="btn-row">${back}</div>`;
 }
 
-function renderAll() { renderMenuCats(); renderHero(); renderFilters(); renderGrid(); renderContact(); renderFaq(); renderBag(); renderEditbar(); if (pvId) renderProduct(); }
+function renderAll() { renderMenuCats(); renderHero(); renderFilters(); renderGrid(); renderContact(); renderFooter(); renderFaq(); renderBag(); renderEditbar(); if (pvId) renderProduct(); }
 
 /* ---------- Drawers ---------- */
 function anyOpen() { return !$('#menu').hidden || !$('#drawer').hidden || !$('#editor').hidden; }
@@ -1529,7 +1637,9 @@ function openContactEditor() {
     <label class="field"><span>Instagram</span><input type="text" id="ed-ig" value="${esc(edItem.instagram)}" placeholder="@kiva.ropa"></label>
     <label class="field"><span>WhatsApp (con código de área)</span><input type="tel" id="ed-wa" value="${esc(edItem.whatsapp)}" placeholder="Ej: 549 341 123 4567"></label>
     <p class="small">El botón “Enviar pedido por WhatsApp” usa este número. Escribilo con 549 adelante y sin el 15.</p>
+    <label class="field"><span>TikTok</span><input type="text" id="ed-tt" value="${esc(edItem.tiktok || '')}" placeholder="@kiva.store"></label>
     <label class="field"><span>Mail</span><input type="email" id="ed-mail" value="${esc(edItem.email)}" placeholder="hola@kiva.com"></label>
+    <label class="field"><span>Acerca de Kiva (texto de “Nosotros”)</span><textarea id="ed-about" rows="5" maxlength="1200" style="padding:10px 12px;border:1px solid var(--line);border-radius:2px;background:var(--surface);color:var(--fg);font:15px/1.5 var(--body);resize:vertical">${esc(edItem.about || DEFAULT_ABOUT)}</textarea></label>
 
   </div>`;
   $('#ed-foot').innerHTML = '<div class="ed-msg err" id="ed-err"></div><button type="button" class="cta" id="ed-done">Listo</button>';
@@ -1587,6 +1697,8 @@ $('#ed-foot').addEventListener('click', e => {
       edItem.instagram = $('#ed-ig').value.trim().slice(0, 60);
       edItem.whatsapp = $('#ed-wa').value.trim().slice(0, 30);
       edItem.email = $('#ed-mail').value.trim().slice(0, 80);
+      edItem.tiktok = $('#ed-tt').value.trim().slice(0, 60);
+      edItem.about = $('#ed-about').value.replace(/\r/g, '').trim().slice(0, 1200);
       draft.contact = edItem;
     } else if (edMode === 'ship') {
       const n = v => Math.max(0, Math.round(Number(v) || 0));
@@ -1811,7 +1923,7 @@ document.addEventListener('keydown', e => {
 });
 
 renderAll();
-const SECTIONS = ['pagos', 'envios', 'talles', 'faq', 'contacto'];
+const SECTIONS = ['pagos', 'envios', 'talles', 'faq', 'contacto', 'comprar', 'cambios', 'nosotros', 'arrepentimiento'];
 let spId = null, spHome = null;
 function openSection(id) {
   const sec = document.getElementById(id);
@@ -1835,6 +1947,10 @@ function closeSection(keepHash) {
   if ($('#pv').hidden) document.body.style.overflow = '';
   if (!keepHash) { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} }
 }
+document.querySelector('footer').addEventListener('click', e => {
+  const g = e.target.closest('[data-go]'); if (!g) return;
+  closeProduct(); openSection(g.dataset.go);
+});
 $('#sp').addEventListener('click', e => {
   if (e.target.closest('#sp-back')) { closeSection(); return; }
   if (e.target.closest('#sp-bag')) { openBag(); }

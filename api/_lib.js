@@ -74,6 +74,8 @@ export function cleanState(input) {
       instagram: str(contact.instagram, 60),
       whatsapp: str(contact.whatsapp, 30),
       email: str(contact.email, 80),
+      tiktok: str(contact.tiktok, 60),
+      about: String(contact.about == null ? '' : contact.about).replace(/\r/g, '').trim().slice(0, 1200),
       alias: str(contact.alias, 60),
       titular: str(contact.titular, 60),
       envio: Math.max(0, Math.round(Number(contact.envio) || 0))
