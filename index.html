@@ -179,19 +179,24 @@ legend { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; colo
 
 /* Info */
 .info { background: var(--head); border-top: 1px solid var(--line); }
-.info .wrap { padding-block: 48px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px; }
+.info .wrap { padding-block: 48px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
+.info .wrap > section { padding: 36px 0; border-top: 1px solid var(--line); }
+.info .wrap > section:first-child { border-top: 0; padding-top: 0; }
 .info section { scroll-margin-top: 110px; min-width: 0; }
 .info h2 { font-family: var(--display); font-weight: 300; font-size: 15px; letter-spacing: .32em; text-transform: uppercase; margin: 0 0 16px; }
 .info ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
 .info p { margin: 0 0 8px; }
 .info .wide { grid-column: 1 / -1; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.calc { display: grid; grid-template-columns: 1fr; gap: 10px; align-items: end; }
+.calc { display: grid; grid-template-columns: 1fr; gap: 10px; align-items: end; max-width: 460px; }
 .calc .field { margin: 0; }
 .calc select, .ck-form select { width: 100%; height: 46px; padding: 0 10px; border: 1px solid var(--line); border-radius: 2px; background: var(--surface); color: var(--fg); font: 15px var(--body); }
 .calc input { width: 100%; }
 .calc button { height: 46px; }
+.calc-box { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
+.calc-title { margin: 0 0 14px; font-family: var(--display); font-weight: 400; font-size: 13px; letter-spacing: .22em; text-transform: uppercase; }
 .quote { margin: 12px 0 0; font-size: 14.5px; line-height: 1.5; }
+#c-out:not(:empty) { margin-top: 16px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); font-size: 16px; }
 .quote b { font-weight: 500; }
 .two { display: grid; grid-template-columns: 1.4fr 1fr; gap: 10px; }
 .ship-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; }
@@ -278,6 +283,13 @@ footer .wrap { padding-block: 24px 40px; display: flex; flex-wrap: wrap; justify
 .pv-bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 10px; }
 .pv-back { display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 4px; border: 0; background: transparent; color: var(--fg); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; }
 .pv-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 24px 64px; }
+.sp-body { padding-block: 40px 80px; max-width: 920px; }
+.sp-body section { scroll-margin-top: 0; }
+.sp-body h2 { font-family: var(--display); font-weight: 300; font-size: clamp(22px, 3vw, 30px); letter-spacing: .28em; text-transform: uppercase; margin: 0 0 28px; }
+.sp-body, .sp-body li, .sp-body p { font-size: 16.5px; line-height: 1.7; }
+.sp-body ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 10px; }
+.sp-body .calc { max-width: 460px; }
+.sp-body .faq-item summary { font-size: 17px; }
 .pv-photo { position: relative; aspect-ratio: 4 / 5; max-width: 100%; border-radius: 2px; overflow: hidden; display: grid; place-items: center; }
 .pv-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .pv-photo svg { width: 40%; height: auto; opacity: .55; }
@@ -416,15 +428,15 @@ body.editing { padding-bottom: 120px; }
         <li>Resto del país: Correo Argentino o Andreani.</li>
         <li>Cambios de talle hasta 7 días después de recibir tu compra.</li>
       </ul>
-    </section>
-    <section id="calc">
-      <h2>Calculá tu envío</h2>
+      <div class="calc-box">
+        <h3 class="calc-title">Calculá tu envío</h3>
       <form class="calc" id="calc-form">
         <label class="field"><span>Provincia</span><select id="c-prov"></select></label>
         <label class="field"><span>Código postal</span><input type="text" id="c-cp" inputmode="numeric" placeholder="Ej: 2000" autocomplete="postal-code"></label>
         <button type="submit" class="ghost">Calcular</button>
       </form>
       <p class="quote" id="c-out" aria-live="polite"></p>
+      </div>
     </section>
     <section id="talles" class="wide">
       <h2>Guía de talles</h2>
@@ -490,6 +502,16 @@ body.editing { padding-bottom: 120px; }
   </div>
   <div class="wrap pv-body" id="pv-body"></div>
 </section>
+<section class="pv sp" id="sp" role="dialog" aria-modal="true" aria-label="Información" hidden>
+  <div class="pv-bar">
+    <div class="wrap">
+      <button type="button" class="pv-back" id="sp-back"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>Volver</button>
+      <span class="logo" style="font-size:16px">Kiva</span>
+      <button type="button" class="pv-back" id="sp-bag">Tu bolsa</button>
+    </div>
+  </div>
+  <div class="wrap sp-body" id="sp-body"></div>
+</section>
 <div class="scrim" id="scrim" hidden></div>
 <aside class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menú" hidden>
   <div class="m-head">
@@ -502,7 +524,6 @@ body.editing { padding-bottom: 120px; }
     <div class="m-sep"></div>
     <button type="button" class="m-item" data-go="pagos">Medios de pago</button>
     <button type="button" class="m-item" data-go="envios">Envíos y cambios</button>
-    <button type="button" class="m-item" data-go="calc">Calculá tu envío</button>
     <button type="button" class="m-item" data-go="talles">Guía de talles</button>
     <button type="button" class="m-item" data-go="faq">Preguntas frecuentes</button>
     <button type="button" class="m-item" data-go="contacto">Contacto</button>
@@ -687,6 +708,8 @@ $('#calc-form').addEventListener('submit', e => {
   $('#c-out').innerHTML = q.local
     ? `<b>Envío en el día: ${quoteText(q)}</b><br><span class="small">Pedí antes de las 15 h y lo recibís hoy. También podés retirarlo gratis.</span>`
     : `<b>Envío a ${esc(prov)}: ${quoteText(q)}</b><br><span class="small">${q.price ? esc(shipCfg().nota) : 'Escribinos y te pasamos el costo exacto.'}</span>`;
+  $('#c-out').classList.remove('flash'); void $('#c-out').offsetWidth; $('#c-out').classList.add('flash');
+  try { $('#c-out').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (err) {}
 });
 function renderContact() {
   const c = data().contact;
@@ -1447,13 +1470,11 @@ $('#menu').addEventListener('click', e => {
   const g = e.target.closest('[data-go]');
   const b = e.target.closest('[data-go-bag]');
   if (c) {
-    cat = c.dataset.goCat; renderFilters(); renderGrid(); closeMenu();
+    cat = c.dataset.goCat; renderFilters(); renderGrid(); closeMenu(); closeSection(); closeProduct();
     $('#filters').scrollIntoView({ behavior: 'smooth', block: 'start' });
   } else if (g) {
-    closeMenu();
-    const sec = document.getElementById(g.dataset.go);
-    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    sec.classList.remove('flash'); void sec.offsetWidth; sec.classList.add('flash');
+    closeMenu(); closeProduct();
+    openSection(g.dataset.go);
   } else if (b) {
     closeMenu(); openBag();
   }
@@ -1528,13 +1549,43 @@ $('#close-bag').addEventListener('click', () => { closeBag(); $('#open-bag').foc
 $('#scrim').addEventListener('click', () => { closeMenu(); closeBag(); closeEditor(); });
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
-  if (!$('#editor').hidden) closeEditor(); else if (!$('#menu').hidden) closeMenu(); else if (!$('#drawer').hidden) closeBag(); else if (!$('#pv').hidden) closeProduct();
+  if (!$('#editor').hidden) closeEditor(); else if (!$('#menu').hidden) closeMenu(); else if (!$('#drawer').hidden) closeBag(); else if (!$('#pv').hidden) closeProduct(); else if (!$('#sp').hidden) closeSection();
 });
 
 renderAll();
+const SECTIONS = ['pagos', 'envios', 'talles', 'faq', 'contacto'];
+let spId = null, spHome = null;
+function openSection(id) {
+  const sec = document.getElementById(id);
+  if (!sec || !SECTIONS.includes(id)) return;
+  closeSection(true);
+  spId = id;
+  spHome = document.createComment('sp');
+  sec.parentNode.insertBefore(spHome, sec);
+  $('#sp-body').appendChild(sec);
+  $('#sp').hidden = false; $('#sp').scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+  try { history.replaceState(null, '', '#' + id); } catch (e) {}
+  $('#sp-back').focus();
+}
+function closeSection(keepHash) {
+  if (!spId) return;
+  const sec = document.getElementById(spId);
+  if (sec && spHome) spHome.parentNode.replaceChild(sec, spHome);
+  spId = null; spHome = null;
+  $('#sp').hidden = true;
+  if ($('#pv').hidden) document.body.style.overflow = '';
+  if (!keepHash) { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} }
+}
+$('#sp').addEventListener('click', e => {
+  if (e.target.closest('#sp-back')) { closeSection(); return; }
+  if (e.target.closest('#sp-bag')) { openBag(); }
+});
 function openFromHash() {
-  const h = decodeURIComponent((location.hash || '').slice(1));
+  let h = decodeURIComponent((location.hash || '').slice(1));
+  if (h === 'calc') h = 'envios';
   if (h && data().products.some(p => p.id === h)) openProduct(h);
+  else if (SECTIONS.includes(h)) openSection(h);
 }
 openFromHash();
 (function handlePayReturn() {
