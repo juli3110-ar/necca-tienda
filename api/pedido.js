@@ -1,6 +1,8 @@
 import { randomBytes } from 'node:crypto';
 import { json, blobReady, loadState, transferPrice, PAGOS, PROVINCIAS, cp4, shipQuote, sizeLeft, updateStock } from './_lib.js';
 import { saveOrder, findOrder } from './_orders.js';
+import { readToken } from './_users.js';
+import { sendMail, orderMailForCustomer, orderMailForOwner } from './_mail.js';
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL'];
 const str = (v, max) => String(v == null ? '' : v).trim().slice(0, max);
@@ -64,6 +66,7 @@ export async function POST(request) {
     id, key: randomBytes(12).toString('hex'),
     fecha: new Date().toISOString(),
     estado: pago === 'online' ? 'pendiente' : 'a_confirmar',
+    cuenta: (() => { try { return readToken(request) || ''; } catch { return ''; } })(),
     nombre, entrega, direccion, detalle, ciudad: entrega === 'envio' ? ciudad : '', provincia: entrega === 'envio' ? provincia : '', cp: entrega === 'envio' ? cp : '', pago,
     items, subtotal, descuento, envio, total
   };
@@ -71,6 +74,11 @@ export async function POST(request) {
   if (pago !== 'online') {
     try { await updateStock(items, -1); order.stock = true; } catch (e) { console.error('stock', e && e.message); }
     await saveOrder(order);
+    const owner = process.env.OWNER_EMAIL || state.contact.email;
+    const mails = [];
+    if (owner) mails.push(sendMail({ to: owner, ...orderMailForOwner(order, false) }));
+    if (order.cuenta) mails.push(sendMail({ to: order.cuenta, ...orderMailForCustomer(order, false) }));
+    await Promise.all(mails);
     return json({ ok: true, id, total, pago });
   }
 

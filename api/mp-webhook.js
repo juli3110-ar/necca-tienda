@@ -1,4 +1,5 @@
-import { json, updateStock } from './_lib.js';
+import { json, updateStock, loadState } from './_lib.js';
+import { sendMail, orderMailForCustomer, orderMailForOwner } from './_mail.js';
 import { findOrder, saveOrder } from './_orders.js';
 
 const STATUS = { approved: 'pagado', authorized: 'pagado', rejected: 'rechazado', cancelled: 'rechazado', refunded: 'rechazado', charged_back: 'rechazado' };
@@ -31,7 +32,18 @@ export async function POST(request) {
     order.mp_pago = String(pay.id);
     order.mp_estado = pay.status;
     if (pay.payer && pay.payer.email) order.email = String(pay.payer.email).slice(0, 120);
+    const notify = order.estado === 'pagado' && !order.avisado;
+    if (notify) order.avisado = true;
     await saveOrder(order);
+    if (notify) {
+      let owner = process.env.OWNER_EMAIL || '';
+      if (!owner) { try { owner = (await loadState()).contact.email || ''; } catch (e) {} }
+      const to = order.cuenta || order.email;
+      await Promise.all([
+        owner ? sendMail({ to: owner, ...orderMailForOwner(order, true) }) : null,
+        to ? sendMail({ to, ...orderMailForCustomer(order, true) }) : null
+      ]);
+    }
     return json({ ok: true });
   } catch (err) {
     console.error('mp webhook', err && err.message);

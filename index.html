@@ -58,6 +58,37 @@ input:focus, textarea:focus, select:focus { border-color: var(--fg) !important; 
 .logo { font-family: var(--display); font-weight: 300; font-size: 20px; letter-spacing: .42em; padding-left: .42em; line-height: 1; text-transform: uppercase; }
 .bag-btn { display: inline-flex; align-items: center; gap: 10px; background: transparent; border: 1px solid rgba(244,238,232,.35); color: var(--head-ink); border-radius: 2px; padding: 10px 16px; font-weight: 300; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; }
 .bag-btn:hover { background: rgba(244,238,232,.08); }
+.top .right { display: flex; align-items: center; gap: 4px; }
+.icon-btn { position: relative; width: 44px; height: 44px; border: 0; background: transparent; color: var(--head-ink); display: grid; place-items: center; border-radius: 6px; }
+.icon-btn:hover { background: rgba(244,238,232,.08); }
+.icon-btn .dot { position: absolute; top: 9px; right: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--good); }
+.search-bar { border-top: 1px solid var(--line); background: var(--head); }
+.s-row { display: flex; align-items: center; gap: 12px; padding-block: 10px; }
+.s-row input { flex: 1; min-width: 0; height: 46px; border: 0; border-bottom: 1px solid var(--muted); background: transparent; color: var(--fg); font: 300 18px var(--body); letter-spacing: .02em; outline: none; }
+.s-row input:focus { border-bottom-color: var(--fg); }
+.s-results { display: flex; flex-direction: column; padding-bottom: 12px; max-height: 60vh; overflow-y: auto; }
+.s-results:empty { display: none; }
+.s-item { width: 100%; display: grid; grid-template-columns: 48px 1fr auto; gap: 14px; align-items: center; padding: 8px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; color: var(--fg); text-align: left; font-size: 14.5px; }
+.s-item .thumb { width: 48px; height: 60px; border-radius: 2px; overflow: hidden; display: grid; place-items: center; }
+.s-item .thumb img { width: 100%; height: 100%; object-fit: cover; }
+.s-item .thumb svg { width: 50%; height: auto; }
+.s-item small { display: block; color: var(--muted); font-size: 12.5px; }
+.s-all { align-self: flex-start; margin-top: 10px; padding: 0; border: 0; background: transparent; color: var(--fg); font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase; text-decoration: underline; text-underline-offset: 4px; }
+.s-none { color: var(--muted); font-size: 14px; padding: 6px 0; }
+.q-chip { margin: -2px 0 6px; font-size: 13.5px; color: var(--muted); }
+.q-chip button { margin-left: 8px; border: 1px solid var(--line); background: transparent; color: var(--fg); border-radius: 999px; padding: 4px 12px; font-size: 12.5px; }
+.acc-tabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line); }
+.acc-tabs button { height: 48px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--muted); font-size: 12.5px; letter-spacing: .16em; text-transform: uppercase; }
+.acc-tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--fg); }
+.acc-hello { font-family: var(--display); font-weight: 300; font-size: 22px; letter-spacing: .06em; margin: 4px 0 0; }
+.acc-h { font-size: 11.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin: 10px 0 0; }
+.acc-order { border: 1px solid var(--line); border-radius: 4px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; font-size: 14px; background: var(--surface); }
+.acc-order .top-row { display: flex; justify-content: space-between; gap: 8px; }
+.link-btn { align-self: flex-start; padding: 0; border: 0; background: transparent; color: var(--muted); font-size: 13.5px; text-decoration: underline; text-underline-offset: 4px; }
+.acc-msg { font-size: 13.5px; margin: 0; min-height: 1em; }
+.acc-msg.ok { color: var(--good); }
+.acc-msg.err { color: var(--warn); }
+@media (max-width: 420px) { .bag-btn .bag-label { display: none; } .bag-btn { padding: 10px 12px; } .icon-btn { width: 40px; } }
 .count { min-width: 22px; height: 22px; border-radius: 999px; background: var(--head-ink); color: var(--head); font-size: 11px; font-weight: 500; display: inline-grid; place-items: center; padding: 0 6px; font-variant-numeric: tabular-nums; }
 .burger { width: 44px; height: 44px; border: 0; background: transparent; color: var(--head-ink); display: grid; place-items: center; border-radius: 6px; }
 .burger:hover { background: rgba(244,238,232,.08); }
@@ -480,17 +511,30 @@ body.editing { padding-bottom: 120px; }
       <button class="burger" id="open-menu" type="button" aria-label="Abrir menú" aria-haspopup="dialog"><span></span></button>
       <span class="logo">Kivara</span>
     </div>
+    <div class="right">
+    <button class="icon-btn" id="open-search" type="button" aria-label="Buscar" aria-expanded="false" aria-controls="search-bar"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+    <button class="icon-btn" id="open-acct" type="button" aria-label="Mi cuenta" aria-haspopup="dialog"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><i class="dot" id="acct-dot" hidden></i></button>
     <button class="bag-btn" id="open-bag" type="button" aria-haspopup="dialog">
       <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l-1 13H7L6 8Zm3 0V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
       <span class="bag-label">Tu bolsa</span>
       <span class="count" id="count">0</span>
     </button>
+    </div>
+  </div>
+  <div class="search-bar" id="search-bar" hidden>
+    <div class="wrap s-row">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="text" id="q" enterkeyhint="search" placeholder="Buscar prendas, colores…" autocomplete="off" aria-label="Buscar en la tienda">
+      <button type="button" class="x" id="close-search" aria-label="Cerrar búsqueda">×</button>
+    </div>
+    <div class="wrap s-results" id="s-results"></div>
   </div>
 </header>
 
 <section class="hero" id="hero"></section>
 <main class="wrap">
   <h2 class="filters" id="filters">Todo</h2>
+  <div class="q-chip" id="q-chip" hidden></div>
   <div class="toolbar">
     <div class="tb-cell">
       <button type="button" class="tb-btn" id="f-open" aria-expanded="false" aria-controls="f-panel">Filtros<span id="f-count"></span></button>
@@ -677,6 +721,13 @@ body.editing { padding-bottom: 120px; }
     <button type="button" class="m-item" data-go-bag="1">Tu bolsa</button>
   </nav>
 </aside>
+<aside class="drawer" id="acct" role="dialog" aria-modal="true" aria-labelledby="acct-title" hidden>
+  <div class="d-head">
+    <h2 id="acct-title">Mi cuenta</h2>
+    <button class="x" id="close-acct" type="button" aria-label="Cerrar">×</button>
+  </div>
+  <div class="d-body" id="acct-body"></div>
+</aside>
 <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="bag-title" hidden>
   <div class="d-head">
     <h2 id="bag-title">Tu bolsa</h2>
@@ -847,6 +898,7 @@ function shownProducts() {
   const all = data().products;
   let list = all.filter(p => cat === 'all' || p.cat === cat);
   if (editing) return list;
+  if (gridQuery) list = list.filter(p => matchesQuery(p, gridQuery));
   if (fColor) list = list.filter(p => colorsOf(p).some(c => c.n.toLowerCase() === fColor));
   if (fSize) list = list.filter(p => sizeInfo(p, fSize).ok);
   const pr = PRICE_RANGES.find(r => r.k === fPrice); if (pr) list = list.filter(p => pr.ok(Number(p.price) || 0));
@@ -860,6 +912,8 @@ function shownProducts() {
 const SORTS = [{ k: 'dest', t: 'Destacados' }, { k: 'new', t: 'Más nuevos' }, { k: 'asc', t: 'Menor precio' }, { k: 'desc', t: 'Mayor precio' }, { k: 'az', t: 'Nombre A-Z' }];
 let fOpenGroup = '', sOpen = false;
 function renderToolbar() {
+  $('#q-chip').hidden = !gridQuery || editing;
+  if (gridQuery) $('#q-chip').innerHTML = `Resultados para “${esc(gridQuery)}” <button type="button">Borrar búsqueda ×</button>`;
   const n = (cat !== 'all' ? 1 : 0) + (fColor ? 1 : 0) + (fPrice ? 1 : 0) + (fSize ? 1 : 0);
   $('#f-count').textContent = n ? `(${n})` : '';
   $('#f-open').setAttribute('aria-expanded', String(fOpen));
@@ -1139,7 +1193,7 @@ async function submitOrder() {
   ckBusy = true; ckError = ''; renderBag();
   try {
     const res = await ckFetch('/api/pedido', {
-      method: 'POST', headers: { 'content-type': 'application/json' },
+      method: 'POST', headers: Object.assign({ 'content-type': 'application/json' }, authHeaders()),
       body: JSON.stringify({ items: cart.map(l => ({ id: l.id, size: l.size, color: l.color || '', qty: l.qty })), entrega: delivery, pago: payment, nombre: buyer.nombre, direccion: buyer.direccion, detalle: buyer.detalle, provincia: buyer.provincia, ciudad: buyer.ciudad, cp: buyer.cp })
     });
     lastOrder = { id: res.id, total: res.total, pago: res.pago };
@@ -1275,9 +1329,171 @@ function renderBag() {
 function renderAll() { renderMenuCats(); renderHero(); renderFilters(); renderGrid(); renderContact(); renderFooter(); renderFaq(); renderBag(); renderEditbar(); if (pvId) renderProduct(); }
 
 /* ---------- Drawers ---------- */
-function anyOpen() { return !$('#menu').hidden || !$('#drawer').hidden || !$('#editor').hidden; }
+function anyOpen() { return !$('#menu').hidden || !$('#drawer').hidden || !$('#editor').hidden || !$('#acct').hidden; }
 function syncScrim() { $('#scrim').hidden = !anyOpen(); }
-function openBag() { $('#drawer').hidden = false; syncScrim(); renderBag(); $('#close-bag').focus(); }
+/* ---------- Search ---------- */
+let gridQuery = '';
+const norm = t => String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+function matchesQuery(p, q) {
+  const words = norm(q).split(/\s+/).filter(Boolean);
+  if (!words.length) return true;
+  const hay = norm([p.name, p.color, colorsOf(p).map(c => c.n).join(' '), catName(p.cat), p.desc].join(' '));
+  return words.every(w => hay.includes(w));
+}
+function renderSearch() {
+  const q = $('#q').value.trim();
+  const box = $('#s-results');
+  if (!q) { box.innerHTML = ''; return; }
+  const hits = data().products.filter(p => matchesQuery(p, q));
+  box.innerHTML = hits.length
+    ? hits.slice(0, 6).map(p => `<button type="button" class="s-item" data-open="${esc(p.id)}">${photoHTML(p, 'thumb')}<span>${esc(p.name)}<small>${esc(colorsOf(p).map(c => c.n).join(' · '))}</small></span><span>${peso(p.price)}</span></button>`).join('') + (hits.length > 6 || hits.length > 1 ? `<button type="button" class="s-all" data-all="1">Ver ${hits.length} resultados</button>` : '')
+    : `<p class="s-none">No encontramos “${esc(q)}”. Probá con otra palabra.</p>`;
+}
+function openSearch() { $('#search-bar').hidden = false; $('#open-search').setAttribute('aria-expanded', 'true'); $('#q').focus(); renderSearch(); }
+function closeSearch() { $('#search-bar').hidden = true; $('#open-search').setAttribute('aria-expanded', 'false'); }
+function applyQuery(q) {
+  gridQuery = q.trim(); closeSearch(); closeProduct(); closeSection && closeSection();
+  renderGrid(); $('#filters').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ---------- Customer accounts ---------- */
+let acct = store.get('kivara-user', null);
+let acctTab = 'login', acctOrders = null, acctMsg = '', resetToken = '';
+const authHeaders = () => acct && acct.token ? { 'x-user-token': acct.token } : {};
+function setAcct(a) { acct = a; store.set('kivara-user', a); $('#acct-dot').hidden = !a; }
+async function acctFetch(path, opts) {
+  let res; try { res = await fetch(path, opts); } catch (e) { throw new Error('No hay conexión. Probá de nuevo.'); }
+  let body = {}; try { body = await res.json(); } catch (e) {}
+  if (res.status === 404 && !body.error) throw new Error('Las cuentas funcionan en la tienda publicada, no en esta vista previa.');
+  if (res.status === 401 && acct) { setAcct(null); }
+  if (!res.ok) throw new Error(body.message || 'No se pudo completar. Probá de nuevo.');
+  return body;
+}
+function fillBuyerFromAcct() {
+  if (!acct || !acct.user) return;
+  const d = acct.user.datos || {};
+  if (!buyer.nombre) buyer.nombre = acct.user.nombre || '';
+  ['provincia', 'ciudad', 'cp', 'direccion', 'detalle'].forEach(k => { if (d[k] && !buyer[k]) buyer[k] = d[k]; });
+  store.set('necca-buyer', buyer);
+}
+function renderAcct() {
+  const body = $('#acct-body');
+  if (resetToken) {
+    body.innerHTML = `<p class="acc-hello">Contraseña nueva</p>
+      <form class="form" id="reset-form" novalidate>
+        <label class="field"><span>Contraseña nueva</span><input type="password" id="r-pass" autocomplete="new-password" minlength="6" required></label>
+        <label class="field"><span>Repetila</span><input type="password" id="r-pass2" autocomplete="new-password" minlength="6" required></label>
+        <p class="acc-msg err" id="r-msg" role="alert"></p>
+        <button type="submit" class="cta" id="r-submit">Guardar y entrar</button>
+      </form>`;
+    return;
+  }
+  if (!acct && acctTab === 'forgot') {
+    body.innerHTML = `<p class="acc-hello">¿Olvidaste tu contraseña?</p>
+      <p class="small" style="margin:0">Escribí tu mail y te mandamos un link para elegir una nueva.</p>
+      <form class="form" id="forgot-form" novalidate>
+        <label class="field"><span>Mail</span><input type="email" id="f-email" autocomplete="email" required></label>
+        <p class="acc-msg" id="f-msg" aria-live="polite"></p>
+        <button type="submit" class="cta" id="f-submit">Mandarme el link</button>
+      </form>
+      <button type="button" class="ghost" data-tab="login" style="align-self:flex-start">Volver</button>`;
+    return;
+  }
+  if (!acct) {
+    body.innerHTML = `<div class="acc-tabs" role="tablist"><button type="button" role="tab" data-tab="login" aria-selected="${acctTab === 'login'}">Iniciar sesión</button><button type="button" role="tab" data-tab="reg" aria-selected="${acctTab === 'reg'}">Crear cuenta</button></div>
+      <form class="form" id="acct-form" novalidate>
+        ${acctTab === 'reg' ? '<label class="field"><span>Nombre</span><input type="text" id="a-nombre" autocomplete="name" required></label>' : ''}
+        <label class="field"><span>Mail</span><input type="email" id="a-email" autocomplete="email" required></label>
+        <label class="field"><span>Contraseña</span><input type="password" id="a-pass" autocomplete="${acctTab === 'reg' ? 'new-password' : 'current-password'}" minlength="6" required></label>
+        <p class="acc-msg err" id="a-msg" role="alert">${esc(acctMsg)}</p>
+        <button type="submit" class="cta" id="a-submit">${acctTab === 'reg' ? 'Crear cuenta' : 'Entrar'}</button>
+        ${acctTab === 'reg' ? '<p class="small">Con tu cuenta guardamos tu dirección para la próxima compra y ves tus pedidos.</p>' : '<button type="button" class="link-btn" data-tab="forgot">¿Olvidaste tu contraseña?</button>'}
+      </form>`;
+    return;
+  }
+  const u = acct.user || {}, d = u.datos || {};
+  body.innerHTML = `<p class="acc-hello">Hola, ${esc((u.nombre || '').split(' ')[0])}</p><p class="small" style="margin:0">${esc(u.email || '')}</p>
+    <p class="acc-h">Mis pedidos</p>
+    <div id="a-orders">${acctOrders === null ? '<p class="small">Cargando…</p>' : acctOrders.length ? acctOrders.map(o => `<div class="acc-order"><div class="top-row"><b style="font-weight:500">#${esc(o.id)}</b><span>${peso(o.total || 0)}</span></div><span class="small">${(() => { try { return new Date(o.fecha).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' }); } catch (e) { return ''; } })()} · ${esc(({ a_confirmar: 'A confirmar', pendiente: 'Esperando pago', pagado: 'Pagado', rechazado: 'Pago rechazado', entregado: 'Entregado', cancelado: 'Cancelado' })[o.estado] || o.estado)}</span><span class="small">${(o.items || []).map(i => `${i.cantidad} × ${esc(i.nombre)} · ${esc(i.talle)}`).join('<br>')}</span></div>`).join('') : '<p class="small">Todavía no hiciste pedidos con esta cuenta.</p>'}</div>
+    <p class="acc-h">Mis datos de envío</p>
+    <form class="form" id="acct-data" novalidate>
+      <label class="field"><span>Nombre</span><input type="text" id="d-nombre" value="${esc(u.nombre || '')}" autocomplete="name"></label>
+      <label class="field"><span>Teléfono</span><input type="tel" id="d-tel" value="${esc(d.telefono || '')}" autocomplete="tel"></label>
+      <div class="two"><label class="field"><span>Provincia</span><select id="d-prov">${['', ...PROVINCIAS].map(p => `<option ${p === (d.provincia || '') ? 'selected' : ''}>${p}</option>`).join('')}</select></label>
+      <label class="field"><span>Código postal</span><input type="text" id="d-cp" inputmode="numeric" value="${esc(d.cp || '')}"></label></div>
+      <label class="field"><span>Ciudad</span><input type="text" id="d-ciudad" value="${esc(d.ciudad || '')}"></label>
+      <label class="field"><span>Dirección</span><input type="text" id="d-dir" value="${esc(d.direccion || '')}" autocomplete="street-address"></label>
+      <label class="field"><span>Piso, depto o barrio</span><input type="text" id="d-det" value="${esc(d.detalle || '')}"></label>
+      <p class="acc-msg" id="d-msg" aria-live="polite"></p>
+      <button type="submit" class="cta">Guardar datos</button>
+    </form>
+    <button type="button" class="ghost" id="a-logout" style="align-self:flex-start">Cerrar sesión</button>`;
+}
+async function loadAcct() {
+  if (!acct) return;
+  try { const res = await acctFetch('/api/cuenta', { headers: authHeaders(), cache: 'no-store' }); acct.user = res.user; setAcct(acct); acctOrders = res.pedidos || []; }
+  catch (e) { acctOrders = []; if (!acct) acctMsg = e.message; }
+  if (!$('#acct').hidden) renderAcct();
+}
+function openAcct() { closeMenu(); $('#acct').hidden = false; syncScrim(); acctOrders = null; renderAcct(); loadAcct(); $('#close-acct').focus(); }
+function closeAcct() { $('#acct').hidden = true; syncScrim(); }
+$('#open-acct').addEventListener('click', openAcct);
+$('#close-acct').addEventListener('click', closeAcct);
+$('#acct').addEventListener('click', e => {
+  const t = e.target.closest('[data-tab]'); if (t) { acctTab = t.dataset.tab; acctMsg = ''; renderAcct(); return; }
+  if (e.target.id === 'a-logout') { setAcct(null); acctOrders = null; acctTab = 'login'; renderAcct(); }
+});
+$('#acct').addEventListener('submit', async e => {
+  e.preventDefault();
+  if (e.target.id === 'acct-form') {
+    const btn = $('#a-submit'); btn.disabled = true; $('#a-msg').textContent = '';
+    try {
+      const res = await acctFetch('/api/cuenta', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ accion: acctTab === 'reg' ? 'registro' : 'login', nombre: $('#a-nombre') ? $('#a-nombre').value : '', email: $('#a-email').value, password: $('#a-pass').value }) });
+      setAcct({ token: res.token, user: res.user }); acctMsg = ''; fillBuyerFromAcct(); acctOrders = null; renderAcct(); loadAcct();
+    } catch (err) { $('#a-msg').textContent = err.message; btn.disabled = false; }
+  } else if (e.target.id === 'forgot-form') {
+    const msg = $('#f-msg'), btn = $('#f-submit'); btn.disabled = true; msg.className = 'acc-msg'; msg.textContent = 'Enviando…';
+    try {
+      const res = await acctFetch('/api/cuenta', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ accion: 'olvide', email: $('#f-email').value }) });
+      msg.className = 'acc-msg ok'; msg.textContent = res.message;
+    } catch (err) { msg.className = 'acc-msg err'; msg.textContent = err.message; btn.disabled = false; }
+  } else if (e.target.id === 'reset-form') {
+    const msg = $('#r-msg'), btn = $('#r-submit');
+    if ($('#r-pass').value !== $('#r-pass2').value) { msg.textContent = 'Las dos contraseñas no coinciden.'; return; }
+    btn.disabled = true; msg.textContent = '';
+    try {
+      const res = await acctFetch('/api/cuenta', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ accion: 'reset', token: resetToken, password: $('#r-pass').value }) });
+      resetToken = ''; setAcct({ token: res.token, user: res.user }); fillBuyerFromAcct(); acctOrders = null; renderAcct(); loadAcct();
+    } catch (err) { msg.textContent = err.message; btn.disabled = false; }
+  } else if (e.target.id === 'acct-data') {
+    const msg = $('#d-msg'); msg.className = 'acc-msg'; msg.textContent = 'Guardando…';
+    try {
+      const res = await acctFetch('/api/cuenta', { method: 'POST', headers: Object.assign({ 'content-type': 'application/json' }, authHeaders()), body: JSON.stringify({ accion: 'datos', nombre: $('#d-nombre').value, datos: { telefono: $('#d-tel').value, provincia: $('#d-prov').value, cp: $('#d-cp').value, ciudad: $('#d-ciudad').value, direccion: $('#d-dir').value, detalle: $('#d-det').value } }) });
+      acct.user = res.user; setAcct(acct);
+      ['nombre', 'provincia', 'ciudad', 'cp', 'direccion', 'detalle'].forEach(k => { buyer[k] = k === 'nombre' ? res.user.nombre : (res.user.datos[k] || buyer[k]); }); store.set('necca-buyer', buyer);
+      msg.className = 'acc-msg ok'; msg.textContent = 'Datos guardados. Se completan solos cuando compres.';
+    } catch (err) { msg.className = 'acc-msg err'; msg.textContent = err.message; }
+  }
+});
+$('#open-search').addEventListener('click', () => { if ($('#search-bar').hidden) openSearch(); else closeSearch(); });
+$('#close-search').addEventListener('click', closeSearch);
+$('#q').addEventListener('input', renderSearch);
+$('#q').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); applyQuery($('#q').value); } });
+$('#s-results').addEventListener('click', e => {
+  const o = e.target.closest('[data-open]'); if (o) { closeSearch(); openProduct(o.dataset.open); return; }
+  if (e.target.closest('[data-all]')) applyQuery($('#q').value);
+});
+$('#q-chip').addEventListener('click', e => { if (e.target.closest('button')) { gridQuery = ''; $('#q').value = ''; renderGrid(); } });
+$('#acct-dot').hidden = !acct;
+(function resetFromLink() {
+  const m = (location.hash || '').match(/^#reset=([A-Za-z0-9_.-]+)$/);
+  if (!m) return;
+  resetToken = m[1];
+  try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+  openAcct();
+})();
+
+function openBag() { fillBuyerFromAcct(); $('#drawer').hidden = false; syncScrim(); renderBag(); $('#close-bag').focus(); }
 function closeBag() { $('#drawer').hidden = true; syncScrim(); }
 function openMenu() { $('#menu').hidden = false; syncScrim(); $('#close-menu').focus(); }
 function closeMenu() { $('#menu').hidden = true; syncScrim(); }
@@ -1915,10 +2131,12 @@ $('#bag-body').addEventListener('input', e => {
 initCalc();
 $('#open-bag').addEventListener('click', openBag);
 $('#close-bag').addEventListener('click', () => { closeBag(); $('#open-bag').focus(); });
-$('#scrim').addEventListener('click', () => { closeMenu(); closeBag(); closeEditor(); });
+$('#scrim').addEventListener('click', () => { closeMenu(); closeBag(); closeEditor(); closeAcct(); });
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
   if (fOpen || sOpen) { fOpen = false; sOpen = false; renderToolbar(); return; }
+  if (!$('#search-bar').hidden) { closeSearch(); return; }
+  if (!$('#acct').hidden) { closeAcct(); return; }
   if (!$('#editor').hidden) closeEditor(); else if (!$('#menu').hidden) closeMenu(); else if (!$('#drawer').hidden) closeBag(); else if (!$('#pv').hidden) closeProduct(); else if (!$('#sp').hidden) closeSection();
 });
 
