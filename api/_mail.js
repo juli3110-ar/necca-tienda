@@ -7,7 +7,7 @@ export const peso = n => '$' + Math.round(Number(n) || 0).toLocaleString('es-AR'
 
 /** A simple, clean mail layout. `rows` are paragraphs (plain text, escaped here); `button` is {text, url}. */
 export function layout({ title, rows = [], button, footer }) {
-  const brand = esc(process.env.MAIL_NAME || 'Kivara').toUpperCase().split('').join('&nbsp;');
+  const brand = esc(process.env.MAIL_NAME || 'Guinzoni').toUpperCase().split('').join('&nbsp;');
   return `<!doctype html><html><body style="margin:0;background:#f4f1ec;font-family:Helvetica,Arial,sans-serif;color:#1a1718">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:32px 16px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff">
@@ -23,7 +23,7 @@ ${footer ? `<p style="margin:20px 0 0;font-size:12.5px;color:#8a8384;line-height
 /** Sends one mail. Never throws: returns true/false so a mail problem never breaks a sale. */
 export async function sendMail({ to, subject, html, text }) {
   if (!mailReady() || !to) return false;
-  const from = process.env.MAIL_FROM, name = process.env.MAIL_NAME || 'Kivara';
+  const from = process.env.MAIL_FROM, name = process.env.MAIL_NAME || 'Guinzoni';
   try {
     let res;
     if (process.env.BREVO_API_KEY) {

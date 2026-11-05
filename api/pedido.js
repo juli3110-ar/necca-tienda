@@ -99,7 +99,7 @@ export async function POST(request) {
     items: mpItems,
     payer: { name: nombre },
     external_reference: id,
-    statement_descriptor: 'KIVARA',
+    statement_descriptor: 'GUINZONI',
     back_urls: {
       success: `${origin}/?pago=ok&pedido=${id}`,
       pending: `${origin}/?pago=pendiente&pedido=${id}`,
