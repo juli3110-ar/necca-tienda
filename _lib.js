@@ -91,7 +91,7 @@ export function cleanState(input) {
         cat: str(p.cat, 40).replace(/[^A-Za-z0-9_-]/g, ''),
         color: str(p.color, 40),
         price,
-        badge: p.badge ? 'Nuevo' : '',
+        badge: typeof p.badge === 'string' ? p.badge.replace(/[<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 24) : (p.badge ? 'Nuevo' : ''),
         desc: String(p.desc == null ? '' : p.desc).replace(/\r/g, '').trim().slice(0, 800),
         img: safeImg(p.img),
         sizes: cleanSizes(p.sizes),
