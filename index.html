@@ -115,13 +115,6 @@ input:focus, textarea:focus, select:focus { border-color: var(--fg) !important; 
 }
 
 /* Catalog */
-.kvh { margin: 40px 0 44px; padding: 28px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-.kvh h2 { font-family: var(--display); font-weight: 300; font-size: 15px; letter-spacing: .32em; text-transform: uppercase; margin: 0 0 6px; }
-.kvh-lead { color: var(--muted); margin: 0 0 22px; max-width: 60ch; }
-.kvh-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
-.kvh-grid h3 { font-family: var(--display); font-weight: 400; font-size: 12px; letter-spacing: .24em; text-transform: uppercase; margin: 0 0 8px; }
-.kvh-grid p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
-@media (max-width: 760px) { .kvh { margin: 28px 0 32px; } .kvh-grid { grid-template-columns: 1fr; gap: 18px; } }
 .filters { font-family: var(--display); font-weight: 300; font-size: 15px; letter-spacing: .32em; text-transform: uppercase; margin: 0 0 8px; padding-bottom: 12px; border-bottom: 1px solid var(--line); scroll-margin-top: 110px; }
 .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin: 0 0 20px; position: relative; z-index: 6; }
 .tb-cell { position: relative; }
@@ -154,7 +147,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--fg) !important; 
 .ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .ph svg { width: 46%; height: auto; opacity: .55; }
 .ph .ph-label { position: absolute; left: 10px; bottom: 8px; font-size: 11px; letter-spacing: .08em; opacity: .7; }
-.badge { position: absolute; top: 10px; left: 10px; z-index: 1; background: #0E0C0D; color: #F4EEE8; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; padding: 4px 8px; border-radius: 2px;  max-width: calc(100% - 20px); white-space: normal; line-height: 1.35; }
+.badge { position: absolute; top: 10px; left: 10px; z-index: 1; background: #0E0C0D; color: #F4EEE8; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; padding: 4px 8px; border-radius: 2px; }
 .name { font-family: var(--display); font-weight: 400; font-size: 15px; letter-spacing: .04em; line-height: 1.3; margin: 0; }
 .color { font-size: 13px; color: var(--muted); }
 .prices { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-variant-numeric: tabular-nums; }
@@ -547,15 +540,6 @@ body.editing { padding-bottom: 120px; }
 
 <section class="hero" id="hero"></section>
 <main class="wrap">
-  <section class="kvh" id="como-funciona" aria-labelledby="how-t">
-    <h2 id="how-t">Cómo funciona</h2>
-    <p class="kvh-lead">Cada jean lo busco en ferias y lo customizo a mano, uno por uno. Por eso no hay dos iguales: cada pieza existe una sola vez.</p>
-    <div class="kvh-grid">
-      <div><h3>En stock</h3><p>Es exactamente el jean de las fotos, en el talle que dice. Fijate sus medidas reales en el detalle del producto.</p></div>
-      <div><h3>Por encargo</h3><p>Busco un jean parecido en tu talle y le hago el mismo diseño. Antes de customizarlo te mando una foto por WhatsApp para que lo apruebes. El tono o el corte pueden variar un poco.</p></div>
-      <div><h3>Tiempos</h3><p>Lo que está en stock sale enseguida, con envío en el día en Rosario. Los encargos tardan de 10 a 15 días.</p></div>
-    </div>
-  </section>
   <h2 class="filters" id="filters">Todo</h2>
   <div class="q-chip" id="q-chip" hidden></div>
   <div class="toolbar">
@@ -843,7 +827,7 @@ function sizeHint(p) {
   if (!sizesFor(p).some(s => sizeInfo(p, s).ok)) return 'Sin stock por ahora';
   if (!sel) return 'Elegí tu talle';
   const i = sizeInfo(p, sel);
-  if (i.enc) return isJeanCat(p.cat) ? `Talle ${sel} por encargo: busco uno parecido en tu talle y te mando foto antes de customizarlo (10 a 15 días)` : `Talle ${sel} por encargo: llega en la próxima tanda`;
+  if (i.enc) return `Talle ${sel} por encargo: llega en la próxima tanda`;
   if (i.left <= 2) return `Talle ${sel}: ${i.left === 1 ? 'queda 1' : 'quedan ' + i.left}`;
   return `Talle ${sel} disponible`;
 }
@@ -1667,9 +1651,9 @@ function openProductEditor(id) {
       <label class="upload-btn" style="align-self:flex-start">Agregar otra foto<input type="file" id="ed-file2" accept="image/*"></label>
       <div class="ed-msg" id="ed-msg2" aria-live="polite"></div>
     </div>
-    <label class="field"><span>Precio de lista ($)</span><input type="text" id="ed-price" inputmode="numeric" autocomplete="off" value="${edItem.price ? Number(edItem.price).toLocaleString('es-AR') : ''}" placeholder="Ej: 50.000"></label>
+    <label class="field"><span>Precio de lista ($)</span><input type="number" id="ed-price" inputmode="numeric" min="0" step="100" value="${esc(edItem.price)}" placeholder="Ej: 34900"></label>
     <label class="field"><span>Descripción</span><textarea id="ed-desc" rows="5" maxlength="800" placeholder="Ej: Vestido lencero de satén, con breteles regulables y largo midi. Ideal para salir o para un evento de día." style="padding:10px 12px;border:1px solid var(--line);border-radius:2px;background:var(--surface);color:var(--fg);font:15px/1.5 var(--body);resize:vertical">${esc(edItem.desc || '')}</textarea></label>
-    <label class="field"><span>Etiqueta sobre la foto (opcional)</span><input type="text" id="ed-new" maxlength="24" list="ed-badges" autocomplete="off" value="${esc(edItem.badge || '')}" placeholder="Ej: Lanzamiento"><datalist id="ed-badges"><option value="Nuevo"><option value="Lanzamiento"><option value="Precio de lanzamiento"><option value="Pieza única"><option value="Último"><option value="Vendido"></datalist><span class="small">Dejalo vacío si no querés etiqueta.</span></label>
+    <label class="check"><input type="checkbox" id="ed-new" ${edItem.badge ? 'checked' : ''}>Mostrar etiqueta “Nuevo”</label>
     <div class="field"><span class="field-label">Medidas en cm (opcional)</span>
       <table class="m-table"><thead><tr><th>Medida</th><th>S</th><th>M</th><th>L</th></tr></thead><tbody>
       ${edItem.m.slice(0, 3).map((r, i) => `<tr>${[0, 1, 2, 3].map(j => `<td><input type="${j ? 'text' : 'text'}" id="ed-m-${i}-${j}" value="${esc(r[j])}" ${j ? 'inputmode="numeric"' : ''} aria-label="${j ? ['', 'S', 'M', 'L'][j] + ' fila ' + (i + 1) : 'Medida fila ' + (i + 1)}" placeholder="${j ? '' : ['Busto', 'Largo', 'Cintura'][i]}"></td>`).join('')}</tr>`).join('')}
@@ -1697,10 +1681,9 @@ function stGridHTML(item) {
 }
 function readProductForm() {
   const name = $('#ed-name').value.trim();
-  const rawPrice = String($('#ed-price').value).trim();
-  const price = Math.round(Number((/,\d{3}(?!\d)/.test(rawPrice) ? rawPrice.replace(/,/g, '') : rawPrice.split(',')[0]).replace(/\D/g, '')));
+  const price = Math.round(Number($('#ed-price').value));
   if (!name) return 'Escribí el nombre de la prenda.';
-  if (!(price > 0)) return 'Escribí el precio, por ejemplo 50.000.';
+  if (!(price > 0)) return 'Escribí el precio (solo números, sin puntos).';
   edItem.name = name.slice(0, 80);
   edItem.cat = $('#ed-cat').value;
   const sz = {};
@@ -1712,7 +1695,7 @@ function readProductForm() {
   edItem.colors = edItem.colors.filter(c => c.n).slice(0, 12).map(c => ({ n: c.n, h: safeColor(c.h) }));
   edItem.color = edItem.colors.map(c => c.n).join(', ').slice(0, 40);
   edItem.price = price;
-  edItem.badge = String($('#ed-new').value || '').replace(/\s+/g, ' ').trim().slice(0, 24);
+  edItem.badge = $('#ed-new').checked ? 'Nuevo' : '';
   edItem.desc = $('#ed-desc').value.trim().slice(0, 800);
   edItem.m = [0, 1, 2].map(i => [0, 1, 2, 3].map(j => $(`#ed-m-${i}-${j}`).value.trim().slice(0, 20))).filter(r => r[0]);
   if (edItem.isNew && !edItem.img) edItem.glyph = glyphFor(edItem.cat);
