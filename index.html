@@ -756,7 +756,7 @@ body.editing { padding-bottom: 120px; }
 <script>
 (function () {
 const TRANSFER_OFF = 0.10;
-const DEFAULT_MENU = [
+const OLD_MENU = [
   { t: 'Colección', items: [
     { id: 'remeras', label: 'Remeras' }, { id: 'tops', label: 'Bodies y tops' }, { id: 'camisas', label: 'Camisas y blusas' },
     { id: 'blazers', label: 'Blazers y chalecos' }, { id: 'vestidos', label: 'Vestidos y monos' }, { id: 'abajo', label: 'Pantalones' },
@@ -770,7 +770,15 @@ const DEFAULT_MENU = [
     { id: 'gorras', label: 'Gorras y sombreros' }, { id: 'panuelos', label: 'Pañuelos' }, { id: 'charms', label: 'Charms' },
     { id: 'bufandas', label: 'Bufandas' }, { id: 'underwear', label: 'Underwear' }, { id: 'medias', label: 'Medias' } ] }
 ];
-const curMenu = () => { const m = (editing && draft ? draft : saved).menu; return Array.isArray(m) && m.length ? m : DEFAULT_MENU; };
+const OLD_MENU_JSON = JSON.stringify(OLD_MENU);
+const DEFAULT_MENU = [
+  { t: 'Denim', items: [
+    { id: 'jeans', label: 'Jeans' }, { id: 'denim-faldas', label: 'Faldas y shorts' }, { id: 'denim-tops', label: 'Camisas y tops' },
+    { id: 'denim-camperas', label: 'Camperas y chalecos' } ] },
+  { t: 'Tops', items: [
+    { id: 'tops', label: 'Tops y bodies' } ] }
+];
+const curMenu = () => { const m = (editing && draft ? draft : saved).menu; return Array.isArray(m) && m.length && JSON.stringify(m) !== OLD_MENU_JSON ? m : DEFAULT_MENU; };
 const allCats = () => curMenu().flatMap(g => g.items || []);
 const catName = id => id === 'all' ? 'Todo' : ((allCats().find(c => c.id === id) || {}).label || 'Todo');
 function glyphFor(id) {
@@ -792,13 +800,19 @@ function renderMenuCats() {
 }
 const GLYPHS = ['g-dress', 'g-skirt', 'g-short', 'g-pant', 'g-top', 'g-tee', 'g-set'];
 const SIZES = ['XS', 'S', 'M', 'L', 'XL'];
+const JEAN_SIZES = ['34', '36', '38', '40', '42', '44', '46'];
+const ALL_SIZES = [...SIZES, ...JEAN_SIZES];
+/* Jeans use number sizes; everything else uses letters. */
+const isJeanCat = id => id === 'jeans' || /jean|pantal/i.test((allCats().find(c => c.id === id) || {}).label || '');
+const sizesFor = p => isJeanCat(p && p.cat) ? JEAN_SIZES : SIZES;
 const ON_ORDER = new Set(['XS', 'XL']);
 /* Sizes of a garment: 'no' (not offered), 'enc' (on order), 'si' (available, not counted) or a number (units in stock). */
 function sizesOf(p) {
   const z = p && p.sizes && typeof p.sizes === 'object' ? p.sizes : null;
   const out = {};
-  SIZES.forEach(s => {
-    const v = z ? z[s] : (ON_ORDER.has(s) ? 'enc' : 'si');
+  const jean = sizesFor(p) === JEAN_SIZES;
+  sizesFor(p).forEach(s => {
+    const v = z && s in z ? z[s] : (jean ? 'no' : (z ? undefined : (ON_ORDER.has(s) ? 'enc' : 'si')));
     out[s] = v === 'no' || v === 'enc' || v === 'si' ? v : (Number.isFinite(Number(v)) && v !== '' && v != null ? Math.max(0, Math.round(Number(v))) : 'no');
   });
   return out;
@@ -806,11 +820,11 @@ function sizesOf(p) {
 const sizeInfo = (p, s) => { const v = sizesOf(p)[s]; return { show: v !== 'no', ok: v === 'si' || v === 'enc' || v > 0, enc: v === 'enc', left: typeof v === 'number' ? v : Infinity }; };
 function sizeButtons(p, cls) {
   const sel = picked[p.id];
-  return SIZES.filter(s => sizeInfo(p, s).show).map(s => { const i = sizeInfo(p, s); return `<button type="button" class="${cls}${i.enc ? ' encargo' : ''}${i.ok ? '' : ' agotado'}" data-size="${s}" aria-pressed="${sel === s}" ${i.ok ? '' : 'disabled title="Sin stock"'}>${s}</button>`; }).join('');
+  return sizesFor(p).filter(s => sizeInfo(p, s).show).map(s => { const i = sizeInfo(p, s); return `<button type="button" class="${cls}${i.enc ? ' encargo' : ''}${i.ok ? '' : ' agotado'}" data-size="${s}" aria-pressed="${sel === s}" ${i.ok ? '' : 'disabled title="Sin stock"'}>${s}</button>`; }).join('');
 }
 function sizeHint(p) {
   const sel = picked[p.id];
-  if (!SIZES.some(s => sizeInfo(p, s).ok)) return 'Sin stock por ahora';
+  if (!sizesFor(p).some(s => sizeInfo(p, s).ok)) return 'Sin stock por ahora';
   if (!sel) return 'Elegí tu talle';
   const i = sizeInfo(p, sel);
   if (i.enc) return `Talle ${sel} por encargo: llega en la próxima tanda`;
@@ -939,7 +953,7 @@ function renderToolbar() {
   const catLabel = c => { const dup = cats.filter(x => x.label === c.label).length > 1; const g = (curMenu().find(gr => (gr.items || []).some(it => it.id === c.id)) || {}).t; return esc(c.label) + (dup && g ? ' · ' + esc(g) : ''); };
   panel.innerHTML =
     grp('cat', 'Categoría', cat !== 'all' ? catName(cat) : '', cats.map(c => `<button type="button" class="pop-opt" data-fcat="${esc(c.id)}" aria-pressed="${cat === c.id}">${catLabel(c)}</button>`).join('')) +
-    grp('size', 'Talle', fSize, SIZES.filter(z => prods.some(p => sizeInfo(p, z).ok)).map(z => `<button type="button" class="pop-opt" data-fsize="${z}" aria-pressed="${fSize === z}">${z}</button>`).join('')) +
+    grp('size', 'Talle', fSize, ALL_SIZES.filter(z => prods.some(p => sizesFor(p).includes(z) && sizeInfo(p, z).ok)).map(z => `<button type="button" class="pop-opt" data-fsize="${z}" aria-pressed="${fSize === z}">${z}</button>`).join('')) +
     (cols.length ? grp('color', 'Color', fColor ? (cols.find(c => c.n.toLowerCase() === fColor) || {}).n : '', cols.map(c => `<button type="button" class="pop-opt" data-fcolor="${esc(c.n.toLowerCase())}" aria-pressed="${fColor === c.n.toLowerCase()}"><i style="--sw:${c.h}"></i>${esc(c.n)}</button>`).join('')) : '') +
     grp('price', 'Precio', fPrice ? PRICE_RANGES.find(r => r.k === fPrice).t : '', PRICE_RANGES.map(r => `<button type="button" class="pop-opt" data-fprice="${r.k}" aria-pressed="${fPrice === r.k}">${r.t}</button>`).join('')) +
     (n ? '<button type="button" class="pop-clear" id="f-clear">Limpiar filtros</button>' : '');
@@ -1072,7 +1086,7 @@ function renderProduct() {
       ${p.desc ? `<div class="pv-desc"><p class="pv-head">Detalle del producto</p>${descHTML(p.desc)}</div>` : ''}
       <div class="pv-accs">
         ${rows ? `<details class="pv-acc"><summary>Medidas de la prenda</summary><table class="measures"><thead><tr><th></th><th>S</th><th>M</th><th>L</th></tr></thead><tbody>${rows}</tbody></table></details>` : ''}
-        <details class="pv-acc"><summary>Tabla de talles</summary><table class="measures"><thead><tr><th>cm</th>${SIZES.map(s => `<th>${s}</th>`).join('')}</tr></thead><tbody><tr><td>Busto</td><td>80</td><td>84</td><td>88</td><td>92</td><td>96</td></tr><tr><td>Cintura</td><td>62</td><td>66</td><td>70</td><td>74</td><td>78</td></tr><tr><td>Cadera</td><td>86</td><td>90</td><td>94</td><td>98</td><td>102</td></tr></tbody></table></details>
+        ${isJeanCat(p.cat) ? `<details class="pv-acc"><summary>Talle y medidas</summary><p class="small" style="margin:8px 0 0">Cada jean viene de una feria y se customiza a mano, así que el calce cambia de uno a otro. Fijate las medidas reales de este jean en el detalle del producto (cintura, cadera, tiro y largo) y comparalas con un jean tuyo que te quede bien.</p></details>` : `<details class="pv-acc"><summary>Tabla de talles</summary><table class="measures"><thead><tr><th>cm</th>${SIZES.map(s => `<th>${s}</th>`).join('')}</tr></thead><tbody><tr><td>Busto</td><td>80</td><td>84</td><td>88</td><td>92</td><td>96</td></tr><tr><td>Cintura</td><td>62</td><td>66</td><td>70</td><td>74</td><td>78</td></tr><tr><td>Cadera</td><td>86</td><td>90</td><td>94</td><td>98</td><td>102</td></tr></tbody></table></details>`}
         <details class="pv-acc"><summary>Envíos y cambios</summary><ul class="pv-perks"><li>Envío en el día en Rosario</li><li>Al resto del país por Correo Argentino o Andreani</li><li>Cambios hasta 7 días</li></ul></details>
       </div>
       <a class="pv-share" href="https://wa.me/?text=${encodeURIComponent(p.name + ' ' + shareUrl)}" target="_blank" rel="noopener">Compartir por WhatsApp</a>
@@ -1624,7 +1638,7 @@ function openProductEditor(id) {
     <label class="field"><span>Nombre</span><input type="text" id="ed-name" value="${esc(edItem.name)}" placeholder="Ej: Vestido lencero midi"></label>
     <label class="field"><span>Categoría</span><select id="ed-cat">${allCats().some(c => c.id === edItem.cat) ? '' : '<option value="" selected>Sin categoría</option>'}${curMenu().map(g => `<optgroup label="${esc(g.t)}">${(g.items || []).map(c => `<option value="${esc(c.id)}" ${c.id === edItem.cat ? 'selected' : ''}>${esc(c.label)}</option>`).join('')}</optgroup>`).join('')}</select></label>
     <div class="field"><span class="field-label">Talles y stock</span>
-      <div class="st-grid">${SIZES.map(z => { const v = sizesOf(edItem)[z]; const mode = typeof v === 'number' ? 'n' : v; return `<div class="st-row"><b>${z}</b><select id="st-m-${z}" aria-label="Talle ${z}"><option value="n" ${mode === 'n' ? 'selected' : ''}>En stock</option><option value="si" ${mode === 'si' ? 'selected' : ''}>Sí, sin contar</option><option value="enc" ${mode === 'enc' ? 'selected' : ''}>Por encargo</option><option value="no" ${mode === 'no' ? 'selected' : ''}>No lo traigo</option></select><input type="number" id="st-n-${z}" min="0" step="1" inputmode="numeric" value="${typeof v === 'number' ? v : ''}" placeholder="Cant." aria-label="Unidades talle ${z}" ${mode === 'n' ? '' : 'hidden'}></div>`; }).join('')}</div>
+      <div class="st-grid" id="st-grid">${stGridHTML(edItem)}</div>
       <p class="small">“En stock”: poné cuántas tenés; se descuenta sola con cada venta y en 0 aparece tachado. “Sí, sin contar”: se vende sin límite. “No lo traigo”: no aparece.</p>
     </div>
     <div class="field"><span class="field-label">Colores</span>
@@ -1662,6 +1676,9 @@ function renderEdColors() {
 function renderEdExtra() {
   $('#ed-extra').innerHTML = edItem.imgs.map((u, i) => `<div class="ex"><img src="${esc(u)}" alt=""><button type="button" class="mini" data-ex-del="${i}" aria-label="Quitar foto">×</button></div>`).join('');
 }
+function stGridHTML(item) {
+  return sizesFor(item).map(z => { const v = sizesOf(item)[z]; const mode = typeof v === 'number' ? 'n' : v; return `<div class="st-row"><b>${z}</b><select id="st-m-${z}" aria-label="Talle ${z}"><option value="n" ${mode === 'n' ? 'selected' : ''}>En stock</option><option value="si" ${mode === 'si' ? 'selected' : ''}>Sí, sin contar</option><option value="enc" ${mode === 'enc' ? 'selected' : ''}>Por encargo</option><option value="no" ${mode === 'no' ? 'selected' : ''}>No lo traigo</option></select><input type="number" id="st-n-${z}" min="0" step="1" inputmode="numeric" value="${typeof v === 'number' ? v : ''}" placeholder="Cant." aria-label="Unidades talle ${z}" ${mode === 'n' ? '' : 'hidden'}></div>`; }).join('');
+}
 function readProductForm() {
   const name = $('#ed-name').value.trim();
   const price = Math.round(Number($('#ed-price').value));
@@ -1670,9 +1687,10 @@ function readProductForm() {
   edItem.name = name.slice(0, 80);
   edItem.cat = $('#ed-cat').value;
   const sz = {};
-  SIZES.forEach(z => { const m = $(`#st-m-${z}`).value; sz[z] = m === 'n' ? Math.max(0, Math.round(Number($(`#st-n-${z}`).value) || 0)) : m; });
-  if (SIZES.every(z => sz[z] === 'no')) return 'Elegí al menos un talle que traigas.';
-  edItem.sizes = sz;
+  const zs = sizesFor(edItem);
+  zs.forEach(z => { const el = $(`#st-m-${z}`); const m = el ? el.value : 'no'; sz[z] = m === 'n' ? Math.max(0, Math.round(Number($(`#st-n-${z}`).value) || 0)) : m; });
+  if (zs.every(z => sz[z] === 'no')) return 'Elegí al menos un talle que traigas.';
+  edItem.sizes = Object.assign({}, edItem.sizes && typeof edItem.sizes === 'object' ? edItem.sizes : {}, sz);
   syncEdColors();
   edItem.colors = edItem.colors.filter(c => c.n).slice(0, 12).map(c => ({ n: c.n, h: safeColor(c.h) }));
   edItem.color = edItem.colors.map(c => c.n).join(', ').slice(0, 40);
@@ -1870,6 +1888,7 @@ function openContactEditor() {
 }
 
 $('#ed-body').addEventListener('change', e => {
+  if (e.target.id === 'ed-cat' && edMode === 'product') { const g = $('#st-grid'); if (g) g.innerHTML = stGridHTML(Object.assign({}, edItem, { cat: e.target.value })); }
   const m = e.target.id && e.target.id.match(/^st-m-(\w+)$/);
   if (m) { const n = $(`#st-n-${m[1]}`); n.hidden = e.target.value !== 'n'; if (!n.hidden) n.focus(); }
 });

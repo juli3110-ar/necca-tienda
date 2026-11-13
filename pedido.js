@@ -4,7 +4,7 @@ import { saveOrder, findOrder } from './_orders.js';
 import { readToken } from './_users.js';
 import { sendMail, orderMailForCustomer, orderMailForOwner } from './_mail.js';
 
-const SIZES = ['XS', 'S', 'M', 'L', 'XL'];
+const SIZES = ['XS', 'S', 'M', 'L', 'XL', '34', '36', '38', '40', '42', '44', '46'];
 const str = (v, max) => String(v == null ? '' : v).trim().slice(0, max);
 
 // Anyone: check how an order is going (shown after paying).

@@ -138,7 +138,7 @@ export function shipQuote(state, prov, cp) {
 }
 
 /* ---------- Talles y stock ---------- */
-export const SIZES = ['XS', 'S', 'M', 'L', 'XL'];
+export const SIZES = ['XS', 'S', 'M', 'L', 'XL', '34', '36', '38', '40', '42', '44', '46'];
 function cleanSizes(z) {
   if (!z || typeof z !== 'object') return undefined;
   const out = {};
