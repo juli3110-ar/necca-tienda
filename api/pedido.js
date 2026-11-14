@@ -33,6 +33,7 @@ export async function POST(request) {
   if (!pago || !entrega) return json({ error: 'missing', message: 'Elegí cómo lo recibís y cómo pagás.' }, 400);
   if (nombre.length < 2) return json({ error: 'missing', message: 'Escribí tu nombre.' }, 400);
   if (entrega === 'envio' && (direccion.length < 4 || ciudad.length < 2 || !provincia || !cp)) return json({ error: 'missing', message: 'Completá provincia, código postal, ciudad y dirección.' }, 400);
+  if (entrega === 'retiro' && body.retiroOk !== true) return json({ error: 'missing', message: 'Confirmá que vas a retirar tu pedido en Rosario, o elegí Envío.' }, 400);
   if (pago === 'efectivo' && entrega !== 'retiro') return json({ error: 'bad_pay', message: 'El efectivo es solo para retiro.' }, 400);
 
   let state;
@@ -68,7 +69,7 @@ export async function POST(request) {
 
   const subtotal = items.reduce((s, i) => s + i.precio * i.cantidad, 0);
   const descuento = pago === 'transferencia' ? subtotal - transferPrice(subtotal) : 0;
-  const sucOk = state.ship && (state.ship.sucGratis || (state.ship.suc && Object.values(state.ship.suc).some(v => Number(v) > 0)));
+  const sucOk = !(state.ship && state.ship.sucPago) || (state.ship.suc && Object.values(state.ship.suc).some(v => Number(v) > 0));
   const q = entrega === 'envio' ? shipQuote(state, provincia, cp, body.modo === 'sucursal' && sucOk ? 'sucursal' : 'domicilio') : null;
   const modo = q ? (q.suc ? 'sucursal' : 'domicilio') : '';
   const envio = q ? q.price : 0;

@@ -277,6 +277,9 @@ legend { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; colo
 .calc-box { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
 .calc-title { margin: 0 0 14px; font-family: var(--display); font-weight: 400; font-size: 13px; letter-spacing: .22em; text-transform: uppercase; }
 .quote { margin: 12px 0 0; font-size: 14.5px; line-height: 1.5; }
+.retiro-ok { display: flex; gap: 12px; align-items: flex-start; padding: 14px; border: 1px solid var(--line); border-radius: 2px; background: var(--surface); font-size: 14.5px; line-height: 1.45; cursor: pointer; }
+.retiro-ok input { width: 22px; height: 22px; flex-shrink: 0; margin: 1px 0 0; accent-color: var(--fg); }
+.retiro-ok b { font-weight: 500; }
 .modo { display: flex; gap: 8px; margin: 0 0 12px; }
 .modo button { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 2px; background: transparent; color: var(--fg); font: 400 13px var(--body); text-align: left; cursor: pointer; }
 .modo button small { color: var(--muted); font-size: 13px; }
@@ -892,6 +895,7 @@ function swatches(p, big) {
 }
 let cart = store.get('necca-cart', []);
 let delivery = null;
+let retiroOk = false;
 let payment = null;
 let onlinePay = false;
 let step = 0;
@@ -1183,7 +1187,7 @@ function cleanCart() { cart = cart.filter(l => findP(l.id)); }
 
 const PROVINCIAS = ['Buenos Aires', 'CABA', 'Catamarca', 'Chaco', 'Chubut', 'Córdoba', 'Corrientes', 'Entre Ríos', 'Formosa', 'Jujuy', 'La Pampa', 'La Rioja', 'Mendoza', 'Misiones', 'Neuquén', 'Río Negro', 'Salta', 'San Juan', 'San Luis', 'Santa Cruz', 'Santa Fe', 'Santiago del Estero', 'Tierra del Fuego', 'Tucumán'];
 const SHIP_NOTA = 'Llega en 2 a 5 días hábiles por Correo Argentino.';
-const shipCfg = () => { const c = Object.assign({ local: '2000', nota: SHIP_NOTA, prov: {}, suc: {} }, (editing && draft ? draft : saved).ship || {}); c.prov = c.prov || {}; c.suc = c.suc || {}; if (!c.nota || c.nota === 'Llega en 3 a 7 días hábiles por Correo Argentino o Andreani.') c.nota = SHIP_NOTA; return c; };
+const shipCfg = () => { const c = Object.assign({ local: '2000', nota: SHIP_NOTA, prov: {}, suc: {} }, (editing && draft ? draft : saved).ship || {}); c.prov = c.prov || {}; c.suc = c.suc || {}; c.sucGratis = !c.sucPago; if (!c.nota || c.nota === 'Llega en 3 a 7 días hábiles por Correo Argentino o Andreani.') c.nota = SHIP_NOTA; return c; };
 const sucGratis = () => Boolean(shipCfg().sucGratis);
 const hasSuc = () => sucGratis() || Object.values(shipCfg().suc).some(v => Number(v) > 0);
 const cp4 = cp => (String(cp || '').match(/\d{4}/) || [''])[0];
@@ -1216,7 +1220,7 @@ const PAY = {
   efectivo: { t: 'Efectivo', s: 'Pagás cuando retirás' }
 };
 const SHIP = {
-  retiro: { t: 'Retiro en punto de entrega', s: 'Gratis · en Rosario, coordinamos día y hora' },
+  retiro: { t: 'Retiro en Rosario (Santa Fe)', s: 'Gratis · solo si podés pasar a buscarlo por Rosario' },
   envio: { t: 'Envío a domicilio', s: 'En Rosario y a todo el país' }
 };
 const ICON = {
@@ -1247,7 +1251,7 @@ function stepsBar() {
   const names = ['Bolsa', 'Entrega', 'Pago', 'Confirmar'];
   return `<ol class="steps" aria-label="Pasos del pedido">${names.map((n, i) => `<li class="${i === step ? 'now' : i < step ? 'done' : ''}" ${i === step ? 'aria-current="step"' : ''}><span>${i + 1}</span>${n}</li>`).join('')}</ol>`;
 }
-const shipOk = () => delivery && buyer.nombre.trim().length > 1 && (delivery === 'retiro' || (buyer.direccion.trim().length > 3 && buyer.ciudad.trim().length > 1 && cp4(buyer.cp) && PROVINCIAS.includes(buyer.provincia)));
+const shipOk = () => delivery && buyer.nombre.trim().length > 1 && ((delivery === 'retiro' && retiroOk) || (delivery === 'envio' && buyer.direccion.trim().length > 3 && buyer.ciudad.trim().length > 1 && cp4(buyer.cp) && PROVINCIAS.includes(buyer.provincia)));
 /* WhatsApp links need 549 + area code + number; accept it written any common way (0341 15…, 341…, +54 9…). */
 const waNumber = () => {
   let d = String(saved.contact.whatsapp || '').replace(/\D/g, '');
@@ -1282,7 +1286,7 @@ async function submitOrder() {
   try {
     const res = await ckFetch('/api/pedido', {
       method: 'POST', headers: Object.assign({ 'content-type': 'application/json' }, authHeaders()),
-      body: JSON.stringify({ items: cart.map(l => ({ id: l.id, size: l.size, color: l.color || '', qty: l.qty, med: l.size === 'ENC' ? l.med : undefined })), entrega: delivery, pago: payment, nombre: buyer.nombre, direccion: buyer.direccion, detalle: buyer.detalle, provincia: buyer.provincia, ciudad: buyer.ciudad, cp: buyer.cp, modo: curModo(), detalle: curModo() === 'sucursal' ? '' : buyer.detalle })
+      body: JSON.stringify({ items: cart.map(l => ({ id: l.id, size: l.size, color: l.color || '', qty: l.qty, med: l.size === 'ENC' ? l.med : undefined })), entrega: delivery, pago: payment, nombre: buyer.nombre, direccion: buyer.direccion, detalle: buyer.detalle, provincia: buyer.provincia, ciudad: buyer.ciudad, cp: buyer.cp, retiroOk, modo: curModo(), detalle: curModo() === 'sucursal' ? '' : buyer.detalle })
     });
     lastOrder = { id: res.id, total: res.total, pago: res.pago };
     try { sessionStorage.setItem('necca-last-order', JSON.stringify(lastOrder)); } catch (e) {}
@@ -1367,6 +1371,8 @@ function renderBag() {
       <div class="choices">${choice('delivery', 'retiro', SHIP.retiro)}${choice('delivery', 'envio', sucGratis() ? { t: 'Envío', s: 'Gratis a sucursal del Correo · también a domicilio' } : hasSuc() ? { t: 'Envío', s: 'A domicilio o a sucursal del Correo · a todo el país' } : SHIP.envio)}</div>
       ${delivery ? `<div class="form ck-form">
         <label class="field"><span>Tu nombre</span><input type="text" id="b-nombre" autocomplete="name" value="${esc(buyer.nombre)}" placeholder="Nombre y apellido"></label>
+        ${delivery === 'retiro' ? `<label class="retiro-ok"><input type="checkbox" id="b-retiro-ok" ${retiroOk ? 'checked' : ''}><span>Confirmo que voy a retirar mi pedido <b>en la ciudad de Rosario, Santa Fe</b>. Coordinamos el punto y el horario por WhatsApp.</span></label>
+        <p class="small">¿No sos de Rosario? Elegí “Envío”${sucGratis() ? ': a sucursal del Correo es gratis' : ''}.</p>` : ''}
         ${delivery === 'envio' ? `<div class="two">
           <label class="field"><span>Provincia</span><select id="b-provincia" autocomplete="address-level1">${PROVINCIAS.map(p => `<option ${p === buyer.provincia ? 'selected' : ''}>${p}</option>`).join('')}</select></label>
           <label class="field"><span>Código postal</span><input type="text" id="b-cp" inputmode="numeric" autocomplete="postal-code" value="${esc(buyer.cp)}" placeholder="Ej: 2000"></label>
@@ -1400,7 +1406,7 @@ function renderBag() {
     <div class="summary">
       ${cart.map(l => { const p = findP(l.id); return `<div class="row"><span>${l.qty} × ${esc(p.name)}${l.color ? ' · ' + esc(l.color) : ''} · ${l.size === 'ENC' ? 'por encargo' : l.size}</span><span>${peso(p.price * l.qty)}</span></div>`; }).join('')}
       <div class="sum-sep"></div>
-      <div class="row"><span>Entrega</span><span>${delivery === 'envio' ? `${curModo() === 'sucursal' ? 'Sucursal del Correo · ' : ''}${esc(buyer.ciudad)}, ${esc(buyer.provincia)} · CP ${esc(cp4(buyer.cp))}` : 'Retiro · gratis'}</span></div>
+      <div class="row"><span>Entrega</span><span>${delivery === 'envio' ? `${curModo() === 'sucursal' ? 'Sucursal del Correo · ' : ''}${esc(buyer.ciudad)}, ${esc(buyer.provincia)} · CP ${esc(cp4(buyer.cp))}` : 'Retiro en Rosario · gratis'}</span></div>
       ${delivery === 'envio' ? `<div class="row"><span>Envío</span><span>${t.envioFree ? 'Gratis' : t.envio ? peso(t.envio) : 'A coordinar'}</span></div>` : ''}
       <div class="row"><span>Pago</span><span>${PAY[payment].t}</span></div>
       ${payment === 'transferencia' ? `<div class="row" style="color:var(--good)"><span>10% off</span><span>−${peso(t.sub - transferPrice(t.sub))}</span></div>` : ''}
@@ -1938,7 +1944,7 @@ function openShipEditor() {
     </div>
     <div class="field"><span class="field-label">Envío a sucursal del Correo, por provincia ($)</span>
       <label style="display:flex;align-items:center;gap:10px;margin:4px 0 10px;font-size:15px;text-transform:none;letter-spacing:0"><input type="checkbox" id="sh-suc-gratis" ${edItem.sucGratis ? 'checked' : ''} style="width:20px;height:20px"> Envío gratis a sucursal en todo el país</label>
-      <p class="small">Con esto marcado, los precios de abajo no se usan. Si no lo marcás y no cargás ninguno, en la compra solo aparece el envío a domicilio.</p>
+      <p class="small">Viene marcado: el envío a sucursal es gratis y los precios de abajo no se usan. Desmarcalo solo si querés cobrarlo.</p>
       <div class="ship-fill"><input type="text" id="sh-all-s" inputmode="numeric" autocomplete="off" placeholder="Mismo precio para todas"><button type="button" class="ghost" id="sh-apply-s">Aplicar</button></div>
       <div class="ship-grid">${PROVINCIAS.map((p, i) => `<label>${p}<input type="text" id="sh-s-${i}" inputmode="numeric" autocomplete="off" value="${Number(edItem.suc[p]) ? Number(edItem.suc[p]).toLocaleString('es-AR') : ''}"></label>`).join('')}</div>
     </div>
@@ -2029,7 +2035,7 @@ $('#ed-foot').addEventListener('click', e => {
       const prov = {};
       const suc = {};
       PROVINCIAS.forEach((p, i) => { const v = n($(`#sh-p-${i}`).value); if (v) prov[p] = v; const w = n($(`#sh-s-${i}`).value); if (w) suc[p] = w; });
-      draft.ship = { local: $('#sh-local').value.replace(/[^0-9, ]/g, '').trim().slice(0, 200), nota: $('#sh-nota').value.trim().slice(0, 160), prov, suc, sucGratis: $('#sh-suc-gratis').checked };
+      draft.ship = { local: $('#sh-local').value.replace(/[^0-9, ]/g, '').trim().slice(0, 200), nota: $('#sh-nota').value.trim().slice(0, 160), prov, suc, sucPago: !$('#sh-suc-gratis').checked };
     } else if (edMode === 'faq') {
       syncFaqForm();
       const faq = edItem.filter(x => x.q || x.a);
@@ -2218,7 +2224,7 @@ function onBagClick(e) {
   else if (t.dataset.dec) { const l = cart[+t.dataset.dec]; l.qty--; if (l.qty < 1) cart.splice(+t.dataset.dec, 1); }
   else if (t.dataset.rm) { cart.splice(+t.dataset.rm, 1); }
   else if (t.dataset.choice) {
-    if (t.dataset.choice === 'delivery') delivery = t.dataset.val; else payment = t.dataset.val;
+    if (t.dataset.choice === 'delivery') { if (delivery !== t.dataset.val) retiroOk = false; delivery = t.dataset.val; } else payment = t.dataset.val;
     renderBag();
     const f = delivery && step === 1 && !buyer.nombre ? $('#b-nombre') : null;
     if (f) f.focus();
@@ -2237,6 +2243,7 @@ $('#bag-body').addEventListener('click', onBagClick);
 $('#bag-foot').addEventListener('click', onBagClick);
 $('#bag-body').addEventListener('input', e => {
   const map = { 'b-nombre': 'nombre', 'b-direccion': 'direccion', 'b-detalle': 'detalle', 'b-provincia': 'provincia', 'b-ciudad': 'ciudad', 'b-cp': 'cp' };
+  if (e.target.id === 'b-retiro-ok') { retiroOk = e.target.checked; const nx = $('#bag-foot [data-step="next"]'); if (nx) nx.disabled = !shipOk(); return; }
   const k = map[e.target.id]; if (!k) return;
   buyer[k] = e.target.value.slice(0, 120);
   store.set('necca-buyer', buyer);

@@ -58,7 +58,7 @@ export function cleanState(input) {
     ...(s.ship && typeof s.ship === 'object' ? { ship: {
       local: str(s.ship.local, 200).replace(/[^0-9, ]/g, ''),
       nota: str(s.ship.nota, 160),
-      sucGratis: Boolean(s.ship.sucGratis),
+      sucPago: Boolean(s.ship.sucPago),
       prov: Object.fromEntries(PROVINCIAS.map(p => [p, Math.max(0, Math.round(Number(s.ship.prov && s.ship.prov[p]) || 0))]).filter(x => x[1] > 0)),
       suc: Object.fromEntries(PROVINCIAS.map(p => [p, Math.max(0, Math.round(Number(s.ship.suc && s.ship.suc[p]) || 0))]).filter(x => x[1] > 0))
     } } : {}),
@@ -138,7 +138,7 @@ export function shipQuote(state, prov, cp, modo) {
   const d = cp4(cp);
   const rosario = Number(state.contact && state.contact.envio) || 0;
   if (d && local.includes(d) && rosario > 0) return { local: true, price: rosario };
-  if (modo === 'sucursal' && ship.sucGratis) return { local: false, suc: true, free: true, price: 0 };
+  if (modo === 'sucursal' && !ship.sucPago) return { local: false, suc: true, free: true, price: 0 };
   if (modo === 'sucursal') return { local: false, suc: true, price: Number(ship.suc && ship.suc[prov]) || 0 };
   return { local: false, price: Number(ship.prov && ship.prov[prov]) || 0 };
 }
