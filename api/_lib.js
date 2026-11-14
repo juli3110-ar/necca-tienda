@@ -136,7 +136,8 @@ export function shipQuote(state, prov, cp, modo) {
   const ship = state.ship || {};
   const local = String(ship.local == null ? '2000' : ship.local).split(/[^0-9]+/).filter(Boolean);
   const d = cp4(cp);
-  if (d && local.includes(d)) return { local: true, price: Number(state.contact && state.contact.envio) || 0 };
+  const rosario = Number(state.contact && state.contact.envio) || 0;
+  if (d && local.includes(d) && rosario > 0) return { local: true, price: rosario };
   if (modo === 'sucursal' && ship.sucGratis) return { local: false, suc: true, free: true, price: 0 };
   if (modo === 'sucursal') return { local: false, suc: true, price: Number(ship.suc && ship.suc[prov]) || 0 };
   return { local: false, price: Number(ship.prov && ship.prov[prov]) || 0 };

@@ -89,7 +89,7 @@ export async function POST(request) {
   if (pago !== 'online') {
     try { await updateStock(items, -1); order.stock = true; } catch (e) { console.error('stock', e && e.message); }
     await saveOrder(order);
-    const owner = process.env.OWNER_EMAIL || state.contact.email;
+    const owner = (process.env.OWNER_EMAIL || process.env.OWNER_EMAI) || state.contact.email;
     const mails = [];
     if (owner) mails.push(sendMail({ to: owner, ...orderMailForOwner(order, false) }));
     if (order.cuenta) mails.push(sendMail({ to: order.cuenta, ...orderMailForCustomer(order, false) }));

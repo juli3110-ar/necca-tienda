@@ -36,7 +36,7 @@ export async function POST(request) {
     if (notify) order.avisado = true;
     await saveOrder(order);
     if (notify) {
-      let owner = process.env.OWNER_EMAIL || '';
+      let owner = (process.env.OWNER_EMAIL || process.env.OWNER_EMAI) || '';
       if (!owner) { try { owner = (await loadState()).contact.email || ''; } catch (e) {} }
       const to = order.cuenta || order.email;
       await Promise.all([

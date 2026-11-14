@@ -1191,7 +1191,9 @@ const cp4 = cp => (String(cp || '').match(/\d{4}/) || [''])[0];
 function shipQuote(prov, cp, modo) {
   const c = shipCfg(), d = cp4(cp);
   const locals = String(c.local || '').split(/[^0-9]+/).filter(Boolean);
-  if (d && locals.includes(d)) return { local: true, price: Number((editing && draft ? draft : saved).contact.envio) || 0, label: 'Envío en Rosario' };
+  const rosario = Number((editing && draft ? draft : saved).contact.envio) || 0;
+  /* Rosario only gets its own price when one is set; otherwise it ships like the rest of its province. */
+  if (d && locals.includes(d) && rosario > 0) return { local: true, price: rosario, label: 'Envío en Rosario' };
   if (!PROVINCIAS.includes(prov)) return { local: false, price: 0, label: 'Envío' };
   if (modo === 'sucursal' && c.sucGratis) return { local: false, suc: true, free: true, price: 0, label: `Envío a sucursal del Correo (${prov})` };
   if (modo === 'sucursal') return { local: false, suc: true, price: Number(c.suc[prov]) || 0, label: `Envío a sucursal del Correo (${prov})` };
@@ -1925,7 +1927,7 @@ function openShipEditor() {
   const rosario = Number(draft.contact.envio) || 0;
   $('#ed-title').textContent = 'Envíos';
   $('#ed-body').innerHTML = `<div class="form">
-    <label class="field"><span>Envío en Rosario ($)</span><input type="text" id="sh-local-price" inputmode="numeric" autocomplete="off" value="${rosario ? rosario.toLocaleString('es-AR') : ''}" placeholder="0 = a coordinar"></label>
+    <label class="field"><span>Envío propio en Rosario ($) · opcional</span><input type="text" id="sh-local-price" inputmode="numeric" autocomplete="off" value="${rosario ? rosario.toLocaleString('es-AR') : ''}" placeholder="Vacío = va por Correo como el resto"></label>
     <label class="field"><span>Códigos postales de Rosario y alrededores</span><input type="text" id="sh-local" value="${esc(edItem.local)}" placeholder="Ej: 2000, 2132, 2152"></label>
     <p class="small">Separalos con coma. 2000 es Rosario; podés sumar Funes (2132), Baigorria (2152), etc.</p>
     <label class="field"><span>Texto de demora para el resto del país</span><input type="text" id="sh-nota" value="${esc(edItem.nota)}"></label>
