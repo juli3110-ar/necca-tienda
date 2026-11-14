@@ -188,6 +188,7 @@ details summary { cursor: pointer; color: var(--rose-ink); width: fit-content; }
 .enc-hint { display: block; margin: -2px 0 2px; font-size: 12.5px; color: var(--muted); letter-spacing: 0; text-transform: none; }
 .enc-title { margin: 0; font-family: var(--display); font-weight: 400; font-size: 13px; letter-spacing: .22em; text-transform: uppercase; }
 .empty-grid { grid-column: 1 / -1; color: var(--muted); padding: 32px 0; }
+.empty-grid.soon { padding: 64px 0; text-align: center; font-family: var(--display); font-weight: 300; font-size: 15px; letter-spacing: .32em; text-transform: uppercase; color: var(--fg); }
 
 /* Drawers */
 .scrim { position: fixed; inset: 0; background: rgba(0, 0, 0, .6); z-index: 20; }
@@ -995,7 +996,7 @@ function renderGrid() {
     </article>`;
   }).join('');
   const addCard = editing ? '<button type="button" class="add-card" id="add-prod">+ Agregar prenda</button>' : '';
-  $('#grid').innerHTML = addCard + (cards || (editing ? '' : '<p class="empty-grid">Pronto vas a encontrar prendas nuevas acá.</p>'));
+  $('#grid').innerHTML = addCard + (cards || (editing ? '' : (fSize || fColor || fPrice || gridQuery ? '<p class="empty-grid">No hay prendas con esa búsqueda o esos filtros.</p>' : '<p class="empty-grid soon">Próximamente</p>')));
 }
 
 const DEFAULT_FAQ = [
@@ -1918,19 +1919,19 @@ function openShipEditor() {
   const rosario = Number(draft.contact.envio) || 0;
   $('#ed-title').textContent = 'Envíos';
   $('#ed-body').innerHTML = `<div class="form">
-    <label class="field"><span>Envío en Rosario ($)</span><input type="number" id="sh-local-price" inputmode="numeric" min="0" step="100" value="${rosario || ''}" placeholder="0 = a coordinar"></label>
+    <label class="field"><span>Envío en Rosario ($)</span><input type="text" id="sh-local-price" inputmode="numeric" autocomplete="off" value="${rosario ? rosario.toLocaleString('es-AR') : ''}" placeholder="0 = a coordinar"></label>
     <label class="field"><span>Códigos postales de Rosario y alrededores</span><input type="text" id="sh-local" value="${esc(edItem.local)}" placeholder="Ej: 2000, 2132, 2152"></label>
     <p class="small">Separalos con coma. 2000 es Rosario; podés sumar Funes (2132), Baigorria (2152), etc.</p>
     <label class="field"><span>Texto de demora para el resto del país</span><input type="text" id="sh-nota" value="${esc(edItem.nota)}"></label>
-    <p class="small">Cotizá en MiCorreo un paquete de 1 kg. Escribí los precios sin puntos (ej: 9500). Si dejás una provincia vacía, dice “a coordinar”.</p>
+    <p class="small">Cotizá en MiCorreo un paquete de 1 kg. Escribí el precio como quieras: 7890 o 7.890. Si dejás una provincia vacía, dice “a coordinar”.</p>
     <div class="field"><span class="field-label">Envío a domicilio, por provincia ($)</span>
-      <div class="ship-fill"><input type="number" id="sh-all" inputmode="numeric" min="0" step="100" placeholder="Mismo precio para todas"><button type="button" class="ghost" id="sh-apply">Aplicar</button></div>
-      <div class="ship-grid">${PROVINCIAS.map((p, i) => `<label>${p}<input type="number" id="sh-p-${i}" inputmode="numeric" min="0" step="100" value="${Number(edItem.prov[p]) || ''}"></label>`).join('')}</div>
+      <div class="ship-fill"><input type="text" id="sh-all" inputmode="numeric" autocomplete="off" placeholder="Mismo precio para todas"><button type="button" class="ghost" id="sh-apply">Aplicar</button></div>
+      <div class="ship-grid">${PROVINCIAS.map((p, i) => `<label>${p}<input type="text" id="sh-p-${i}" inputmode="numeric" autocomplete="off" value="${Number(edItem.prov[p]) ? Number(edItem.prov[p]).toLocaleString('es-AR') : ''}"></label>`).join('')}</div>
     </div>
     <div class="field"><span class="field-label">Envío a sucursal del Correo, por provincia ($)</span>
       <p class="small">Si no cargás ninguno, en la compra solo aparece el envío a domicilio.</p>
-      <div class="ship-fill"><input type="number" id="sh-all-s" inputmode="numeric" min="0" step="100" placeholder="Mismo precio para todas"><button type="button" class="ghost" id="sh-apply-s">Aplicar</button></div>
-      <div class="ship-grid">${PROVINCIAS.map((p, i) => `<label>${p}<input type="number" id="sh-s-${i}" inputmode="numeric" min="0" step="100" value="${Number(edItem.suc[p]) || ''}"></label>`).join('')}</div>
+      <div class="ship-fill"><input type="text" id="sh-all-s" inputmode="numeric" autocomplete="off" placeholder="Mismo precio para todas"><button type="button" class="ghost" id="sh-apply-s">Aplicar</button></div>
+      <div class="ship-grid">${PROVINCIAS.map((p, i) => `<label>${p}<input type="text" id="sh-s-${i}" inputmode="numeric" autocomplete="off" value="${Number(edItem.suc[p]) ? Number(edItem.suc[p]).toLocaleString('es-AR') : ''}"></label>`).join('')}</div>
     </div>
   </div>`;
   $('#ed-foot').innerHTML = '<div class="ed-msg err" id="ed-err"></div><button type="button" class="cta" id="ed-done">Listo</button>';
@@ -2014,7 +2015,7 @@ $('#ed-foot').addEventListener('click', e => {
       edItem.about = $('#ed-about').value.replace(/\r/g, '').trim().slice(0, 1200);
       draft.contact = edItem;
     } else if (edMode === 'ship') {
-      const n = v => Math.max(0, Math.round(Number(v) || 0));
+      const n = v => { const r = String(v || '').trim(); return Math.max(0, Math.round(Number((/,\d{3}(?!\d)/.test(r) ? r.replace(/,/g, '') : r.split(',')[0]).replace(/\D/g, '')) || 0)); };
       draft.contact = Object.assign({}, draft.contact, { envio: n($('#sh-local-price').value) });
       const prov = {};
       const suc = {};
