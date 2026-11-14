@@ -598,18 +598,23 @@ body.editing { padding-bottom: 120px; }
 <div class="info">
   <div class="wrap">
     <section id="pagos">
-      <h2>Medios de pago</h2>
+      <h2>Formas de pago</h2>
       <ul>
         <li id="info-online"><b>Mercado Pago:</b> pagás en el momento desde la página, con tarjeta de crédito, débito o dinero en cuenta.</li>
+        <li>Las cuotas dependen de tu tarjeta: las ves en Mercado Pago antes de confirmar.</li>
+        <li>El pago es seguro: lo procesa Mercado Pago, y en Kavantia no vemos ni guardamos los datos de tu tarjeta.</li>
+        <li>Tu pedido queda confirmado cuando se acredita el pago.</li>
       </ul>
     </section>
     <section id="envios">
-      <h2>Envíos</h2>
+      <h2>Envíos y seguimiento</h2>
       <ul>
-        <li>En Rosario: envío a domicilio o retiro gratis en punto de entrega.</li>
         <li id="info-free" hidden><b>Envío gratis</b> a la sucursal del Correo Argentino que elijas, en todo el país.</li>
-        <li>Resto del país: por Correo Argentino, a domicilio o a sucursal. Llega en 2 a 5 días hábiles desde que lo despachamos.</li>
-        <li>Cuando despachamos tu pedido te mandamos el número de seguimiento por WhatsApp.</li>
+        <li><b>A domicilio:</b> también por Correo Argentino, con un costo adicional que ves antes de pagar.</li>
+        <li><b>Rosario:</b> podés retirar gratis. Coordinamos el punto y el horario por WhatsApp.</li>
+        <li><b>Cuándo sale:</b> lo que está en stock se despacha apenas se acredita el pago. Los encargos, cuando están listos (10 a 15 días).</li>
+        <li><b>Cuánto tarda:</b> una vez despachado, llega en 2 a 5 días hábiles.</li>
+        <li><b>Seguimiento:</b> te mandamos el número por WhatsApp para que lo sigas en la página del Correo Argentino.</li>
       </ul>
       <div class="calc-box">
         <h3 class="calc-title">Calculá tu envío</h3>
@@ -628,11 +633,12 @@ body.editing { padding-bottom: 120px; }
     <section id="comprar">
       <h2>Cómo comprar</h2>
       <ol class="steps-list">
-        <li><b>Elegí tu jean.</b> Si está en stock, fijate su talle y sus medidas y tocá “Comprar”.</li>
-        <li><b>¿No está tu talle?</b> Tocá “Quiero encargar el mío” y completá tus medidas.</li>
-        <li><b>Elegí cómo lo recibís:</b> retiro gratis en Rosario o envío. El costo del envío se suma solo.</li>
-        <li><b>Pagá con Mercado Pago</b> (tarjeta de crédito, débito o dinero en cuenta).</li>
-        <li><b>Listo:</b> te escribimos por WhatsApp para coordinar la entrega.</li>
+        <li><b>Elegí tu prenda.</b> Cada diseño es único y está customizado a mano.</li>
+        <li><b>Si está en stock,</b> vas a ver su talle y sus medidas reales. Si te queda, tocá “Comprar”.</li>
+        <li><b>Si no está tu talle,</b> tocá “Quiero encargar el mío” y completá tus medidas. La hacemos con el mismo diseño en 10 a 15 días.</li>
+        <li><b>Elegí cómo la recibís:</b> envío a sucursal del Correo, envío a domicilio o retiro en Rosario.</li>
+        <li><b>Pagá con Mercado Pago:</b> tarjeta de crédito, débito o dinero en cuenta.</li>
+        <li><b>Listo.</b> Te escribimos por WhatsApp para confirmar tu pedido y pasarte el seguimiento.</li>
       </ol>
     </section>
     <section id="nosotros">
@@ -724,8 +730,9 @@ body.editing { padding-bottom: 120px; }
     <button type="button" class="m-shop" data-go-cat="all">Shop</button>
     <div class="m-cols" id="cat-sub"></div>
     <div class="m-sep"></div>
-    <button type="button" class="m-item" data-go="pagos">Medios de pago</button>
-    <button type="button" class="m-item" data-go="envios">Envíos</button>
+    <button type="button" class="m-item" data-go="comprar">Cómo comprar</button>
+    <button type="button" class="m-item" data-go="envios">Envíos y seguimiento</button>
+    <button type="button" class="m-item" data-go="pagos">Formas de pago</button>
     <button type="button" class="m-item" data-go="faq">Preguntas frecuentes</button>
     <button type="button" class="m-item" data-go="contacto">Contacto</button>
     <div class="m-sep"></div>
@@ -916,7 +923,8 @@ function photoHTML(p, cls) {
 }
 
 function renderHero() {
-  const h = data().hero;
+  let h = data().hero;
+  if (h && h.eyebrow === 'Colección verano' && h.title === 'Nueva temporada') h = Object.assign({}, h, { eyebrow: 'Denim y tops customizados a mano', title: 'Cada pieza existe una sola vez' });
   const img = safeImg(h.img);
   $('#hero').innerHTML = `
     <div class="hero-img">${img ? `<img src="${esc(img)}" alt="${esc(h.alt || 'Foto de portada de Kavantia')}">` : '<span class="hero-ph">Foto de portada</span>'}</div>
@@ -1005,23 +1013,21 @@ function renderGrid() {
 }
 
 const DEFAULT_FAQ = [
-  { q: '¿Cuáles son los métodos de pago?', a: 'Pagás desde la página con Mercado Pago: tarjeta de crédito, débito o dinero en cuenta.' },
-  { q: '¿Cuáles son los métodos de envío?', a: 'En Rosario te lo llevamos a domicilio o lo retirás gratis en nuestro punto de entrega.\nAl resto del país enviamos por Correo Argentino, a domicilio o a sucursal: llega en 2 a 5 días hábiles desde que lo despachamos.' },
-  { q: '¿Las prendas tienen cambio?', a: 'No. Cada jean es único y está customizado a mano, por eso no tiene cambio. Antes de comprar fijate su talle y sus medidas reales, que están en cada jean.' },
-  { q: '¿Cómo sé si me queda?', a: 'Cada jean en stock muestra su talle y sus medidas reales (cintura, cadera, tiro y largo). Comparalas con un jean tuyo que te quede bien.' },
-  { q: '¿Qué pasa si no está mi talle?', a: 'Tocá “Quiero encargar el mío” y completá tus medidas. Lo hacemos con el mismo diseño sobre otro jean, y tarda de 10 a 15 días.' },
-  { q: '¿Y si no consiguen un jean para mi encargo?', a: 'Te avisamos por WhatsApp apenas nos damos cuenta y te ofrecemos otra opción parecida, con fotos. Si no te convence, te devolvemos el 100% por Mercado Pago.' },
-  { q: '¿Cuándo llegan prendas nuevas?', a: 'Subimos novedades todos los jueves a las 20 h. Seguinos en Instagram para verlas primero.' }
+  { q: '¿Cómo sé si una prenda me queda?', a: 'Cada prenda en stock muestra su talle y sus medidas reales (en los jeans: cintura, cadera, tiro y largo). Comparalas con una prenda tuya que te quede bien.' },
+  { q: '¿Qué pasa si no está mi talle?', a: 'Tocá “Quiero encargar el mío” y completá tus medidas. La hacemos para vos con el mismo diseño.' },
+  { q: '¿Cuánto tarda un encargo?', a: 'De 10 a 15 días desde que se acredita el pago. Después se suma el tiempo del envío.' },
+  { q: '¿El encargo queda igual al de la foto?', a: 'El diseño es el mismo. Como cada pieza se hace sobre una prenda distinta, el tono o el corte pueden variar un poco.' },
+  { q: '¿Y si no consiguen una prenda para mi encargo?', a: 'Te avisamos por WhatsApp apenas nos damos cuenta y te ofrecemos otra opción parecida, con fotos. Si no te convence, te devolvemos el 100% por Mercado Pago.' },
+  { q: '¿Las prendas tienen cambio?', a: 'No. Cada pieza es única y está customizada a mano, por eso no tiene cambio. Antes de comprar fijate su talle y sus medidas reales.' },
+  { q: '¿Cómo son los envíos?', a: 'Enviamos a todo el país por Correo Argentino. A sucursal es gratis, y a domicilio tiene un costo adicional que ves antes de pagar. Llega en 2 a 5 días hábiles desde que lo despachamos.\nEn Rosario también podés retirar gratis.' },
+  { q: '¿Cómo pago?', a: 'Desde la página con Mercado Pago: tarjeta de crédito, débito o dinero en cuenta.' },
+  { q: '¿Puedo cancelar mi compra?', a: 'Las prendas en stock, sí: tenés 10 días desde que la recibís, mirá “Cancelá tu compra”. Los encargos hechos con tus medidas no, porque se hacen especialmente para vos.' },
+  { q: '¿Cuándo suben prendas nuevas?', a: 'Las mostramos primero en Instagram y TikTok. Seguinos para verlas antes de que se vendan.' }
 ];
-const OLD_FAQ_JSON = JSON.stringify([
-  { q: '¿Cuáles son los métodos de pago?', a: 'Pagás desde la página con Mercado Pago: tarjeta de crédito, débito o dinero en cuenta. Si retirás tu pedido, también podés pagar en efectivo.' },
-  { q: '¿Cuáles son los métodos de envío?', a: 'En Rosario: si pedís antes de las 15 h, te lo llevamos ese mismo día. También podés retirarlo gratis en nuestro punto de entrega.\nAl resto del país enviamos por Correo Argentino o Andreani.' },
-  { q: '¿Las prendas tienen cambio?', a: 'Sí. Podés cambiar el talle hasta 7 días después de recibir tu compra, con la prenda sin usar y con su etiqueta.' },
-  { q: '¿Cómo sé qué talle soy?', a: 'Mirá la guía de talles de esta página y las medidas en cm que tiene cada prenda. Si quedás entre dos talles, escribinos y te ayudamos.' },
-  { q: '¿Qué pasa si no está mi talle?', a: 'S, M y L están en stock. XS y XL los traemos por encargo en la próxima tanda: escribinos y lo reservamos.' },
-  { q: '¿Cuándo llegan prendas nuevas?', a: 'Subimos novedades todos los jueves a las 20 h. Seguinos en Instagram para verlas primero.' }
-]);
-const curFaq = () => { const f = (editing && draft ? draft : saved).faq; return Array.isArray(f) && JSON.stringify(f) !== OLD_FAQ_JSON ? f : DEFAULT_FAQ; };
+/* A saved list that still carries the old shop's rules (cash, exchanges, size guide…) is replaced by the current one. */
+const FAQ_STALE = ['en efectivo', 'hasta 7 días', 'guía de talles', 'antes de las 15 h', 'próxima tanda', 'jueves a las 20'];
+const faqStale = f => { const t = JSON.stringify(f); return FAQ_STALE.some(x => t.includes(x)); };
+const curFaq = () => { const f = (editing && draft ? draft : saved).faq; return Array.isArray(f) && f.length && !faqStale(f) ? f : DEFAULT_FAQ; };
 function renderFaq() {
   const f = curFaq();
   $('#faq').hidden = !f.length && !editing;
@@ -1053,7 +1059,8 @@ const ICONS = {
   mail: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 7l8.5 6 8.5-6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>'
 };
 const handle = v => String(v || '').trim().replace(/^https?:\/\/(www\.)?(instagram|tiktok)\.com\//i, '').replace(/^@/, '').replace(/[^A-Za-z0-9._]/g, '');
-const DEFAULT_ABOUT = 'KAVANTIA nació en Rosario con una idea simple: que cada prenda exista una sola vez.\nCustomizamos cada jean a mano, uno por uno: los diseños son únicos y no hay dos iguales.\nPor ahora trabajamos por encargo: escribinos y la hacemos para vos.';
+const DEFAULT_ABOUT = 'KAVANTIA nació en Rosario con una idea simple: que cada prenda exista una sola vez.\nCustomizamos denim y tops a mano, uno por uno: los diseños son únicos y no hay dos iguales.\nSi una pieza no está en tu talle, la hacemos por encargo con tus medidas.';
+const aboutText = a => !a || /prendas con historia|Por ahora trabajamos por encargo/.test(a) ? DEFAULT_ABOUT : a;
 function renderFooter() {
   document.querySelectorAll('.an-free').forEach(x => { x.hidden = !sucGratis(); }); { const f = $('#info-free'); if (f) f.hidden = !sucGratis(); }
   const c = data().contact || {};
@@ -1067,7 +1074,7 @@ function renderFooter() {
   const cq = $('#f-consultas');
   if (wa.length >= 8) { cq.href = `https://wa.me/${wa}?text=${encodeURIComponent('¡Hola Kavantia! Tengo una consulta:')}`; cq.target = '_blank'; }
   else { cq.href = '#contacto'; cq.removeAttribute('target'); }
-  $('#about-body').innerHTML = descHTML(c.about || DEFAULT_ABOUT);
+  $('#about-body').innerHTML = descHTML(aboutText(c.about));
   const msg = encodeURIComponent('Hola Kavantia, quiero cancelar mi compra. Número de pedido: ');
   const acts = (wa.length >= 8 ? `<a class="arrep-btn" href="https://wa.me/${wa}?text=${msg}" target="_blank" rel="noopener">Cancelar por WhatsApp</a>` : '') + (c.email ? `<a class="arrep-btn" href="mailto:${esc(c.email)}?subject=${encodeURIComponent('Cancelación de compra')}">Cancelar por mail</a>` : '');
   $('#arrep-actions').innerHTML = acts || '<span class="small">Escribinos por Instagram con tu número de pedido.</span>';
@@ -1967,7 +1974,7 @@ function openContactEditor() {
     <p class="small">El botón “Enviar pedido por WhatsApp” usa este número. Escribilo con 549 adelante y sin el 15.</p>
     <label class="field"><span>TikTok</span><input type="text" id="ed-tt" value="${esc(edItem.tiktok || '')}" placeholder="@kavantia"></label>
     <label class="field"><span>Mail</span><input type="email" id="ed-mail" value="${esc(edItem.email)}" placeholder="hola@kavantia.com"></label>
-    <label class="field"><span>Acerca de Kavantia (texto de “Nosotros”)</span><textarea id="ed-about" rows="5" maxlength="1200" style="padding:10px 12px;border:1px solid var(--line);border-radius:2px;background:var(--surface);color:var(--fg);font:15px/1.5 var(--body);resize:vertical">${esc(edItem.about || DEFAULT_ABOUT)}</textarea></label>
+    <label class="field"><span>Acerca de Kavantia (texto de “Nosotros”)</span><textarea id="ed-about" rows="5" maxlength="1200" style="padding:10px 12px;border:1px solid var(--line);border-radius:2px;background:var(--surface);color:var(--fg);font:15px/1.5 var(--body);resize:vertical">${esc(aboutText(edItem.about))}</textarea></label>
 
   </div>`;
   $('#ed-foot').innerHTML = '<div class="ed-msg err" id="ed-err"></div><button type="button" class="cta" id="ed-done">Listo</button>';
