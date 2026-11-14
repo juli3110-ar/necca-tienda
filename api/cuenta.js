@@ -35,9 +35,9 @@ export async function POST(request) {
     if (await findUser(email)) return json({ error: 'exists', message: 'Ya hay una cuenta con ese mail. Iniciá sesión.' }, 409);
     const user = { email, nombre, pass: hashPassword(pw), datos: {}, creada: new Date().toISOString() };
     await saveUser(user);
-    await sendMail({ to: email, subject: '¡Bienvenida a Guinzoni!', html: layout({
+    await sendMail({ to: email, subject: '¡Bienvenida a Kavantia!', html: layout({
       title: `¡Hola ${nombre.split(' ')[0]}!`,
-      rows: ['Ya tenés tu cuenta en Guinzoni. Desde ahí ves tus pedidos y guardás tu dirección para comprar más rápido.'],
+      rows: ['Ya tenés tu cuenta en Kavantia. Desde ahí ves tus pedidos y guardás tu dirección para comprar más rápido.'],
       button: { text: 'Ir a la tienda', url: new URL(request.url).origin },
       footer: 'Si no creaste esta cuenta, ignorá este mail.'
     }) });
@@ -50,7 +50,7 @@ export async function POST(request) {
     const user = validEmail(email) ? await findUser(email) : null;
     if (user) {
       const link = `${new URL(request.url).origin}/#reset=${makeResetToken(user)}`;
-      await sendMail({ to: email, subject: 'Cambiá tu contraseña de Guinzoni', html: layout({
+      await sendMail({ to: email, subject: 'Cambiá tu contraseña de Kavantia', html: layout({
         title: 'Cambiá tu contraseña',
         rows: [`Hola ${user.nombre.split(' ')[0]}, tocá el botón para elegir una contraseña nueva. El link vale por 1 hora.`],
         button: { text: 'Elegir contraseña nueva', url: link },

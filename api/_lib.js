@@ -58,7 +58,8 @@ export function cleanState(input) {
     ...(s.ship && typeof s.ship === 'object' ? { ship: {
       local: str(s.ship.local, 200).replace(/[^0-9, ]/g, ''),
       nota: str(s.ship.nota, 160),
-      prov: Object.fromEntries(PROVINCIAS.map(p => [p, Math.max(0, Math.round(Number(s.ship.prov && s.ship.prov[p]) || 0))]).filter(x => x[1] > 0))
+      prov: Object.fromEntries(PROVINCIAS.map(p => [p, Math.max(0, Math.round(Number(s.ship.prov && s.ship.prov[p]) || 0))]).filter(x => x[1] > 0)),
+      suc: Object.fromEntries(PROVINCIAS.map(p => [p, Math.max(0, Math.round(Number(s.ship.suc && s.ship.suc[p]) || 0))]).filter(x => x[1] > 0))
     } } : {}),
     ...(Array.isArray(s.faq) ? { faq: s.faq.slice(0, 30).map(x => ({
       q: str(x && x.q, 140),
@@ -91,7 +92,7 @@ export function cleanState(input) {
         cat: str(p.cat, 40).replace(/[^A-Za-z0-9_-]/g, ''),
         color: str(p.color, 40),
         price,
-        badge: p.badge ? 'Nuevo' : '',
+        badge: typeof p.badge === 'string' ? p.badge.replace(/[<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 24) : (p.badge ? 'Nuevo' : ''),
         desc: String(p.desc == null ? '' : p.desc).replace(/\r/g, '').trim().slice(0, 800),
         img: safeImg(p.img),
         sizes: cleanSizes(p.sizes),
@@ -100,6 +101,7 @@ export function cleanState(input) {
         tint: color(p.tint),
         ink: color(p.ink),
         glyph: GLYPHS.includes(p.glyph) ? p.glyph : 'g-top',
+        jm: Object.fromEntries(['cintura', 'cadera', 'tiro', 'largo', 'entrepierna'].map(k => [k, str(p.jm && p.jm[k], 8)]).filter(x => x[1])),
         m: (Array.isArray(p.m) ? p.m : []).slice(0, 4)
           .map(r => (Array.isArray(r) ? r : []).slice(0, 4).map(x => str(x, 20)))
           .filter(r => r[0])
@@ -123,22 +125,23 @@ export async function loadState() {
 
 /* ---------- Pedidos ---------- */
 export const transferPrice = n => Math.round(n * 0.9 / 100) * 100;
-export const PAGOS = { transferencia: 'Transferencia', online: 'Tarjeta o Mercado Pago', efectivo: 'Efectivo al retirar' };
+export const PAGOS = { transferencia: 'Transferencia', online: 'Tarjeta o Mercado Pago' };
 export const ESTADOS = { a_confirmar: 'A confirmar', pendiente: 'Esperando el pago', pagado: 'Pagado', rechazado: 'Pago rechazado' };
 
 export const PROVINCIAS = ['Buenos Aires', 'CABA', 'Catamarca', 'Chaco', 'Chubut', 'Córdoba', 'Corrientes', 'Entre Ríos', 'Formosa', 'Jujuy', 'La Pampa', 'La Rioja', 'Mendoza', 'Misiones', 'Neuquén', 'Río Negro', 'Salta', 'San Juan', 'San Luis', 'Santa Cruz', 'Santa Fe', 'Santiago del Estero', 'Tierra del Fuego', 'Tucumán'];
 export const cp4 = cp => (String(cp || '').match(/\d{4}/) || [''])[0];
 /** Same rules as the page: local postal codes pay the Rosario price, the rest their province's price. 0 = a coordinar. */
-export function shipQuote(state, prov, cp) {
+export function shipQuote(state, prov, cp, modo) {
   const ship = state.ship || {};
   const local = String(ship.local == null ? '2000' : ship.local).split(/[^0-9]+/).filter(Boolean);
   const d = cp4(cp);
   if (d && local.includes(d)) return { local: true, price: Number(state.contact && state.contact.envio) || 0 };
+  if (modo === 'sucursal') return { local: false, suc: true, price: Number(ship.suc && ship.suc[prov]) || 0 };
   return { local: false, price: Number(ship.prov && ship.prov[prov]) || 0 };
 }
 
 /* ---------- Talles y stock ---------- */
-export const SIZES = ['XS', 'S', 'M', 'L', 'XL'];
+export const SIZES = ['XS', 'S', 'M', 'L', 'XL', '34', '36', '38', '40', '42', '44', '46'];
 function cleanSizes(z) {
   if (!z || typeof z !== 'object') return undefined;
   const out = {};

@@ -7,7 +7,7 @@ export const peso = n => '$' + Math.round(Number(n) || 0).toLocaleString('es-AR'
 
 /** A simple, clean mail layout. `rows` are paragraphs (plain text, escaped here); `button` is {text, url}. */
 export function layout({ title, rows = [], button, footer }) {
-  const brand = esc(process.env.MAIL_NAME || 'Guinzoni').toUpperCase().split('').join('&nbsp;');
+  const brand = esc(process.env.MAIL_NAME || 'Kavantia').toUpperCase().split('').join('&nbsp;');
   return `<!doctype html><html><body style="margin:0;background:#f4f1ec;font-family:Helvetica,Arial,sans-serif;color:#1a1718">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:32px 16px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff">
@@ -23,7 +23,7 @@ ${footer ? `<p style="margin:20px 0 0;font-size:12.5px;color:#8a8384;line-height
 /** Sends one mail. Never throws: returns true/false so a mail problem never breaks a sale. */
 export async function sendMail({ to, subject, html, text }) {
   if (!mailReady() || !to) return false;
-  const from = process.env.MAIL_FROM, name = process.env.MAIL_NAME || 'Guinzoni';
+  const from = process.env.MAIL_FROM, name = process.env.MAIL_NAME || 'Kavantia';
   try {
     let res;
     if (process.env.BREVO_API_KEY) {
@@ -45,8 +45,10 @@ export async function sendMail({ to, subject, html, text }) {
 }
 
 const PAGO = { online: 'Mercado Pago', efectivo: 'Efectivo al retirar', transferencia: 'Transferencia' };
-const itemsText = o => (o.items || []).map(i => `${i.cantidad} × ${i.nombre}${i.color ? ' · ' + i.color : ''} · Talle ${i.talle} — ${peso(i.precio * i.cantidad)}`).join('\n');
-const entregaText = o => o.entrega === 'envio' ? `Envío a ${[o.direccion, o.detalle, o.ciudad, o.provincia].filter(Boolean).join(', ')}${o.cp ? ' (CP ' + o.cp + ')' : ''}` : 'Retiro en punto de entrega';
+const MED = { cintura: 'Cintura', cadera: 'Cadera', entrepierna: 'Largo de pierna', altura: 'Altura', busto: 'Busto', talle: 'Talle habitual' };
+const medText = m => Object.keys(MED).filter(k => m && m[k]).map(k => `${MED[k]} ${m[k]}${k === 'talle' ? '' : ' cm'}`).join(' · ') + (m && m.nota ? ` · "${m.nota}"` : '');
+const itemsText = o => (o.items || []).map(i => `${i.cantidad} × ${i.nombre}${i.color ? ' · ' + i.color : ''} · ${i.encargo ? 'Por encargo (' + medText(i.medidas) + ')' : 'Talle ' + i.talle} — ${peso(i.precio * i.cantidad)}`).join('\n');
+const entregaText = o => o.entrega === 'envio' ? `${o.modo === 'sucursal' ? 'Retiro en sucursal del Correo:' : 'Envío a'} ${[o.direccion, o.detalle, o.ciudad, o.provincia].filter(Boolean).join(', ')}${o.cp ? ' (CP ' + o.cp + ')' : ''}` : 'Retiro en punto de entrega';
 
 /** Mail to the customer when an order is confirmed or paid. */
 export function orderMailForCustomer(o, paid) {
