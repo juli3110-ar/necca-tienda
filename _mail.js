@@ -45,8 +45,10 @@ export async function sendMail({ to, subject, html, text }) {
 }
 
 const PAGO = { online: 'Mercado Pago', efectivo: 'Efectivo al retirar', transferencia: 'Transferencia' };
-const itemsText = o => (o.items || []).map(i => `${i.cantidad} × ${i.nombre}${i.color ? ' · ' + i.color : ''} · Talle ${i.talle} — ${peso(i.precio * i.cantidad)}`).join('\n');
-const entregaText = o => o.entrega === 'envio' ? `Envío a ${[o.direccion, o.detalle, o.ciudad, o.provincia].filter(Boolean).join(', ')}${o.cp ? ' (CP ' + o.cp + ')' : ''}` : 'Retiro en punto de entrega';
+const MED = { cintura: 'Cintura', cadera: 'Cadera', entrepierna: 'Largo de pierna', altura: 'Altura', busto: 'Busto', talle: 'Talle habitual' };
+const medText = m => Object.keys(MED).filter(k => m && m[k]).map(k => `${MED[k]} ${m[k]}${k === 'talle' ? '' : ' cm'}`).join(' · ') + (m && m.nota ? ` · "${m.nota}"` : '');
+const itemsText = o => (o.items || []).map(i => `${i.cantidad} × ${i.nombre}${i.color ? ' · ' + i.color : ''} · ${i.encargo ? 'Por encargo (' + medText(i.medidas) + ')' : 'Talle ' + i.talle} — ${peso(i.precio * i.cantidad)}`).join('\n');
+const entregaText = o => o.entrega === 'envio' ? `${o.modo === 'sucursal' ? 'Retiro en sucursal del Correo:' : 'Envío a'} ${[o.direccion, o.detalle, o.ciudad, o.provincia].filter(Boolean).join(', ')}${o.cp ? ' (CP ' + o.cp + ')' : ''}` : 'Retiro en punto de entrega';
 
 /** Mail to the customer when an order is confirmed or paid. */
 export function orderMailForCustomer(o, paid) {

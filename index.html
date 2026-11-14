@@ -177,6 +177,16 @@ details summary { cursor: pointer; color: var(--rose-ink); width: fit-content; }
 .add { margin-top: auto; height: 44px; border: 0; border-radius: 2px; background: var(--wine); color: var(--wine-ink); font-weight: 400; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; }
 .add:disabled { background: var(--nude); color: var(--muted); cursor: not-allowed; }
 .add.done { background: var(--good); }
+.buy { margin-top: auto; display: grid; gap: 8px; }
+.buy .add { margin-top: 0; }
+.enc-btn { min-height: 44px; padding: 8px 10px; border: 1px solid var(--fg); border-radius: 2px; background: transparent; color: var(--fg); font: 400 11px/1.3 var(--body); letter-spacing: .14em; text-transform: uppercase; cursor: pointer; }
+.pv-info .enc-btn.pv-enc { width: 100%; min-height: 52px; margin-top: 10px; font-size: 12px; letter-spacing: .2em; }
+.jm { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+.jm-table { margin: 0 0 16px; max-width: 320px; }
+.enc-form { margin-top: 16px; padding: 18px 16px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); display: grid; gap: 12px; }
+.enc-form .field input { width: 100%; }
+.enc-hint { display: block; margin: -2px 0 2px; font-size: 12.5px; color: var(--muted); letter-spacing: 0; text-transform: none; }
+.enc-title { margin: 0; font-family: var(--display); font-weight: 400; font-size: 13px; letter-spacing: .22em; text-transform: uppercase; }
 .empty-grid { grid-column: 1 / -1; color: var(--muted); padding: 32px 0; }
 
 /* Drawers */
@@ -266,6 +276,11 @@ legend { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; colo
 .calc-box { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
 .calc-title { margin: 0 0 14px; font-family: var(--display); font-weight: 400; font-size: 13px; letter-spacing: .22em; text-transform: uppercase; }
 .quote { margin: 12px 0 0; font-size: 14.5px; line-height: 1.5; }
+.modo { display: flex; gap: 8px; margin: 0 0 12px; }
+.modo button { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 2px; background: transparent; color: var(--fg); font: 400 13px var(--body); text-align: left; cursor: pointer; }
+.modo button small { color: var(--muted); font-size: 13px; }
+.modo button[aria-pressed="true"] { border-color: var(--fg); }
+.modo button[aria-pressed="true"] small { color: var(--fg); }
 #c-out:not(:empty) { margin-top: 16px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); font-size: 16px; }
 .quote b { font-weight: 500; }
 .two { display: grid; grid-template-columns: 1.4fr 1fr; gap: 10px; }
@@ -519,8 +534,8 @@ body.editing { padding-bottom: 120px; }
 
 <div class="announce" aria-label="Beneficios">
   <div class="announce-track">
-    <span>Envío en el día en Rosario</span><span>Pagá con Mercado Pago</span><span>Cambios hasta 7 días</span><span>Novedades cada jueves 20 h</span>
-    <span aria-hidden="true">Envío en el día en Rosario</span><span aria-hidden="true">Pagá con Mercado Pago</span><span aria-hidden="true">Cambios hasta 7 días</span><span aria-hidden="true">Novedades cada jueves 20 h</span>
+    <span>Diseños únicos, hechos a mano</span><span>Pagá con Mercado Pago</span><span>Encargá el tuyo con tus medidas</span><span>Novedades cada jueves 20 h</span>
+    <span aria-hidden="true">Diseños únicos, hechos a mano</span><span aria-hidden="true">Pagá con Mercado Pago</span><span aria-hidden="true">Encargá el tuyo con tus medidas</span><span aria-hidden="true">Novedades cada jueves 20 h</span>
   </div>
 </div>
 
@@ -554,11 +569,11 @@ body.editing { padding-bottom: 120px; }
 <main class="wrap">
   <section class="kvh" id="como-funciona" aria-labelledby="how-t">
     <h2 id="how-t">Cómo funciona</h2>
-    <p class="kvh-lead">Cada jean lo busco en ferias y lo customizo a mano, uno por uno. Por eso no hay dos iguales: cada pieza existe una sola vez.</p>
+    <p class="kvh-lead">Cada jean lo customizo a mano, uno por uno. Los diseños son únicos y no hay dos jeans iguales: cada pieza existe una sola vez.</p>
     <div class="kvh-grid">
-      <div><h3>En stock</h3><p>Es exactamente el jean de las fotos, en el talle que dice. Fijate sus medidas reales en el detalle del producto.</p></div>
-      <div><h3>Por encargo</h3><p>Busco un jean parecido en tu talle y le hago el mismo diseño. Antes de customizarlo te mando una foto por WhatsApp para que lo apruebes. El tono o el corte pueden variar un poco.</p></div>
-      <div><h3>Tiempos</h3><p>Lo que está en stock sale enseguida, con envío en el día en Rosario. Los encargos tardan de 10 a 15 días.</p></div>
+      <div><h3>En stock</h3><p>Es exactamente el jean de las fotos. En cada uno vas a ver su talle y sus medidas reales. Si te queda, tocá “Comprar”.</p></div>
+      <div><h3>Por encargo</h3><p>Si no está tu talle, tocá “Quiero encargar el mío” y dejanos tus medidas. Lo hago con el mismo diseño sobre otro jean, así que el tono o el corte pueden variar un poco.</p></div>
+      <div><h3>Tiempos</h3><p>Lo que está en stock sale enseguida. Los encargos tardan de 10 a 15 días.</p></div>
     </div>
   </section>
   <h2 class="filters" id="filters">Todo</h2>
@@ -582,17 +597,14 @@ body.editing { padding-bottom: 120px; }
       <h2>Medios de pago</h2>
       <ul>
         <li id="info-online"><b>Mercado Pago:</b> pagás en el momento desde la página, con tarjeta de crédito, débito o dinero en cuenta.</li>
-        <li><b>Efectivo:</b> al retirar en el punto de entrega.</li>
       </ul>
     </section>
     <section id="envios">
-      <h2>Envíos y cambios</h2>
+      <h2>Envíos</h2>
       <ul>
-        <li>Pedidos antes de las 15 h: envío ese mismo día en Rosario.</li>
-        <li>Retiro gratis en punto de entrega, en horarios fijos.</li>
-        <li>Resto del país: Correo Argentino o Andreani.</li>
+        <li>En Rosario: envío a domicilio o retiro gratis en punto de entrega.</li>
+        <li>Resto del país: por Correo Argentino, a domicilio o a sucursal.</li>
         <li>Cuando despachamos tu pedido te mandamos el número de seguimiento por WhatsApp.</li>
-        <li>Cambios de talle hasta 7 días después de recibir tu compra.</li>
       </ul>
       <div class="calc-box">
         <h3 class="calc-title">Calculá tu envío</h3>
@@ -604,28 +616,6 @@ body.editing { padding-bottom: 120px; }
       <p class="quote" id="c-out" aria-live="polite"></p>
       </div>
     </section>
-    <section id="talles" class="wide">
-      <h2>Guía de talles</h2>
-      <p>Buscá tus medidas en la tabla para saber qué talle te corresponde. Si quedás entre dos, elegí el más grande para prendas entalladas y el más chico para las oversize.</p>
-      <div class="size-wrap">
-        <table class="size-table">
-          <thead><tr><th>Medida (cm)</th><th>XS</th><th>S</th><th>M</th><th>L</th><th>XL</th></tr></thead>
-          <tbody>
-            <tr><td>Busto</td><td>80</td><td>84</td><td>88</td><td>92</td><td>96</td></tr>
-            <tr><td>Cintura</td><td>62</td><td>66</td><td>70</td><td>74</td><td>78</td></tr>
-            <tr><td>Cadera</td><td>86</td><td>90</td><td>94</td><td>98</td><td>102</td></tr>
-            <tr><td>Equivale a</td><td>34</td><td>36</td><td>38</td><td>40</td><td>42</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="how">
-        <div><b>Busto</b><span>Pasá el centro por la parte más llena del busto, sin apretar.</span></div>
-        <div><b>Cintura</b><span>Medite en la parte más angosta, arriba del ombligo.</span></div>
-        <div><b>Cadera</b><span>Medí la parte más ancha, con los pies juntos.</span></div>
-        <div><b>Truco</b><span>Medí una prenda tuya que te quede bien y comparala con “Ver medidas en cm” de cada producto.</span></div>
-      </div>
-      <p class="small">S, M y L están en stock; XS y XL los traemos por encargo en la próxima tanda. Medidas de referencia: cada prenda tiene las suyas en su ficha.</p>
-    </section>
     <section id="faq" class="wide">
       <h2>Preguntas frecuentes</h2>
       <div class="faq" id="faq-body"></div>
@@ -633,22 +623,12 @@ body.editing { padding-bottom: 120px; }
     <section id="comprar">
       <h2>Cómo comprar</h2>
       <ol class="steps-list">
-        <li><b>Elegí la prenda</b>, el color y tu talle. Si dudás, mirá la tabla de talles.</li>
-        <li><b>Agregala a la bolsa</b> y seguí mirando, o tocá “Tu bolsa” para terminar.</li>
-        <li><b>Elegí cómo la recibís:</b> retiro gratis en Rosario o envío a domicilio. El costo del envío se suma solo.</li>
-        <li><b>Pagá con Mercado Pago</b> (tarjeta de crédito, débito o dinero en cuenta), o en efectivo si retirás.</li>
+        <li><b>Elegí tu jean.</b> Si está en stock, fijate su talle y sus medidas y tocá “Comprar”.</li>
+        <li><b>¿No está tu talle?</b> Tocá “Quiero encargar el mío” y completá tus medidas.</li>
+        <li><b>Elegí cómo lo recibís:</b> retiro gratis en Rosario o envío. El costo del envío se suma solo.</li>
+        <li><b>Pagá con Mercado Pago</b> (tarjeta de crédito, débito o dinero en cuenta).</li>
         <li><b>Listo:</b> te escribimos por WhatsApp para coordinar la entrega.</li>
       </ol>
-    </section>
-    <section id="cambios">
-      <h2>Cambios y devoluciones</h2>
-      <ul>
-        <li>Podés cambiar el talle o la prenda <b>hasta 7 días</b> después de recibirla.</li>
-        <li>La prenda tiene que estar sin uso, sin lavar y con su etiqueta.</li>
-        <li>Escribinos por WhatsApp con tu número de pedido y coordinamos el cambio.</li>
-        <li>Si la prenda tiene una falla, el envío del cambio corre por nuestra cuenta.</li>
-        <li>Si te arrepentiste de la compra, mirá “Cancelá tu compra”.</li>
-      </ul>
     </section>
     <section id="nosotros">
       <h2>Acerca de Kavantia</h2>
@@ -659,6 +639,7 @@ body.editing { padding-bottom: 120px; }
       <p>Tenés <b>10 días corridos</b> desde que recibís tu compra para cancelarla, sin tener que explicar el motivo. Es tu derecho de arrepentimiento (Ley 24.240 de Defensa del Consumidor).</p>
       <ul>
         <li>La prenda tiene que estar sin uso y con su etiqueta.</li>
+        <li>Los encargos hechos con tus medidas no tienen arrepentimiento, porque se confeccionan especialmente para vos (art. 1116 del Código Civil y Comercial).</li>
         <li>Te devolvemos el total por el mismo medio con el que pagaste.</li>
         <li>Mandanos tu número de pedido y tu nombre:</li>
       </ul>
@@ -677,7 +658,6 @@ body.editing { padding-bottom: 120px; }
       <button type="button" data-go="comprar">Cómo comprar</button>
       <button type="button" data-go="envios">Envíos y seguimiento</button>
       <button type="button" data-go="pagos">Formas de pago</button>
-      <button type="button" data-go="cambios">Cambios y devoluciones</button>
       <button type="button" data-go="faq">Preguntas frecuentes</button>
     </nav>
     <nav class="fcol" aria-label="Nosotros"><h3>Nosotros</h3>
@@ -686,7 +666,6 @@ body.editing { padding-bottom: 120px; }
     <nav class="fcol" aria-label="Atención al cliente"><h3>Atención al cliente</h3>
       <button type="button" data-go="contacto">Contacto</button>
       <a id="f-consultas" href="#contacto" target="_blank" rel="noopener">Consultas</a>
-      <button type="button" data-go="talles">Tabla de talles</button>
       <button type="button" data-go="arrepentimiento">Cancelá tu compra</button>
     </nav>
     <div class="fcol"><h3>Seguinos</h3><div class="f-social" id="f-social"></div></div>
@@ -741,8 +720,7 @@ body.editing { padding-bottom: 120px; }
     <div class="m-cols" id="cat-sub"></div>
     <div class="m-sep"></div>
     <button type="button" class="m-item" data-go="pagos">Medios de pago</button>
-    <button type="button" class="m-item" data-go="envios">Envíos y cambios</button>
-    <button type="button" class="m-item" data-go="talles">Guía de talles</button>
+    <button type="button" class="m-item" data-go="envios">Envíos</button>
     <button type="button" class="m-item" data-go="faq">Preguntas frecuentes</button>
     <button type="button" class="m-item" data-go="contacto">Contacto</button>
     <div class="m-sep"></div>
@@ -838,19 +816,29 @@ function sizesOf(p) {
   });
   return out;
 }
-const sizeInfo = (p, s) => { const v = sizesOf(p)[s]; return { show: v !== 'no', ok: v === 'si' || v === 'enc' || v > 0, enc: v === 'enc', left: typeof v === 'number' ? v : Infinity }; };
+const sizeInfo = (p, s) => { const v = sizesOf(p)[s]; const ok = v === 'si' || v > 0; return { show: ok, ok, enc: false, left: typeof v === 'number' ? v : Infinity }; };
+const stockSizes = p => sizesFor(p).filter(s => sizeInfo(p, s).ok);
+/* Real measurements of one garment (cm). Jeans: cintura, cadera, tiro, largo, entrepierna. */
+const JM = [['cintura', 'Cintura'], ['cadera', 'Cadera'], ['tiro', 'Tiro'], ['largo', 'Largo'], ['entrepierna', 'Entrepierna']];
+const jmParts = p => JM.filter(([k]) => p.jm && p.jm[k]).map(([k, t]) => [t, String(p.jm[k])]);
+const jmLine = p => { const x = jmParts(p); return x.length ? x.map(([t, v]) => `${t} ${esc(v)}`).join(' · ') + ' cm' : ''; };
+/* What we ask the customer for an encargo (cm). */
+const ENC_F = p => isJeanCat(p.cat)
+  ? [['cintura', 'Cintura', 1, 'Alrededor de la cintura, donde usás el jean'], ['cadera', 'Cadera', 1, 'En la parte más ancha, con los pies juntos'], ['entrepierna', 'Largo de pierna', 1, 'Desde la entrepierna hasta el tobillo'], ['altura', 'Tu altura', 0, ''], ['talle', 'Talle que usás normalmente', 0, 'Ej: 38']]
+  : [['busto', 'Busto', 1, 'En la parte más llena, sin apretar'], ['cintura', 'Cintura', 1, 'En la parte más angosta'], ['cadera', 'Cadera', 0, 'En la parte más ancha'], ['altura', 'Tu altura', 0, ''], ['talle', 'Talle que usás normalmente', 0, 'Ej: M']];
+const ENC_LABEL = { cintura: 'Cintura', cadera: 'Cadera', entrepierna: 'Largo de pierna', altura: 'Altura', busto: 'Busto', talle: 'Talle habitual' };
+const medText = m => Object.keys(ENC_LABEL).filter(k => m && m[k]).map(k => `${ENC_LABEL[k]} ${esc(m[k])}${k === 'talle' ? '' : ' cm'}`).join(' · ') + (m && m.nota ? ` · “${esc(m.nota)}”` : '');
+let encFor = null, encVals = {};
 function sizeButtons(p, cls) {
   const sel = picked[p.id];
   return sizesFor(p).filter(s => sizeInfo(p, s).show).map(s => { const i = sizeInfo(p, s); return `<button type="button" class="${cls}${i.enc ? ' encargo' : ''}${i.ok ? '' : ' agotado'}" data-size="${s}" aria-pressed="${sel === s}" ${i.ok ? '' : 'disabled title="Sin stock"'}>${s}</button>`; }).join('');
 }
 function sizeHint(p) {
   const sel = picked[p.id];
-  if (!sizesFor(p).some(s => sizeInfo(p, s).ok)) return 'Sin stock por ahora';
+  if (!stockSizes(p).length) return 'Sin stock · encargá el tuyo con tus medidas';
   if (!sel) return 'Elegí tu talle';
   const i = sizeInfo(p, sel);
-  if (i.enc) return isJeanCat(p.cat) ? `Talle ${sel} por encargo: busco uno parecido en tu talle y te mando foto antes de customizarlo (10 a 15 días)` : `Talle ${sel} por encargo: llega en la próxima tanda`;
-  if (i.left <= 2) return `Talle ${sel}: ${i.left === 1 ? 'queda 1' : 'quedan ' + i.left}`;
-  return `Talle ${sel} disponible`;
+  return `Talle ${sel} · en stock`;
 }
 
 const $ = s => document.querySelector(s);
@@ -984,6 +972,8 @@ function renderGrid() {
   renderToolbar();
   const list = shownProducts();
   const cards = list.map(p => {
+    const ss = stockSizes(p);
+    if (ss.length === 1 && !picked[p.id]) picked[p.id] = ss[0];
     const sel = picked[p.id];
     const rows = (p.m || []).filter(r => r && r[0]).map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td></tr>`).join('');
     return `<article class="card" data-id="${esc(p.id)}">
@@ -994,12 +984,14 @@ function renderGrid() {
         ${colorsOf(p).length > 1 ? swatches(p, false) : `<div class="color">${esc(colorSel(p))}</div>`}
       </div>
       <div class="prices"><span class="price">${peso(p.price)}</span></div>
-      <div class="sizes" role="group" aria-label="Talle">
-        ${sizeButtons(p, 'size')}
-      </div>
+      ${ss.length ? `<div class="sizes" role="group" aria-label="Talle">${sizeButtons(p, 'size')}</div>` : ''}
       <div class="hint">${sizeHint(p)}</div>
-      ${rows ? `<details><summary>Ver medidas en cm</summary><table class="measures"><thead><tr><th></th><th>S</th><th>M</th><th>L</th></tr></thead><tbody>${rows}</tbody></table></details>` : ''}
-      <button type="button" class="add" data-add="${esc(p.id)}" ${sel ? '' : 'disabled'}>${sel ? 'Agregar a la bolsa' : 'Elegí un talle'}</button>
+      ${ss.length && jmLine(p) ? `<div class="jm">${jmLine(p)}</div>` : ''}
+      ${rows && !isJeanCat(p.cat) ? `<details><summary>Ver medidas en cm</summary><table class="measures"><thead><tr><th></th><th>S</th><th>M</th><th>L</th></tr></thead><tbody>${rows}</tbody></table></details>` : ''}
+      <div class="buy">
+        <button type="button" class="add" data-add="${esc(p.id)}" ${ss.length && sel ? '' : 'disabled'}>${ss.length && !sel ? 'Elegí un talle' : 'Comprar'}</button>
+        <button type="button" class="enc-btn" data-enc="${esc(p.id)}">Quiero encargar el mío</button>
+      </div>
     </article>`;
   }).join('');
   const addCard = editing ? '<button type="button" class="add-card" id="add-prod">+ Agregar prenda</button>' : '';
@@ -1007,14 +999,23 @@ function renderGrid() {
 }
 
 const DEFAULT_FAQ = [
+  { q: '¿Cuáles son los métodos de pago?', a: 'Pagás desde la página con Mercado Pago: tarjeta de crédito, débito o dinero en cuenta.' },
+  { q: '¿Cuáles son los métodos de envío?', a: 'En Rosario te lo llevamos a domicilio o lo retirás gratis en nuestro punto de entrega.\nAl resto del país enviamos por Correo Argentino, a domicilio o a sucursal.' },
+  { q: '¿Las prendas tienen cambio?', a: 'No. Cada jean es único y está customizado a mano, por eso no tiene cambio. Antes de comprar fijate su talle y sus medidas reales, que están en cada jean.' },
+  { q: '¿Cómo sé si me queda?', a: 'Cada jean en stock muestra su talle y sus medidas reales (cintura, cadera, tiro y largo). Comparalas con un jean tuyo que te quede bien.' },
+  { q: '¿Qué pasa si no está mi talle?', a: 'Tocá “Quiero encargar el mío” y completá tus medidas. Lo hacemos con el mismo diseño sobre otro jean, y tarda de 10 a 15 días.' },
+  { q: '¿Y si no consiguen un jean para mi encargo?', a: 'Te avisamos por WhatsApp apenas nos damos cuenta y te ofrecemos otra opción parecida, con fotos. Si no te convence, te devolvemos el 100% por Mercado Pago.' },
+  { q: '¿Cuándo llegan prendas nuevas?', a: 'Subimos novedades todos los jueves a las 20 h. Seguinos en Instagram para verlas primero.' }
+];
+const OLD_FAQ_JSON = JSON.stringify([
   { q: '¿Cuáles son los métodos de pago?', a: 'Pagás desde la página con Mercado Pago: tarjeta de crédito, débito o dinero en cuenta. Si retirás tu pedido, también podés pagar en efectivo.' },
   { q: '¿Cuáles son los métodos de envío?', a: 'En Rosario: si pedís antes de las 15 h, te lo llevamos ese mismo día. También podés retirarlo gratis en nuestro punto de entrega.\nAl resto del país enviamos por Correo Argentino o Andreani.' },
   { q: '¿Las prendas tienen cambio?', a: 'Sí. Podés cambiar el talle hasta 7 días después de recibir tu compra, con la prenda sin usar y con su etiqueta.' },
   { q: '¿Cómo sé qué talle soy?', a: 'Mirá la guía de talles de esta página y las medidas en cm que tiene cada prenda. Si quedás entre dos talles, escribinos y te ayudamos.' },
   { q: '¿Qué pasa si no está mi talle?', a: 'S, M y L están en stock. XS y XL los traemos por encargo en la próxima tanda: escribinos y lo reservamos.' },
   { q: '¿Cuándo llegan prendas nuevas?', a: 'Subimos novedades todos los jueves a las 20 h. Seguinos en Instagram para verlas primero.' }
-];
-const curFaq = () => { const f = (editing && draft ? draft : saved).faq; return Array.isArray(f) ? f : DEFAULT_FAQ; };
+]);
+const curFaq = () => { const f = (editing && draft ? draft : saved).faq; return Array.isArray(f) && JSON.stringify(f) !== OLD_FAQ_JSON ? f : DEFAULT_FAQ; };
 function renderFaq() {
   const f = curFaq();
   $('#faq').hidden = !f.length && !editing;
@@ -1029,11 +1030,13 @@ $('#calc-form').addEventListener('submit', e => {
   e.preventDefault();
   const prov = $('#c-prov').value, cp = $('#c-cp').value;
   if (!cp4(cp)) { $('#c-out').innerHTML = '<span class="ck-err">Escribí los 4 números de tu código postal (ej: 2000).</span>'; return; }
-  const q = shipQuote(prov, cp);
+  const q = shipQuote(prov, cp), sq = shipQuote(prov, cp, 'sucursal');
   buyer.provincia = prov; buyer.cp = cp; store.set('necca-buyer', buyer);
   $('#c-out').innerHTML = q.local
-    ? `<b>Envío en el día: ${quoteText(q)}</b><br><span class="small">Pedí antes de las 15 h y lo recibís hoy. También podés retirarlo gratis.</span>`
-    : `<b>Envío a ${esc(prov)}: ${quoteText(q)}</b><br><span class="small">${q.price ? esc(shipCfg().nota) : 'Escribinos y te pasamos el costo exacto.'}</span>`;
+    ? `<b>Envío en Rosario: ${quoteText(q)}</b><br><span class="small">Coordinamos el día por WhatsApp. También podés retirarlo gratis.</span>`
+    : hasSuc()
+      ? `<b>Envío a ${esc(prov)}</b><br>A domicilio: <b>${quoteText(q)}</b><br>A sucursal del Correo: <b>${quoteText(sq)}</b><br><span class="small">${q.price || sq.price ? esc(shipCfg().nota) : 'Escribinos y te pasamos el costo exacto.'}</span>`
+      : `<b>Envío a ${esc(prov)}: ${quoteText(q)}</b><br><span class="small">${q.price ? esc(shipCfg().nota) : 'Escribinos y te pasamos el costo exacto.'}</span>`;
   $('#c-out').classList.remove('flash'); void $('#c-out').offsetWidth; $('#c-out').classList.add('flash');
   try { $('#c-out').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (err) {}
 });
@@ -1044,7 +1047,7 @@ const ICONS = {
   mail: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 7l8.5 6 8.5-6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>'
 };
 const handle = v => String(v || '').trim().replace(/^https?:\/\/(www\.)?(instagram|tiktok)\.com\//i, '').replace(/^@/, '').replace(/[^A-Za-z0-9._]/g, '');
-const DEFAULT_ABOUT = 'KAVANTIA nació en Rosario con una idea simple: que cada prenda exista una sola vez.\nBuscamos prendas con historia y las transformamos a mano, una por una, hasta convertirlas en piezas únicas.\nPor ahora trabajamos por encargo: escribinos y la hacemos para vos.';
+const DEFAULT_ABOUT = 'KAVANTIA nació en Rosario con una idea simple: que cada prenda exista una sola vez.\nCustomizamos cada jean a mano, uno por uno: los diseños son únicos y no hay dos iguales.\nPor ahora trabajamos por encargo: escribinos y la hacemos para vos.';
 function renderFooter() {
   const c = data().contact || {};
   const ig = handle(c.instagram), tt = handle(c.tiktok), wa = waNumber();
@@ -1077,6 +1080,8 @@ function descHTML(text) {
 function renderProduct() {
   const p = data().products.find(x => x.id === pvId);
   if (!p) { closeProduct(); return; }
+  const ss = stockSizes(p);
+  if (ss.length === 1 && !picked[p.id]) picked[p.id] = ss[0];
   const sel = picked[p.id];
   const col = colorSel(p);
   const rows = (p.m || []).filter(r => r && r[0]).map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td></tr>`).join('');
@@ -1099,16 +1104,19 @@ function renderProduct() {
       </div>
       <div class="pv-rule"></div>
       ${colorsOf(p).length ? `<div class="pv-row"><span class="pv-label">Color</span><div class="pv-opts">${swatches(p, true)}<span class="pv-colname">${esc(col)}</span></div></div>` : ''}
-      <div class="pv-row"><span class="pv-label">Talle</span>
+      ${ss.length ? `<div class="pv-row"><span class="pv-label">Talle</span>
         <div class="pv-opts"><div class="tsizes" role="group" aria-label="Talle">${sizeButtons(p, 'tsize')}</div></div>
-      </div>
+      </div>` : ''}
       <div class="hint">${sizeHint(p)}</div>
-      <button type="button" class="add pv-add" data-add="${esc(p.id)}" ${sel ? '' : 'disabled'}>${sel ? 'Agregar a la bolsa' : 'Elegí un talle'}</button>
+      ${ss.length && jmParts(p).length ? `<table class="measures jm-table"><tbody>${jmParts(p).map(([t, v]) => `<tr><td>${t}</td><td>${esc(v)} cm</td></tr>`).join('')}</tbody></table>` : ''}
+      <button type="button" class="add pv-add" data-add="${esc(p.id)}" ${ss.length && sel ? '' : 'disabled'}>${ss.length && !sel ? 'Elegí un talle' : 'Comprar'}</button>
+      <button type="button" class="enc-btn pv-enc" data-enc="${esc(p.id)}" aria-expanded="${encFor === p.id}">Quiero encargar el mío</button>
+      ${encFor === p.id ? encFormHTML(p) : ''}
       ${p.desc ? `<div class="pv-desc"><p class="pv-head">Detalle del producto</p>${descHTML(p.desc)}</div>` : ''}
       <div class="pv-accs">
         ${rows ? `<details class="pv-acc"><summary>Medidas de la prenda</summary><table class="measures"><thead><tr><th></th><th>S</th><th>M</th><th>L</th></tr></thead><tbody>${rows}</tbody></table></details>` : ''}
-        ${isJeanCat(p.cat) ? `<details class="pv-acc"><summary>Talle y medidas</summary><p class="small" style="margin:8px 0 0">Cada jean viene de una feria y se customiza a mano, así que el calce cambia de uno a otro. Fijate las medidas reales de este jean en el detalle del producto (cintura, cadera, tiro y largo) y comparalas con un jean tuyo que te quede bien.</p></details>` : `<details class="pv-acc"><summary>Tabla de talles</summary><table class="measures"><thead><tr><th>cm</th>${SIZES.map(s => `<th>${s}</th>`).join('')}</tr></thead><tbody><tr><td>Busto</td><td>80</td><td>84</td><td>88</td><td>92</td><td>96</td></tr><tr><td>Cintura</td><td>62</td><td>66</td><td>70</td><td>74</td><td>78</td></tr><tr><td>Cadera</td><td>86</td><td>90</td><td>94</td><td>98</td><td>102</td></tr></tbody></table></details>`}
-        <details class="pv-acc"><summary>Envíos y cambios</summary><ul class="pv-perks"><li>Envío en el día en Rosario</li><li>Al resto del país por Correo Argentino o Andreani</li><li>Cambios hasta 7 días</li></ul></details>
+        ${isJeanCat(p.cat) ? `<details class="pv-acc"><summary>Talle y medidas</summary><p class="small" style="margin:8px 0 0">Cada jean es único y está customizado a mano, así que el calce cambia de uno a otro. Si está en stock, arriba ves su talle y sus medidas reales: comparalas con un jean tuyo que te quede bien. Si no está tu talle, encargá el tuyo con tus medidas.</p></details>` : `<details class="pv-acc"><summary>Tabla de talles</summary><table class="measures"><thead><tr><th>cm</th>${SIZES.map(s => `<th>${s}</th>`).join('')}</tr></thead><tbody><tr><td>Busto</td><td>80</td><td>84</td><td>88</td><td>92</td><td>96</td></tr><tr><td>Cintura</td><td>62</td><td>66</td><td>70</td><td>74</td><td>78</td></tr><tr><td>Cadera</td><td>86</td><td>90</td><td>94</td><td>98</td><td>102</td></tr></tbody></table></details>`}
+        <details class="pv-acc"><summary>Envíos</summary><ul class="pv-perks"><li>En Rosario, a domicilio o con retiro gratis</li><li>Al resto del país por Correo Argentino, a domicilio o a sucursal</li><li>Cada pieza es única: no tiene cambio</li></ul></details>
       </div>
       <a class="pv-share" href="https://wa.me/?text=${encodeURIComponent(p.name + ' ' + shareUrl)}" target="_blank" rel="noopener">Compartir por WhatsApp</a>
     </div>`;
@@ -1138,30 +1146,57 @@ function addToCart(id, btn) {
   const color = colorSel(findP(id));
   const info = sizeInfo(findP(id), size);
   const inCart = cart.filter(l => l.id === id && l.size === size).reduce((a, l) => a + l.qty, 0);
-  if (!info.ok || inCart >= info.left) { btn.textContent = inCart ? 'No hay más de ese talle' : 'Sin stock'; setTimeout(() => { btn.textContent = 'Agregar a la bolsa'; }, 1600); return; }
+  if (!info.ok || inCart >= info.left) { if (inCart) { openBag(); return; } btn.textContent = 'Sin stock'; setTimeout(() => { btn.textContent = 'Comprar'; }, 1600); return; }
   const ex = cart.find(l => l.id === id && l.size === size && (l.color || '') === color);
   if (ex) ex.qty++; else cart.push({ id, size, color, qty: 1 });
   store.set('necca-cart', cart); renderBag();
   btn.textContent = 'Agregada ✓'; btn.classList.add('done');
-  setTimeout(() => { btn.textContent = 'Agregar a la bolsa'; btn.classList.remove('done'); }, 1400);
+  setTimeout(() => { btn.textContent = 'Comprar'; btn.classList.remove('done'); openBag(); }, 500);
+}
+function encFormHTML(p) {
+  return `<div class="enc-form" id="enc-form">
+    <p class="enc-title">Encargá el tuyo</p>
+    <p class="small">Lo hacemos con el mismo diseño sobre otro jean, a tu medida. El tono o el corte pueden variar un poco. Tarda de 10 a 15 días. Medite con un centímetro, sin apretar.</p>
+    ${ENC_F(p).map(([k, t, req, h]) => `<label class="field"><span>${t}${k === 'talle' ? '' : ' (cm)'}${req ? '' : ' · opcional'}</span>${h && k !== 'talle' ? `<small class="enc-hint">${esc(h)}</small>` : ''}<input type="text" id="enc-${k}" inputmode="${k === 'talle' ? 'text' : 'numeric'}" maxlength="12" value="${esc(encVals[k] || '')}" placeholder="${k === 'talle' ? esc(h) : 'Ej: ' + ({ cintura: 72, cadera: 96, entrepierna: 78, altura: 165, busto: 88 }[k] || '')}"></label>`).join('')}
+    <label class="field"><span>Algo más que quieras contarnos · opcional</span><input type="text" id="enc-nota" maxlength="140" value="${esc(encVals.nota || '')}" placeholder="Ej: lo quiero de tiro alto"></label>
+    <div class="ed-msg err" id="enc-err" aria-live="polite"></div>
+    <button type="button" class="add" data-enc-add="${esc(p.id)}">Agregar encargo a la bolsa</button>
+  </div>`;
+}
+function addEncargo(id, btn) {
+  const p = findP(id); if (!p) { btn.textContent = 'Guardá los cambios primero'; return; }
+  const med = {};
+  for (const [k, t, req] of ENC_F(p)) {
+    const v = String(($('#enc-' + k) || {}).value || '').trim().replace(/\s+/g, ' ').slice(0, 12);
+    if (req && !v) { $('#enc-err').textContent = `Completá: ${t}.`; $('#enc-' + k).focus(); return; }
+    if (v && k !== 'talle' && !/^\d{2,3}([.,]\d)?$/.test(v)) { $('#enc-err').textContent = `${t}: escribí solo el número en cm (ej: 72).`; $('#enc-' + k).focus(); return; }
+    if (v) med[k] = v;
+  }
+  const nota = String(($('#enc-nota') || {}).value || '').trim().slice(0, 140); if (nota) med.nota = nota;
+  cart.push({ id, size: 'ENC', color: colorSel(p), qty: 1, med });
+  store.set('necca-cart', cart); encFor = null; encVals = {}; renderProduct(); renderBag(); openBag();
 }
 function cleanCart() { cart = cart.filter(l => findP(l.id)); }
 
 const PROVINCIAS = ['Buenos Aires', 'CABA', 'Catamarca', 'Chaco', 'Chubut', 'Córdoba', 'Corrientes', 'Entre Ríos', 'Formosa', 'Jujuy', 'La Pampa', 'La Rioja', 'Mendoza', 'Misiones', 'Neuquén', 'Río Negro', 'Salta', 'San Juan', 'San Luis', 'Santa Cruz', 'Santa Fe', 'Santiago del Estero', 'Tierra del Fuego', 'Tucumán'];
-const shipCfg = () => Object.assign({ local: '2000', nota: 'Llega en 3 a 7 días hábiles por Correo Argentino o Andreani.', prov: {} }, (editing && draft ? draft : saved).ship || {});
+const shipCfg = () => { const c = Object.assign({ local: '2000', nota: 'Llega en 3 a 7 días hábiles por Correo Argentino o Andreani.', prov: {}, suc: {} }, (editing && draft ? draft : saved).ship || {}); c.prov = c.prov || {}; c.suc = c.suc || {}; return c; };
+const hasSuc = () => Object.values(shipCfg().suc).some(v => Number(v) > 0);
 const cp4 = cp => (String(cp || '').match(/\d{4}/) || [''])[0];
 /* Same rules as the server: a local postal code gets same-day delivery, the rest pays its province's price. 0 = to be arranged. */
-function shipQuote(prov, cp) {
+function shipQuote(prov, cp, modo) {
   const c = shipCfg(), d = cp4(cp);
   const locals = String(c.local || '').split(/[^0-9]+/).filter(Boolean);
-  if (d && locals.includes(d)) return { local: true, price: Number((editing && draft ? draft : saved).contact.envio) || 0, label: 'Envío en el día' };
+  if (d && locals.includes(d)) return { local: true, price: Number((editing && draft ? draft : saved).contact.envio) || 0, label: 'Envío en Rosario' };
   if (!PROVINCIAS.includes(prov)) return { local: false, price: 0, label: 'Envío' };
-  return { local: false, price: Number(c.prov[prov]) || 0, label: `Envío a ${prov}` };
+  if (modo === 'sucursal') return { local: false, suc: true, price: Number(c.suc[prov]) || 0, label: `Envío a sucursal del Correo (${prov})` };
+  return { local: false, price: Number(c.prov[prov]) || 0, label: `Envío a domicilio (${prov})` };
 }
+const isLocal = () => shipQuote(buyer.provincia, buyer.cp).local;
+const curModo = () => (hasSuc() && buyer.modo === 'sucursal' && !isLocal()) ? 'sucursal' : 'domicilio';
 const quoteText = q => q.price ? peso(q.price) : 'A coordinar';
 function totals() {
   const sub = cart.reduce((s, l) => s + (Number(findP(l.id).price) || 0) * l.qty, 0);
-  const envio = delivery === 'envio' ? shipQuote(buyer.provincia, buyer.cp).price : 0;
+  const envio = delivery === 'envio' ? shipQuote(buyer.provincia, buyer.cp, curModo()).price : 0;
   const total = sub + envio;
   return { sub, envio, total, items: cart.reduce((s, l) => s + l.qty, 0) };
 }
@@ -1173,7 +1208,7 @@ const PAY = {
 };
 const SHIP = {
   retiro: { t: 'Retiro en punto de entrega', s: 'Gratis · en Rosario, coordinamos día y hora' },
-  envio: { t: 'Envío a domicilio', s: 'En el día en Rosario · a todo el país' }
+  envio: { t: 'Envío a domicilio', s: 'En Rosario y a todo el país' }
 };
 const ICON = {
   retiro: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.3-6-10a6 6 0 0 1 12 0c0 4.7-6 10-6 10z M12 13a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>',
@@ -1193,8 +1228,10 @@ function choice(group, key, opt, extra) {
 }
 function quoteLine() {
   if (!cp4(buyer.cp)) return 'Escribí tu código postal para ver el costo del envío.';
-  const q = shipQuote(buyer.provincia, buyer.cp);
-  return `<b>${q.local ? 'Envío en el día' : q.label}: ${quoteText(q)}</b>${q.local ? '' : `<br><span class="small">${esc(shipCfg().nota)}</span>`}${q.price ? '' : '<br><span class="small">Te escribimos con el costo antes de despacharlo.</span>'}`;
+  const q = shipQuote(buyer.provincia, buyer.cp, curModo());
+  const opts = !q.local && hasSuc() ? (() => { const m = curModo(), dq = shipQuote(buyer.provincia, buyer.cp, 'domicilio'), sq = shipQuote(buyer.provincia, buyer.cp, 'sucursal');
+    return `<span class="modo" role="group" aria-label="Tipo de envío"><button type="button" data-modo="domicilio" aria-pressed="${m === 'domicilio'}">A domicilio<small>${quoteText(dq)}</small></button><button type="button" data-modo="sucursal" aria-pressed="${m === 'sucursal'}">A sucursal del Correo<small>${quoteText(sq)}</small></button></span>`; })() : '';
+  return opts + `<b>${q.local ? 'Envío en Rosario' : q.label}: ${quoteText(q)}</b>${q.local ? '' : `<br><span class="small">${esc(shipCfg().nota)}</span>`}${q.price ? '' : '<br><span class="small">Te escribimos con el costo antes de despacharlo.</span>'}`;
 }
 function stepsBar() {
   if (step > 3) return '';
@@ -1236,7 +1273,7 @@ async function submitOrder() {
   try {
     const res = await ckFetch('/api/pedido', {
       method: 'POST', headers: Object.assign({ 'content-type': 'application/json' }, authHeaders()),
-      body: JSON.stringify({ items: cart.map(l => ({ id: l.id, size: l.size, color: l.color || '', qty: l.qty })), entrega: delivery, pago: payment, nombre: buyer.nombre, direccion: buyer.direccion, detalle: buyer.detalle, provincia: buyer.provincia, ciudad: buyer.ciudad, cp: buyer.cp })
+      body: JSON.stringify({ items: cart.map(l => ({ id: l.id, size: l.size, color: l.color || '', qty: l.qty, med: l.size === 'ENC' ? l.med : undefined })), entrega: delivery, pago: payment, nombre: buyer.nombre, direccion: buyer.direccion, detalle: buyer.detalle, provincia: buyer.provincia, ciudad: buyer.ciudad, cp: buyer.cp, modo: curModo(), detalle: curModo() === 'sucursal' ? '' : buyer.detalle })
     });
     lastOrder = { id: res.id, total: res.total, pago: res.pago };
     try { sessionStorage.setItem('necca-last-order', JSON.stringify(lastOrder)); } catch (e) {}
@@ -1294,7 +1331,7 @@ function renderBag() {
     foot.innerHTML = '';
     return;
   }
-  if (delivery === 'envio' && payment === 'efectivo') payment = null;
+  if (payment === 'efectivo') payment = null;
   const t = totals();
   const back = '<button type="button" class="ghost" data-step="back">Volver</button>';
 
@@ -1305,8 +1342,8 @@ function renderBag() {
         ${photoHTML(p, 'thumb')}
         <div>
           <div class="l-name">${esc(p.name)}</div>
-          <div class="l-meta">${esc(l.color || colorSel(p))} · Talle ${l.size}${sizeInfo(p, l.size).enc ? ' · por encargo' : ''}</div>
-          <div class="qty"><button type="button" data-dec="${i}" aria-label="Quitar uno">−</button><span>${l.qty}</span><button type="button" data-inc="${i}" aria-label="Sumar uno">+</button></div>
+          <div class="l-meta">${esc(l.color || colorSel(p))} · ${l.size === 'ENC' ? `Por encargo (10 a 15 días)<br>${medText(l.med)}` : `Talle ${l.size}`}</div>
+          ${l.size === 'ENC' ? '' : `<div class="qty"><button type="button" data-dec="${i}" aria-label="Quitar uno">−</button><span>${l.qty}</span><button type="button" data-inc="${i}" aria-label="Sumar uno">+</button></div>`}
         </div>
         <div><div class="l-price">${peso(p.price * l.qty)}</div><button type="button" class="rm" data-rm="${i}">Quitar</button></div>
       </div>`;
@@ -1318,17 +1355,18 @@ function renderBag() {
 
   if (step === 1) {
     body.innerHTML = stepsBar() + `<h3 class="ck-title">¿Cómo lo recibís?</h3>
-      <div class="choices">${choice('delivery', 'retiro', SHIP.retiro)}${choice('delivery', 'envio', SHIP.envio)}</div>
+      <div class="choices">${choice('delivery', 'retiro', SHIP.retiro)}${choice('delivery', 'envio', hasSuc() ? { t: 'Envío', s: 'A domicilio o a sucursal del Correo · a todo el país' } : SHIP.envio)}</div>
       ${delivery ? `<div class="form ck-form">
         <label class="field"><span>Tu nombre</span><input type="text" id="b-nombre" autocomplete="name" value="${esc(buyer.nombre)}" placeholder="Nombre y apellido"></label>
         ${delivery === 'envio' ? `<div class="two">
           <label class="field"><span>Provincia</span><select id="b-provincia" autocomplete="address-level1">${PROVINCIAS.map(p => `<option ${p === buyer.provincia ? 'selected' : ''}>${p}</option>`).join('')}</select></label>
           <label class="field"><span>Código postal</span><input type="text" id="b-cp" inputmode="numeric" autocomplete="postal-code" value="${esc(buyer.cp)}" placeholder="Ej: 2000"></label>
         </div>
+        <p class="quote" id="b-quote" aria-live="polite">${quoteLine()}</p>
         <label class="field"><span>Ciudad o localidad</span><input type="text" id="b-ciudad" autocomplete="address-level2" value="${esc(buyer.ciudad)}" placeholder="Ej: Rosario"></label>
-        <label class="field"><span>Dirección</span><input type="text" id="b-direccion" autocomplete="street-address" value="${esc(buyer.direccion)}" placeholder="Calle y número"></label>
-        <label class="field"><span>Piso, depto o barrio (opcional)</span><input type="text" id="b-detalle" value="${esc(buyer.detalle)}" placeholder="Ej: 3° B, Pichincha"></label>
-        <p class="quote" id="b-quote" aria-live="polite">${quoteLine()}</p>` : ''}
+        ${curModo() === 'sucursal' ? `<label class="field"><span>Sucursal del Correo donde lo retirás</span><input type="text" id="b-direccion" value="${esc(buyer.direccion)}" placeholder="Nombre o dirección de la sucursal"></label>
+        <p class="small">Buscá la más cercana en correoargentino.com.ar → Sucursales. Si no sabés cuál, poné “la más cercana” y te ayudamos.</p>` : `<label class="field"><span>Dirección</span><input type="text" id="b-direccion" autocomplete="street-address" value="${esc(buyer.direccion)}" placeholder="Calle y número"></label>
+        <label class="field"><span>Piso, depto o barrio (opcional)</span><input type="text" id="b-detalle" value="${esc(buyer.detalle)}" placeholder="Ej: 3° B, Pichincha"></label>`}` : ''}
       </div>` : ''}`;
     foot.innerHTML = `<div class="btn-row">${back}<button type="button" class="cta" style="flex:1" data-step="next" ${shipOk() ? '' : 'disabled'}>Continuar</button></div>`;
     return;
@@ -1341,7 +1379,6 @@ function renderBag() {
     body.innerHTML = stepsBar() + `<h3 class="ck-title">¿Cómo pagás?</h3>
       <div class="choices">
         ${delivery !== 'envio' || t.envio ? choice('payment', 'online', PAY.online, peso(sub + t.envio)) : ''}
-        ${delivery === 'retiro' ? choice('payment', 'efectivo', PAY.efectivo, peso(sub)) : ''}
       </div>
       ${delivery === 'envio' && !t.envio ? `<p class="small">Para tu zona el costo del envío se coordina aparte. ${waNumber().length >= 8 ? `<a href="https://wa.me/${waNumber()}" target="_blank" rel="noopener">Escribinos por WhatsApp</a> y te pasamos el total.` : 'Escribinos y te pasamos el total.'}</p>` : ''}`;
     if (payment === 'transferencia') payment = null;
@@ -1352,9 +1389,9 @@ function renderBag() {
   // step 3: confirm and pay
   body.innerHTML = stepsBar() + `<h3 class="ck-title">Revisá tu pedido</h3>
     <div class="summary">
-      ${cart.map(l => { const p = findP(l.id); return `<div class="row"><span>${l.qty} × ${esc(p.name)}${l.color ? ' · ' + esc(l.color) : ''} · ${l.size}</span><span>${peso(p.price * l.qty)}</span></div>`; }).join('')}
+      ${cart.map(l => { const p = findP(l.id); return `<div class="row"><span>${l.qty} × ${esc(p.name)}${l.color ? ' · ' + esc(l.color) : ''} · ${l.size === 'ENC' ? 'por encargo' : l.size}</span><span>${peso(p.price * l.qty)}</span></div>`; }).join('')}
       <div class="sum-sep"></div>
-      <div class="row"><span>Entrega</span><span>${delivery === 'envio' ? `${esc(buyer.ciudad)}, ${esc(buyer.provincia)} · CP ${esc(cp4(buyer.cp))}` : 'Retiro · gratis'}</span></div>
+      <div class="row"><span>Entrega</span><span>${delivery === 'envio' ? `${curModo() === 'sucursal' ? 'Sucursal del Correo · ' : ''}${esc(buyer.ciudad)}, ${esc(buyer.provincia)} · CP ${esc(cp4(buyer.cp))}` : 'Retiro · gratis'}</span></div>
       ${delivery === 'envio' ? `<div class="row"><span>Envío</span><span>${t.envio ? peso(t.envio) : 'A coordinar'}</span></div>` : ''}
       <div class="row"><span>Pago</span><span>${PAY[payment].t}</span></div>
       ${payment === 'transferencia' ? `<div class="row" style="color:var(--good)"><span>10% off</span><span>−${peso(t.sub - transferPrice(t.sub))}</span></div>` : ''}
@@ -1675,7 +1712,8 @@ function openProductEditor(id) {
     <label class="field"><span>Precio de lista ($)</span><input type="text" id="ed-price" inputmode="numeric" autocomplete="off" value="${edItem.price ? Number(edItem.price).toLocaleString('es-AR') : ''}" placeholder="Ej: 50.000"></label>
     <label class="field"><span>Descripción</span><textarea id="ed-desc" rows="5" maxlength="800" placeholder="Ej: Vestido lencero de satén, con breteles regulables y largo midi. Ideal para salir o para un evento de día." style="padding:10px 12px;border:1px solid var(--line);border-radius:2px;background:var(--surface);color:var(--fg);font:15px/1.5 var(--body);resize:vertical">${esc(edItem.desc || '')}</textarea></label>
     <label class="field"><span>Etiqueta sobre la foto (opcional)</span><input type="text" id="ed-new" maxlength="24" list="ed-badges" autocomplete="off" value="${esc(edItem.badge || '')}" placeholder="Ej: Lanzamiento"><datalist id="ed-badges"><option value="Nuevo"><option value="Lanzamiento"><option value="Precio de lanzamiento"><option value="Pieza única"><option value="Último"><option value="Vendido"></datalist><span class="small">Dejalo vacío si no querés etiqueta.</span></label>
-    <div class="field"><span class="field-label">Medidas en cm (opcional)</span>
+    <div id="jm-box">${jmEditHTML(edItem)}</div>
+    <div class="field" id="m-box" ${isJeanCat(edItem.cat) ? 'hidden' : ''}><span class="field-label">Medidas en cm (opcional)</span>
       <table class="m-table"><thead><tr><th>Medida</th><th>S</th><th>M</th><th>L</th></tr></thead><tbody>
       ${edItem.m.slice(0, 3).map((r, i) => `<tr>${[0, 1, 2, 3].map(j => `<td><input type="${j ? 'text' : 'text'}" id="ed-m-${i}-${j}" value="${esc(r[j])}" ${j ? 'inputmode="numeric"' : ''} aria-label="${j ? ['', 'S', 'M', 'L'][j] + ' fila ' + (i + 1) : 'Medida fila ' + (i + 1)}" placeholder="${j ? '' : ['Busto', 'Largo', 'Cintura'][i]}"></td>`).join('')}</tr>`).join('')}
       </tbody></table>
@@ -1697,8 +1735,13 @@ function renderEdColors() {
 function renderEdExtra() {
   $('#ed-extra').innerHTML = edItem.imgs.map((u, i) => `<div class="ex"><img src="${esc(u)}" alt=""><button type="button" class="mini" data-ex-del="${i}" aria-label="Quitar foto">×</button></div>`).join('');
 }
+function jmEditHTML(item) {
+  if (!isJeanCat(item.cat)) return '';
+  const j = item.jm || {};
+  return `<div class="field"><span class="field-label">Medidas reales de este jean (cm)</span><p class="small">Aparecen junto al talle. Medilo apoyado plano: cintura y cadera de lado a lado por 2.</p><div class="ship-grid">${JM.map(([k, t]) => `<label>${t}<input type="text" id="jm-${k}" inputmode="numeric" maxlength="8" value="${esc(j[k] || '')}"></label>`).join('')}</div></div>`;
+}
 function stGridHTML(item) {
-  return sizesFor(item).map(z => { const v = sizesOf(item)[z]; const mode = typeof v === 'number' ? 'n' : v; return `<div class="st-row"><b>${z}</b><select id="st-m-${z}" aria-label="Talle ${z}"><option value="n" ${mode === 'n' ? 'selected' : ''}>En stock</option><option value="si" ${mode === 'si' ? 'selected' : ''}>Sí, sin contar</option><option value="enc" ${mode === 'enc' ? 'selected' : ''}>Por encargo</option><option value="no" ${mode === 'no' ? 'selected' : ''}>No lo traigo</option></select><input type="number" id="st-n-${z}" min="0" step="1" inputmode="numeric" value="${typeof v === 'number' ? v : ''}" placeholder="Cant." aria-label="Unidades talle ${z}" ${mode === 'n' ? '' : 'hidden'}></div>`; }).join('');
+  return sizesFor(item).map(z => { const v = sizesOf(item)[z]; const mode = typeof v === 'number' ? 'n' : v; return `<div class="st-row"><b>${z}</b><select id="st-m-${z}" aria-label="Talle ${z}"><option value="n" ${mode === 'n' ? 'selected' : ''}>En stock</option><option value="si" ${mode === 'si' ? 'selected' : ''}>Sí, sin contar</option><option value="no" ${mode === 'no' ? 'selected' : ''}>No lo traigo</option></select><input type="number" id="st-n-${z}" min="0" step="1" inputmode="numeric" value="${typeof v === 'number' ? v : ''}" placeholder="Cant." aria-label="Unidades talle ${z}" ${mode === 'n' ? '' : 'hidden'}></div>`; }).join('');
 }
 function readProductForm() {
   const name = $('#ed-name').value.trim();
@@ -1720,6 +1763,7 @@ function readProductForm() {
   edItem.badge = String($('#ed-new').value || '').replace(/\s+/g, ' ').trim().slice(0, 24);
   edItem.desc = $('#ed-desc').value.trim().slice(0, 800);
   edItem.m = [0, 1, 2].map(i => [0, 1, 2, 3].map(j => $(`#ed-m-${i}-${j}`).value.trim().slice(0, 20))).filter(r => r[0]);
+  if ($('#jm-cintura')) { const jm = {}; JM.forEach(([k]) => { const v = $('#jm-' + k).value.trim().slice(0, 8); if (v) jm[k] = v; }); edItem.jm = jm; }
   if (edItem.isNew && !edItem.img) edItem.glyph = glyphFor(edItem.cat);
   return '';
 }
@@ -1870,27 +1914,32 @@ $('#ed-body').addEventListener('click', e => {
 });
 function openShipEditor() {
   edMode = 'ship';
-  edItem = clone(shipCfg()); edItem.prov = Object.assign({}, edItem.prov);
+  edItem = clone(shipCfg()); edItem.prov = Object.assign({}, edItem.prov); edItem.suc = Object.assign({}, edItem.suc);
   const rosario = Number(draft.contact.envio) || 0;
   $('#ed-title').textContent = 'Envíos';
   $('#ed-body').innerHTML = `<div class="form">
-    <label class="field"><span>Envío en el día en Rosario ($)</span><input type="number" id="sh-local-price" inputmode="numeric" min="0" step="100" value="${rosario || ''}" placeholder="0 = a coordinar"></label>
-    <label class="field"><span>Códigos postales con envío en el día</span><input type="text" id="sh-local" value="${esc(edItem.local)}" placeholder="Ej: 2000, 2132, 2152"></label>
+    <label class="field"><span>Envío en Rosario ($)</span><input type="number" id="sh-local-price" inputmode="numeric" min="0" step="100" value="${rosario || ''}" placeholder="0 = a coordinar"></label>
+    <label class="field"><span>Códigos postales de Rosario y alrededores</span><input type="text" id="sh-local" value="${esc(edItem.local)}" placeholder="Ej: 2000, 2132, 2152"></label>
     <p class="small">Separalos con coma. 2000 es Rosario; podés sumar Funes (2132), Baigorria (2152), etc.</p>
     <label class="field"><span>Texto de demora para el resto del país</span><input type="text" id="sh-nota" value="${esc(edItem.nota)}"></label>
-    <div class="field"><span class="field-label">Precio de envío por provincia ($)</span>
-      <p class="small">Cotizalo en la web de Correo Argentino o Andreani para un paquete chico. Si dejás una vacía, dice “a coordinar” y te escriben.</p>
+    <p class="small">Cotizá en MiCorreo un paquete de 1 kg. Escribí los precios sin puntos (ej: 9500). Si dejás una provincia vacía, dice “a coordinar”.</p>
+    <div class="field"><span class="field-label">Envío a domicilio, por provincia ($)</span>
       <div class="ship-fill"><input type="number" id="sh-all" inputmode="numeric" min="0" step="100" placeholder="Mismo precio para todas"><button type="button" class="ghost" id="sh-apply">Aplicar</button></div>
       <div class="ship-grid">${PROVINCIAS.map((p, i) => `<label>${p}<input type="number" id="sh-p-${i}" inputmode="numeric" min="0" step="100" value="${Number(edItem.prov[p]) || ''}"></label>`).join('')}</div>
+    </div>
+    <div class="field"><span class="field-label">Envío a sucursal del Correo, por provincia ($)</span>
+      <p class="small">Si no cargás ninguno, en la compra solo aparece el envío a domicilio.</p>
+      <div class="ship-fill"><input type="number" id="sh-all-s" inputmode="numeric" min="0" step="100" placeholder="Mismo precio para todas"><button type="button" class="ghost" id="sh-apply-s">Aplicar</button></div>
+      <div class="ship-grid">${PROVINCIAS.map((p, i) => `<label>${p}<input type="number" id="sh-s-${i}" inputmode="numeric" min="0" step="100" value="${Number(edItem.suc[p]) || ''}"></label>`).join('')}</div>
     </div>
   </div>`;
   $('#ed-foot').innerHTML = '<div class="ed-msg err" id="ed-err"></div><button type="button" class="cta" id="ed-done">Listo</button>';
   $('#editor').hidden = false; syncScrim();
 }
 $('#ed-body').addEventListener('click', e => {
-  if (edMode !== 'ship' || e.target.id !== 'sh-apply') return;
-  const v = $('#sh-all').value; if (v === '') return;
-  PROVINCIAS.forEach((p, i) => { $(`#sh-p-${i}`).value = v; });
+  if (edMode !== 'ship' || (e.target.id !== 'sh-apply' && e.target.id !== 'sh-apply-s')) return;
+  const s = e.target.id === 'sh-apply-s', v = $(s ? '#sh-all-s' : '#sh-all').value; if (v === '') return;
+  PROVINCIAS.forEach((p, i) => { $(`#sh-${s ? 's' : 'p'}-${i}`).value = v; });
 });
 function openContactEditor() {
   edMode = 'contact';
@@ -1910,7 +1959,7 @@ function openContactEditor() {
 }
 
 $('#ed-body').addEventListener('change', e => {
-  if (e.target.id === 'ed-cat' && edMode === 'product') { const g = $('#st-grid'); if (g) g.innerHTML = stGridHTML(Object.assign({}, edItem, { cat: e.target.value })); }
+  if (e.target.id === 'ed-cat' && edMode === 'product') { const it = Object.assign({}, edItem, { cat: e.target.value }); const g = $('#st-grid'); if (g) g.innerHTML = stGridHTML(it); const jb = $('#jm-box'); if (jb) jb.innerHTML = jmEditHTML(it); const mb = $('#m-box'); if (mb) mb.hidden = isJeanCat(it.cat); }
   const m = e.target.id && e.target.id.match(/^st-m-(\w+)$/);
   if (m) { const n = $(`#st-n-${m[1]}`); n.hidden = e.target.value !== 'n'; if (!n.hidden) n.focus(); }
 });
@@ -1968,8 +2017,9 @@ $('#ed-foot').addEventListener('click', e => {
       const n = v => Math.max(0, Math.round(Number(v) || 0));
       draft.contact = Object.assign({}, draft.contact, { envio: n($('#sh-local-price').value) });
       const prov = {};
-      PROVINCIAS.forEach((p, i) => { const v = n($(`#sh-p-${i}`).value); if (v) prov[p] = v; });
-      draft.ship = { local: $('#sh-local').value.replace(/[^0-9, ]/g, '').trim().slice(0, 200), nota: $('#sh-nota').value.trim().slice(0, 160), prov };
+      const suc = {};
+      PROVINCIAS.forEach((p, i) => { const v = n($(`#sh-p-${i}`).value); if (v) prov[p] = v; const w = n($(`#sh-s-${i}`).value); if (w) suc[p] = w; });
+      draft.ship = { local: $('#sh-local').value.replace(/[^0-9, ]/g, '').trim().slice(0, 200), nota: $('#sh-nota').value.trim().slice(0, 160), prov, suc };
     } else if (edMode === 'faq') {
       syncFaqForm();
       const faq = edItem.filter(x => x.q || x.a);
@@ -2008,8 +2058,8 @@ function renderOrders(msg) {
   $('#ed-body').innerHTML = (msg ? `<p class="small">${msg}</p>` : '') + (ordList.length ? `<div class="orders">${ordList.map(o => `<div class="order">
     <div class="order-top"><b>#${esc(o.id)}</b><span class="chip ${esc(o.estado)}">${ORD_EST[o.estado] || esc(o.estado)}</span></div>
     <span class="small">${fmt(o.fecha)} · ${esc(o.nombre)}</span>
-    <ul>${(o.items || []).map(i => `<li>${i.cantidad} × ${esc(i.nombre)}${i.color ? ' · ' + esc(i.color) : ''} · ${esc(i.talle)}</li>`).join('')}</ul>
-    <span>${o.entrega === 'envio' ? 'Envío: ' + esc(o.direccion) + (o.detalle ? ' (' + esc(o.detalle) + ')' : '') + (o.ciudad ? ', ' + esc(o.ciudad) : '') + (o.provincia ? ', ' + esc(o.provincia) : '') + (o.cp ? ' · CP ' + esc(o.cp) : '') + (o.envio ? '' : ' · costo a coordinar') : 'Retira en persona'}</span>
+    <ul>${(o.items || []).map(i => `<li>${i.cantidad} × ${esc(i.nombre)}${i.color ? ' · ' + esc(i.color) : ''} · ${esc(i.talle)}${i.encargo && i.medidas ? `<br><span class="small">${medText(i.medidas)}</span>` : ''}</li>`).join('')}</ul>
+    <span>${o.entrega === 'envio' ? (o.modo === 'sucursal' ? 'Sucursal del Correo: ' : 'Envío: ') + esc(o.direccion) + (o.detalle ? ' (' + esc(o.detalle) + ')' : '') + (o.ciudad ? ', ' + esc(o.ciudad) : '') + (o.provincia ? ', ' + esc(o.provincia) : '') + (o.cp ? ' · CP ' + esc(o.cp) : '') + (o.envio ? '' : ' · costo a coordinar') : 'Retira en persona'}</span>
     <span><b style="font-weight:500">${peso(o.total || 0)}</b> · ${ORD_PAGO[o.pago] || esc(o.pago)}${o.email ? ' · ' + esc(o.email) : ''}</span>
     <div class="btn-row">
       ${o.estado !== 'pagado' && o.estado !== 'entregado' && o.estado !== 'cancelado' ? `<button type="button" class="ghost" data-ord="${esc(o.id)}" data-est="pagado">Marcar pagado</button>` : ''}
@@ -2122,6 +2172,8 @@ $('#grid').addEventListener('click', e => {
   if (s) { picked[id] = s.dataset.size; renderGrid(); return; }
   const sw = e.target.closest('[data-color]');
   if (sw) { pickedColor[id] = sw.dataset.color; renderGrid(); return; }
+  const en = e.target.closest('[data-enc]');
+  if (en) { encFor = id; openProduct(id); setTimeout(() => { const f = $('#enc-form'); if (f) { f.scrollIntoView({ block: 'start', behavior: 'smooth' }); const i = f.querySelector('input'); if (i) i.focus({ preventScroll: true }); } }, 60); return; }
   const a = e.target.closest('[data-add]');
   if (a && picked[id]) addToCart(id, a);
 });
@@ -2134,9 +2186,14 @@ $('#pv').addEventListener('click', e => {
   if (sw && pvId) { pickedColor[pvId] = sw.dataset.color; renderProduct(); renderGrid(); return; }
   const th = e.target.closest('[data-ph]');
   if (th) { pvPhoto = +th.dataset.ph; renderProduct(); return; }
+  const ea = e.target.closest('[data-enc-add]');
+  if (ea && pvId) { addEncargo(pvId, ea); return; }
+  const en = e.target.closest('[data-enc]');
+  if (en && pvId) { encFor = encFor === pvId ? null : pvId; renderProduct(); if (encFor) { const f = $('#enc-form'); if (f) f.scrollIntoView({ block: 'start', behavior: 'smooth' }); } return; }
   const a = e.target.closest('[data-add]');
   if (a && pvId && picked[pvId]) addToCart(pvId, a);
 });
+$('#pv').addEventListener('input', e => { const m = /^enc-(\w+)$/.exec(e.target.id || ''); if (m) encVals[m[1]] = e.target.value; });
 function copyText(text, okMsg) {
   const msg = $('#copy-msg');
   const done = () => { if (msg) msg.textContent = okMsg; };
@@ -2146,6 +2203,7 @@ function copyText(text, okMsg) {
 function onBagClick(e) {
   const t = e.target.closest('button, a');
   if (!t) return;
+  if (t.dataset.modo) { buyer.modo = t.dataset.modo === 'sucursal' ? 'sucursal' : 'domicilio'; store.set('necca-buyer', buyer); renderBag(); return; }
   if (t.dataset.inc) { const l = cart[+t.dataset.inc], p = findP(l.id), used = cart.filter(x => x.id === l.id && x.size === l.size).reduce((a, x) => a + x.qty, 0); if (!p || used < sizeInfo(p, l.size).left) l.qty++; }
   else if (t.dataset.dec) { const l = cart[+t.dataset.dec]; l.qty--; if (l.qty < 1) cart.splice(+t.dataset.dec, 1); }
   else if (t.dataset.rm) { cart.splice(+t.dataset.rm, 1); }
@@ -2189,7 +2247,7 @@ document.addEventListener('keydown', e => {
 });
 
 renderAll();
-const SECTIONS = ['pagos', 'envios', 'talles', 'faq', 'contacto', 'comprar', 'cambios', 'nosotros', 'arrepentimiento'];
+const SECTIONS = ['pagos', 'envios', 'faq', 'contacto', 'comprar', 'nosotros', 'arrepentimiento'];
 let spId = null, spHome = null;
 function openSection(id) {
   const sec = document.getElementById(id);

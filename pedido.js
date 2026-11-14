@@ -42,13 +42,24 @@ export async function POST(request) {
   for (const l of (Array.isArray(body.items) ? body.items : []).slice(0, 30)) {
     const p = state.products.find(x => x.id === l.id);
     const qty = Math.max(1, Math.min(10, Math.round(Number(l.qty) || 0)));
-    if (!p || !SIZES.includes(l.size)) continue;
+    if (!p) continue;
+    if (l.size === 'ENC') {
+      const med = {};
+      for (const k of ['cintura', 'cadera', 'entrepierna', 'altura', 'busto', 'talle']) { const v = str(l.med && l.med[k], 12); if (v) med[k] = v; }
+      const nota = str(l.med && l.med.nota, 140); if (nota) med.nota = nota;
+      if (Object.keys(med).filter(k => k !== 'talle' && k !== 'nota').length < 2) return json({ error: 'missing', message: 'Para el encargo de ' + p.name + ' faltan tus medidas.' }, 400);
+      const names0 = (Array.isArray(p.colors) && p.colors.length ? p.colors.map(c => c.n) : [p.color]).filter(Boolean);
+      items.push({ id: p.id, nombre: p.name, color: names0.includes(l.color) ? l.color : (names0[0] || ''), talle: 'Por encargo', encargo: true, medidas: med, cantidad: 1, precio: p.price });
+      continue;
+    }
+    if (!SIZES.includes(l.size)) continue;
     const names = (Array.isArray(p.colors) && p.colors.length ? p.colors.map(c => c.n) : [p.color]).filter(Boolean);
     const col = names.includes(l.color) ? l.color : (names[0] || '');
     items.push({ id: p.id, nombre: p.name, color: col, talle: l.size, cantidad: qty, precio: p.price });
   }
   if (!items.length) return json({ error: 'empty', message: 'Tu bolsa está vacía o esas prendas ya no están.' }, 400);
   for (const i of items) {
+    if (i.encargo) continue;
     const p = state.products.find(x => x.id === i.id);
     const want = items.filter(x => x.id === i.id && x.talle === i.talle).reduce((a, x) => a + x.cantidad, 0);
     const left = sizeLeft(p, i.talle);
@@ -57,7 +68,10 @@ export async function POST(request) {
 
   const subtotal = items.reduce((s, i) => s + i.precio * i.cantidad, 0);
   const descuento = pago === 'transferencia' ? subtotal - transferPrice(subtotal) : 0;
-  const envio = entrega === 'envio' ? shipQuote(state, provincia, cp).price : 0;
+  const sucOk = state.ship && state.ship.suc && Object.values(state.ship.suc).some(v => Number(v) > 0);
+  const q = entrega === 'envio' ? shipQuote(state, provincia, cp, body.modo === 'sucursal' && sucOk ? 'sucursal' : 'domicilio') : null;
+  const modo = q ? (q.suc ? 'sucursal' : 'domicilio') : '';
+  const envio = q ? q.price : 0;
   if (pago === 'online' && entrega === 'envio' && !envio) return json({ error: 'no_ship', message: 'Para tu zona el envío se coordina aparte. Escribinos por WhatsApp.' }, 400);
   const total = subtotal - descuento + envio;
 
@@ -67,7 +81,7 @@ export async function POST(request) {
     fecha: new Date().toISOString(),
     estado: pago === 'online' ? 'pendiente' : 'a_confirmar',
     cuenta: (() => { try { return readToken(request) || ''; } catch { return ''; } })(),
-    nombre, entrega, direccion, detalle, ciudad: entrega === 'envio' ? ciudad : '', provincia: entrega === 'envio' ? provincia : '', cp: entrega === 'envio' ? cp : '', pago,
+    nombre, entrega, direccion, detalle, ciudad: entrega === 'envio' ? ciudad : '', provincia: entrega === 'envio' ? provincia : '', cp: entrega === 'envio' ? cp : '', modo, pago,
     items, subtotal, descuento, envio, total
   };
 
@@ -93,7 +107,7 @@ export async function POST(request) {
     unit_price: i.precio,
     currency_id: 'ARS'
   }));
-  if (envio > 0) mpItems.push({ id: 'envio', title: `Envío a ${ciudad}, ${provincia}`.slice(0, 250), quantity: 1, unit_price: envio, currency_id: 'ARS' });
+  if (envio > 0) mpItems.push({ id: 'envio', title: `${modo === 'sucursal' ? 'Envío a sucursal del Correo' : 'Envío'} a ${ciudad}, ${provincia}`.slice(0, 250), quantity: 1, unit_price: envio, currency_id: 'ARS' });
 
   const pref = {
     items: mpItems,
