@@ -602,7 +602,6 @@ body.editing { padding-bottom: 120px; }
       <ul>
         <li id="info-online"><b>Mercado Pago:</b> pagás en el momento desde la página, con tarjeta de crédito, débito o dinero en cuenta.</li>
         <li>Las cuotas dependen de tu tarjeta: las ves en Mercado Pago antes de confirmar.</li>
-        <li>El pago es seguro: lo procesa Mercado Pago, y en Kavantia no vemos ni guardamos los datos de tu tarjeta.</li>
         <li>Tu pedido queda confirmado cuando se acredita el pago.</li>
       </ul>
     </section>
@@ -635,8 +634,8 @@ body.editing { padding-bottom: 120px; }
       <ol class="steps-list">
         <li><b>Elegí tu prenda.</b> Cada diseño es único y está customizado a mano.</li>
         <li><b>Si está en stock,</b> vas a ver su talle y sus medidas reales. Si te queda, tocá “Comprar”.</li>
-        <li><b>Si no está tu talle,</b> tocá “Quiero encargar el mío” y completá tus medidas. La hacemos con el mismo diseño en 10 a 15 días.</li>
-        <li><b>Elegí cómo la recibís:</b> envío a sucursal del Correo, envío a domicilio o retiro en Rosario.</li>
+        <li><b>Si no está tu talle,</b> tocá “Quiero encargar el mío” y completá tus medidas. La hacemos con el mismo diseño en 10 a 15 días. Como cada pieza se hace a mano sobre una prenda distinta, el diseño, el tono o el corte pueden variar un poco.</li>
+        <li><b>Elegí cómo la recibís:</b> <span id="comprar-ship">envío a sucursal del Correo, envío a domicilio (con costo adicional) o retiro gratis en Rosario</span>.</li>
         <li><b>Pagá con Mercado Pago:</b> tarjeta de crédito, débito o dinero en cuenta.</li>
         <li><b>Listo.</b> Te escribimos por WhatsApp para confirmar tu pedido y pasarte el seguimiento.</li>
       </ol>
@@ -1014,9 +1013,9 @@ function renderGrid() {
 
 const DEFAULT_FAQ = [
   { q: '¿Cómo sé si una prenda me queda?', a: 'Cada prenda en stock muestra su talle y sus medidas reales (en los jeans: cintura, cadera, tiro y largo). Comparalas con una prenda tuya que te quede bien.' },
-  { q: '¿Qué pasa si no está mi talle?', a: 'Tocá “Quiero encargar el mío” y completá tus medidas. La hacemos para vos con el mismo diseño.' },
+  { q: '¿Qué pasa si no está mi talle?', a: 'Tocá “Quiero encargar el mío” y completá tus medidas. La hacemos para vos con el mismo diseño.\nComo cada pieza se hace a mano sobre una prenda distinta, el modelo, el tono o el corte pueden variar un poco.' },
   { q: '¿Cuánto tarda un encargo?', a: 'De 10 a 15 días desde que se acredita el pago. Después se suma el tiempo del envío.' },
-  { q: '¿El encargo queda igual al de la foto?', a: 'El diseño es el mismo. Como cada pieza se hace sobre una prenda distinta, el tono o el corte pueden variar un poco.' },
+  { q: '¿El encargo queda igual al de la foto?', a: 'Seguimos el mismo diseño, pero cada pieza se hace a mano sobre una prenda distinta. Por eso el diseño, el tono o el corte pueden variar un poco: no hay dos iguales.' },
   { q: '¿Y si no consiguen una prenda para mi encargo?', a: 'Te avisamos por WhatsApp apenas nos damos cuenta y te ofrecemos otra opción parecida, con fotos. Si no te convence, te devolvemos el 100% por Mercado Pago.' },
   { q: '¿Las prendas tienen cambio?', a: 'No. Cada pieza es única y está customizada a mano, por eso no tiene cambio. Antes de comprar fijate su talle y sus medidas reales.' },
   { q: '¿Cómo son los envíos?', a: 'Enviamos a todo el país por Correo Argentino. A sucursal es gratis, y a domicilio tiene un costo adicional que ves antes de pagar. Llega en 2 a 5 días hábiles desde que lo despachamos.\nEn Rosario también podés retirar gratis.' },
@@ -1062,7 +1061,7 @@ const handle = v => String(v || '').trim().replace(/^https?:\/\/(www\.)?(instagr
 const DEFAULT_ABOUT = 'KAVANTIA nació en Rosario con una idea simple: que cada prenda exista una sola vez.\nCustomizamos denim y tops a mano, uno por uno: los diseños son únicos y no hay dos iguales.\nSi una pieza no está en tu talle, la hacemos por encargo con tus medidas.';
 const aboutText = a => !a || /prendas con historia|Por ahora trabajamos por encargo/.test(a) ? DEFAULT_ABOUT : a;
 function renderFooter() {
-  document.querySelectorAll('.an-free').forEach(x => { x.hidden = !sucGratis(); }); { const f = $('#info-free'); if (f) f.hidden = !sucGratis(); }
+  document.querySelectorAll('.an-free').forEach(x => { x.hidden = !sucGratis(); }); { const f = $('#info-free'); if (f) f.hidden = !sucGratis(); const cs = $('#comprar-ship'); if (cs) cs.innerHTML = (sucGratis() ? 'envío <b>gratis</b> a sucursal del Correo' : 'envío a sucursal del Correo') + ', envío a domicilio (con costo adicional) o retiro gratis en Rosario'; }
   const c = data().contact || {};
   const ig = handle(c.instagram), tt = handle(c.tiktok), wa = waNumber();
   const links = [];
