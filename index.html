@@ -535,8 +535,8 @@ body.editing { padding-bottom: 120px; }
 
 <div class="announce" aria-label="Beneficios">
   <div class="announce-track">
-    <span>Diseños únicos, hechos a mano</span><span>Pagá con Mercado Pago</span><span>Encargá el tuyo con tus medidas</span><span>Novedades cada jueves 20 h</span>
-    <span aria-hidden="true">Diseños únicos, hechos a mano</span><span aria-hidden="true">Pagá con Mercado Pago</span><span aria-hidden="true">Encargá el tuyo con tus medidas</span><span aria-hidden="true">Novedades cada jueves 20 h</span>
+    <span>Diseños únicos, hechos a mano</span><span class="an-free" hidden>Envío gratis a sucursal del Correo</span><span>Pagá con Mercado Pago</span><span>Encargá el tuyo con tus medidas</span><span>Novedades cada jueves 20 h</span>
+    <span aria-hidden="true">Diseños únicos, hechos a mano</span><span aria-hidden="true" class="an-free" hidden>Envío gratis a sucursal del Correo</span><span aria-hidden="true">Pagá con Mercado Pago</span><span aria-hidden="true">Encargá el tuyo con tus medidas</span><span aria-hidden="true">Novedades cada jueves 20 h</span>
   </div>
 </div>
 
@@ -604,7 +604,8 @@ body.editing { padding-bottom: 120px; }
       <h2>Envíos</h2>
       <ul>
         <li>En Rosario: envío a domicilio o retiro gratis en punto de entrega.</li>
-        <li>Resto del país: por Correo Argentino, a domicilio o a sucursal.</li>
+        <li id="info-free" hidden><b>Envío gratis</b> a la sucursal del Correo Argentino que elijas, en todo el país.</li>
+        <li>Resto del país: por Correo Argentino, a domicilio o a sucursal. Llega en 2 a 5 días hábiles desde que lo despachamos.</li>
         <li>Cuando despachamos tu pedido te mandamos el número de seguimiento por WhatsApp.</li>
       </ul>
       <div class="calc-box">
@@ -1001,7 +1002,7 @@ function renderGrid() {
 
 const DEFAULT_FAQ = [
   { q: '¿Cuáles son los métodos de pago?', a: 'Pagás desde la página con Mercado Pago: tarjeta de crédito, débito o dinero en cuenta.' },
-  { q: '¿Cuáles son los métodos de envío?', a: 'En Rosario te lo llevamos a domicilio o lo retirás gratis en nuestro punto de entrega.\nAl resto del país enviamos por Correo Argentino, a domicilio o a sucursal.' },
+  { q: '¿Cuáles son los métodos de envío?', a: 'En Rosario te lo llevamos a domicilio o lo retirás gratis en nuestro punto de entrega.\nAl resto del país enviamos por Correo Argentino, a domicilio o a sucursal: llega en 2 a 5 días hábiles desde que lo despachamos.' },
   { q: '¿Las prendas tienen cambio?', a: 'No. Cada jean es único y está customizado a mano, por eso no tiene cambio. Antes de comprar fijate su talle y sus medidas reales, que están en cada jean.' },
   { q: '¿Cómo sé si me queda?', a: 'Cada jean en stock muestra su talle y sus medidas reales (cintura, cadera, tiro y largo). Comparalas con un jean tuyo que te quede bien.' },
   { q: '¿Qué pasa si no está mi talle?', a: 'Tocá “Quiero encargar el mío” y completá tus medidas. Lo hacemos con el mismo diseño sobre otro jean, y tarda de 10 a 15 días.' },
@@ -1036,7 +1037,7 @@ $('#calc-form').addEventListener('submit', e => {
   $('#c-out').innerHTML = q.local
     ? `<b>Envío en Rosario: ${quoteText(q)}</b><br><span class="small">Coordinamos el día por WhatsApp. También podés retirarlo gratis.</span>`
     : hasSuc()
-      ? `<b>Envío a ${esc(prov)}</b><br>A domicilio: <b>${quoteText(q)}</b><br>A sucursal del Correo: <b>${quoteText(sq)}</b><br><span class="small">${q.price || sq.price ? esc(shipCfg().nota) : 'Escribinos y te pasamos el costo exacto.'}</span>`
+      ? `<b>Envío a ${esc(prov)}</b><br>A domicilio: <b>${quoteText(q)}</b><br>A sucursal del Correo: <b>${quoteText(sq)}</b><br><span class="small">${q.price || sq.price || sq.free ? esc(shipCfg().nota) : 'Escribinos y te pasamos el costo exacto.'}</span>`
       : `<b>Envío a ${esc(prov)}: ${quoteText(q)}</b><br><span class="small">${q.price ? esc(shipCfg().nota) : 'Escribinos y te pasamos el costo exacto.'}</span>`;
   $('#c-out').classList.remove('flash'); void $('#c-out').offsetWidth; $('#c-out').classList.add('flash');
   try { $('#c-out').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (err) {}
@@ -1050,6 +1051,7 @@ const ICONS = {
 const handle = v => String(v || '').trim().replace(/^https?:\/\/(www\.)?(instagram|tiktok)\.com\//i, '').replace(/^@/, '').replace(/[^A-Za-z0-9._]/g, '');
 const DEFAULT_ABOUT = 'KAVANTIA nació en Rosario con una idea simple: que cada prenda exista una sola vez.\nCustomizamos cada jean a mano, uno por uno: los diseños son únicos y no hay dos iguales.\nPor ahora trabajamos por encargo: escribinos y la hacemos para vos.';
 function renderFooter() {
+  document.querySelectorAll('.an-free').forEach(x => { x.hidden = !sucGratis(); }); { const f = $('#info-free'); if (f) f.hidden = !sucGratis(); }
   const c = data().contact || {};
   const ig = handle(c.instagram), tt = handle(c.tiktok), wa = waNumber();
   const links = [];
@@ -1117,7 +1119,7 @@ function renderProduct() {
       <div class="pv-accs">
         ${rows ? `<details class="pv-acc"><summary>Medidas de la prenda</summary><table class="measures"><thead><tr><th></th><th>S</th><th>M</th><th>L</th></tr></thead><tbody>${rows}</tbody></table></details>` : ''}
         ${isJeanCat(p.cat) ? `<details class="pv-acc"><summary>Talle y medidas</summary><p class="small" style="margin:8px 0 0">Cada jean es único y está customizado a mano, así que el calce cambia de uno a otro. Si está en stock, arriba ves su talle y sus medidas reales: comparalas con un jean tuyo que te quede bien. Si no está tu talle, encargá el tuyo con tus medidas.</p></details>` : `<details class="pv-acc"><summary>Tabla de talles</summary><table class="measures"><thead><tr><th>cm</th>${SIZES.map(s => `<th>${s}</th>`).join('')}</tr></thead><tbody><tr><td>Busto</td><td>80</td><td>84</td><td>88</td><td>92</td><td>96</td></tr><tr><td>Cintura</td><td>62</td><td>66</td><td>70</td><td>74</td><td>78</td></tr><tr><td>Cadera</td><td>86</td><td>90</td><td>94</td><td>98</td><td>102</td></tr></tbody></table></details>`}
-        <details class="pv-acc"><summary>Envíos</summary><ul class="pv-perks"><li>En Rosario, a domicilio o con retiro gratis</li><li>Al resto del país por Correo Argentino, a domicilio o a sucursal</li><li>Cada pieza es única: no tiene cambio</li></ul></details>
+        <details class="pv-acc"><summary>Envíos</summary><ul class="pv-perks"><li>En Rosario, a domicilio o con retiro gratis</li><li>Al resto del país por Correo Argentino, a domicilio o a sucursal: 2 a 5 días hábiles</li><li>Cada pieza es única: no tiene cambio</li></ul></details>
       </div>
       <a class="pv-share" href="https://wa.me/?text=${encodeURIComponent(p.name + ' ' + shareUrl)}" target="_blank" rel="noopener">Compartir por WhatsApp</a>
     </div>`;
@@ -1180,8 +1182,10 @@ function addEncargo(id, btn) {
 function cleanCart() { cart = cart.filter(l => findP(l.id)); }
 
 const PROVINCIAS = ['Buenos Aires', 'CABA', 'Catamarca', 'Chaco', 'Chubut', 'Córdoba', 'Corrientes', 'Entre Ríos', 'Formosa', 'Jujuy', 'La Pampa', 'La Rioja', 'Mendoza', 'Misiones', 'Neuquén', 'Río Negro', 'Salta', 'San Juan', 'San Luis', 'Santa Cruz', 'Santa Fe', 'Santiago del Estero', 'Tierra del Fuego', 'Tucumán'];
-const shipCfg = () => { const c = Object.assign({ local: '2000', nota: 'Llega en 3 a 7 días hábiles por Correo Argentino o Andreani.', prov: {}, suc: {} }, (editing && draft ? draft : saved).ship || {}); c.prov = c.prov || {}; c.suc = c.suc || {}; return c; };
-const hasSuc = () => Object.values(shipCfg().suc).some(v => Number(v) > 0);
+const SHIP_NOTA = 'Llega en 2 a 5 días hábiles por Correo Argentino.';
+const shipCfg = () => { const c = Object.assign({ local: '2000', nota: SHIP_NOTA, prov: {}, suc: {} }, (editing && draft ? draft : saved).ship || {}); c.prov = c.prov || {}; c.suc = c.suc || {}; if (!c.nota || c.nota === 'Llega en 3 a 7 días hábiles por Correo Argentino o Andreani.') c.nota = SHIP_NOTA; return c; };
+const sucGratis = () => Boolean(shipCfg().sucGratis);
+const hasSuc = () => sucGratis() || Object.values(shipCfg().suc).some(v => Number(v) > 0);
 const cp4 = cp => (String(cp || '').match(/\d{4}/) || [''])[0];
 /* Same rules as the server: a local postal code gets same-day delivery, the rest pays its province's price. 0 = to be arranged. */
 function shipQuote(prov, cp, modo) {
@@ -1189,17 +1193,19 @@ function shipQuote(prov, cp, modo) {
   const locals = String(c.local || '').split(/[^0-9]+/).filter(Boolean);
   if (d && locals.includes(d)) return { local: true, price: Number((editing && draft ? draft : saved).contact.envio) || 0, label: 'Envío en Rosario' };
   if (!PROVINCIAS.includes(prov)) return { local: false, price: 0, label: 'Envío' };
+  if (modo === 'sucursal' && c.sucGratis) return { local: false, suc: true, free: true, price: 0, label: `Envío a sucursal del Correo (${prov})` };
   if (modo === 'sucursal') return { local: false, suc: true, price: Number(c.suc[prov]) || 0, label: `Envío a sucursal del Correo (${prov})` };
   return { local: false, price: Number(c.prov[prov]) || 0, label: `Envío a domicilio (${prov})` };
 }
 const isLocal = () => shipQuote(buyer.provincia, buyer.cp).local;
-const curModo = () => (hasSuc() && buyer.modo === 'sucursal' && !isLocal()) ? 'sucursal' : 'domicilio';
-const quoteText = q => q.price ? peso(q.price) : 'A coordinar';
+const curModo = () => (hasSuc() && (buyer.modo ? buyer.modo === 'sucursal' : sucGratis()) && !isLocal()) ? 'sucursal' : 'domicilio';
+const quoteText = q => q.free ? 'Gratis' : q.price ? peso(q.price) : 'A coordinar';
 function totals() {
   const sub = cart.reduce((s, l) => s + (Number(findP(l.id).price) || 0) * l.qty, 0);
-  const envio = delivery === 'envio' ? shipQuote(buyer.provincia, buyer.cp, curModo()).price : 0;
+  const q = delivery === 'envio' ? shipQuote(buyer.provincia, buyer.cp, curModo()) : null;
+  const envio = q ? q.price : 0, envioFree = Boolean(q && q.free), envioOk = !q || envio > 0 || envioFree;
   const total = sub + envio;
-  return { sub, envio, total, items: cart.reduce((s, l) => s + l.qty, 0) };
+  return { sub, envio, envioFree, envioOk, total, items: cart.reduce((s, l) => s + l.qty, 0) };
 }
 
 const PAY = {
@@ -1232,7 +1238,7 @@ function quoteLine() {
   const q = shipQuote(buyer.provincia, buyer.cp, curModo());
   const opts = !q.local && hasSuc() ? (() => { const m = curModo(), dq = shipQuote(buyer.provincia, buyer.cp, 'domicilio'), sq = shipQuote(buyer.provincia, buyer.cp, 'sucursal');
     return `<span class="modo" role="group" aria-label="Tipo de envío"><button type="button" data-modo="domicilio" aria-pressed="${m === 'domicilio'}">A domicilio<small>${quoteText(dq)}</small></button><button type="button" data-modo="sucursal" aria-pressed="${m === 'sucursal'}">A sucursal del Correo<small>${quoteText(sq)}</small></button></span>`; })() : '';
-  return opts + `<b>${q.local ? 'Envío en Rosario' : q.label}: ${quoteText(q)}</b>${q.local ? '' : `<br><span class="small">${esc(shipCfg().nota)}</span>`}${q.price ? '' : '<br><span class="small">Te escribimos con el costo antes de despacharlo.</span>'}`;
+  return opts + `<b>${q.local ? 'Envío en Rosario' : q.label}: ${quoteText(q)}</b>${q.local ? '' : `<br><span class="small">${esc(shipCfg().nota)}</span>`}${q.price || q.free ? '' : '<br><span class="small">Te escribimos con el costo antes de despacharlo.</span>'}`;
 }
 function stepsBar() {
   if (step > 3) return '';
@@ -1356,7 +1362,7 @@ function renderBag() {
 
   if (step === 1) {
     body.innerHTML = stepsBar() + `<h3 class="ck-title">¿Cómo lo recibís?</h3>
-      <div class="choices">${choice('delivery', 'retiro', SHIP.retiro)}${choice('delivery', 'envio', hasSuc() ? { t: 'Envío', s: 'A domicilio o a sucursal del Correo · a todo el país' } : SHIP.envio)}</div>
+      <div class="choices">${choice('delivery', 'retiro', SHIP.retiro)}${choice('delivery', 'envio', sucGratis() ? { t: 'Envío', s: 'Gratis a sucursal del Correo · también a domicilio' } : hasSuc() ? { t: 'Envío', s: 'A domicilio o a sucursal del Correo · a todo el país' } : SHIP.envio)}</div>
       ${delivery ? `<div class="form ck-form">
         <label class="field"><span>Tu nombre</span><input type="text" id="b-nombre" autocomplete="name" value="${esc(buyer.nombre)}" placeholder="Nombre y apellido"></label>
         ${delivery === 'envio' ? `<div class="two">
@@ -1375,13 +1381,13 @@ function renderBag() {
 
   if (step === 2) {
     const sub = t.sub;
-    if (payment === 'online' && delivery === 'envio' && !t.envio) payment = null;
+    if (payment === 'online' && !t.envioOk) payment = null;
     if (payment === 'efectivo' && delivery !== 'retiro') payment = null;
     body.innerHTML = stepsBar() + `<h3 class="ck-title">¿Cómo pagás?</h3>
       <div class="choices">
-        ${delivery !== 'envio' || t.envio ? choice('payment', 'online', PAY.online, peso(sub + t.envio)) : ''}
+        ${t.envioOk ? choice('payment', 'online', PAY.online, peso(sub + t.envio)) : ''}
       </div>
-      ${delivery === 'envio' && !t.envio ? `<p class="small">Para tu zona el costo del envío se coordina aparte. ${waNumber().length >= 8 ? `<a href="https://wa.me/${waNumber()}" target="_blank" rel="noopener">Escribinos por WhatsApp</a> y te pasamos el total.` : 'Escribinos y te pasamos el total.'}</p>` : ''}`;
+      ${!t.envioOk ? `<p class="small">Para tu zona el costo del envío se coordina aparte. ${waNumber().length >= 8 ? `<a href="https://wa.me/${waNumber()}" target="_blank" rel="noopener">Escribinos por WhatsApp</a> y te pasamos el total.` : 'Escribinos y te pasamos el total.'}</p>` : ''}`;
     if (payment === 'transferencia') payment = null;
     foot.innerHTML = `<div class="btn-row">${back}<button type="button" class="cta" style="flex:1" data-step="next" ${payment ? '' : 'disabled'}>Continuar</button></div>`;
     return;
@@ -1393,7 +1399,7 @@ function renderBag() {
       ${cart.map(l => { const p = findP(l.id); return `<div class="row"><span>${l.qty} × ${esc(p.name)}${l.color ? ' · ' + esc(l.color) : ''} · ${l.size === 'ENC' ? 'por encargo' : l.size}</span><span>${peso(p.price * l.qty)}</span></div>`; }).join('')}
       <div class="sum-sep"></div>
       <div class="row"><span>Entrega</span><span>${delivery === 'envio' ? `${curModo() === 'sucursal' ? 'Sucursal del Correo · ' : ''}${esc(buyer.ciudad)}, ${esc(buyer.provincia)} · CP ${esc(cp4(buyer.cp))}` : 'Retiro · gratis'}</span></div>
-      ${delivery === 'envio' ? `<div class="row"><span>Envío</span><span>${t.envio ? peso(t.envio) : 'A coordinar'}</span></div>` : ''}
+      ${delivery === 'envio' ? `<div class="row"><span>Envío</span><span>${t.envioFree ? 'Gratis' : t.envio ? peso(t.envio) : 'A coordinar'}</span></div>` : ''}
       <div class="row"><span>Pago</span><span>${PAY[payment].t}</span></div>
       ${payment === 'transferencia' ? `<div class="row" style="color:var(--good)"><span>10% off</span><span>−${peso(t.sub - transferPrice(t.sub))}</span></div>` : ''}
       <div class="row total"><span>Total</span><span>${peso(t.total)}</span></div>
@@ -1929,7 +1935,8 @@ function openShipEditor() {
       <div class="ship-grid">${PROVINCIAS.map((p, i) => `<label>${p}<input type="text" id="sh-p-${i}" inputmode="numeric" autocomplete="off" value="${Number(edItem.prov[p]) ? Number(edItem.prov[p]).toLocaleString('es-AR') : ''}"></label>`).join('')}</div>
     </div>
     <div class="field"><span class="field-label">Envío a sucursal del Correo, por provincia ($)</span>
-      <p class="small">Si no cargás ninguno, en la compra solo aparece el envío a domicilio.</p>
+      <label style="display:flex;align-items:center;gap:10px;margin:4px 0 10px;font-size:15px;text-transform:none;letter-spacing:0"><input type="checkbox" id="sh-suc-gratis" ${edItem.sucGratis ? 'checked' : ''} style="width:20px;height:20px"> Envío gratis a sucursal en todo el país</label>
+      <p class="small">Con esto marcado, los precios de abajo no se usan. Si no lo marcás y no cargás ninguno, en la compra solo aparece el envío a domicilio.</p>
       <div class="ship-fill"><input type="text" id="sh-all-s" inputmode="numeric" autocomplete="off" placeholder="Mismo precio para todas"><button type="button" class="ghost" id="sh-apply-s">Aplicar</button></div>
       <div class="ship-grid">${PROVINCIAS.map((p, i) => `<label>${p}<input type="text" id="sh-s-${i}" inputmode="numeric" autocomplete="off" value="${Number(edItem.suc[p]) ? Number(edItem.suc[p]).toLocaleString('es-AR') : ''}"></label>`).join('')}</div>
     </div>
@@ -2020,7 +2027,7 @@ $('#ed-foot').addEventListener('click', e => {
       const prov = {};
       const suc = {};
       PROVINCIAS.forEach((p, i) => { const v = n($(`#sh-p-${i}`).value); if (v) prov[p] = v; const w = n($(`#sh-s-${i}`).value); if (w) suc[p] = w; });
-      draft.ship = { local: $('#sh-local').value.replace(/[^0-9, ]/g, '').trim().slice(0, 200), nota: $('#sh-nota').value.trim().slice(0, 160), prov, suc };
+      draft.ship = { local: $('#sh-local').value.replace(/[^0-9, ]/g, '').trim().slice(0, 200), nota: $('#sh-nota').value.trim().slice(0, 160), prov, suc, sucGratis: $('#sh-suc-gratis').checked };
     } else if (edMode === 'faq') {
       syncFaqForm();
       const faq = edItem.filter(x => x.q || x.a);
@@ -2060,7 +2067,7 @@ function renderOrders(msg) {
     <div class="order-top"><b>#${esc(o.id)}</b><span class="chip ${esc(o.estado)}">${ORD_EST[o.estado] || esc(o.estado)}</span></div>
     <span class="small">${fmt(o.fecha)} · ${esc(o.nombre)}</span>
     <ul>${(o.items || []).map(i => `<li>${i.cantidad} × ${esc(i.nombre)}${i.color ? ' · ' + esc(i.color) : ''} · ${esc(i.talle)}${i.encargo && i.medidas ? `<br><span class="small">${medText(i.medidas)}</span>` : ''}</li>`).join('')}</ul>
-    <span>${o.entrega === 'envio' ? (o.modo === 'sucursal' ? 'Sucursal del Correo: ' : 'Envío: ') + esc(o.direccion) + (o.detalle ? ' (' + esc(o.detalle) + ')' : '') + (o.ciudad ? ', ' + esc(o.ciudad) : '') + (o.provincia ? ', ' + esc(o.provincia) : '') + (o.cp ? ' · CP ' + esc(o.cp) : '') + (o.envio ? '' : ' · costo a coordinar') : 'Retira en persona'}</span>
+    <span>${o.entrega === 'envio' ? (o.modo === 'sucursal' ? 'Sucursal del Correo: ' : 'Envío: ') + esc(o.direccion) + (o.detalle ? ' (' + esc(o.detalle) + ')' : '') + (o.ciudad ? ', ' + esc(o.ciudad) : '') + (o.provincia ? ', ' + esc(o.provincia) : '') + (o.cp ? ' · CP ' + esc(o.cp) : '') + (o.envio ? '' : o.envioGratis ? ' · envío gratis' : ' · costo a coordinar') : 'Retira en persona'}</span>
     <span><b style="font-weight:500">${peso(o.total || 0)}</b> · ${ORD_PAGO[o.pago] || esc(o.pago)}${o.email ? ' · ' + esc(o.email) : ''}</span>
     <div class="btn-row">
       ${o.estado !== 'pagado' && o.estado !== 'entregado' && o.estado !== 'cancelado' ? `<button type="button" class="ghost" data-ord="${esc(o.id)}" data-est="pagado">Marcar pagado</button>` : ''}

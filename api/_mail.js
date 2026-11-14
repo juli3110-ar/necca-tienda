@@ -56,7 +56,7 @@ export function orderMailForCustomer(o, paid) {
     subject: paid ? `Recibimos tu pago · Pedido #${o.id}` : `Recibimos tu pedido #${o.id}`,
     html: layout({
       title: paid ? '¡Gracias por tu compra!' : '¡Recibimos tu pedido!',
-      rows: [`Hola ${o.nombre || ''}, ${paid ? 'tu pago se acreditó.' : 'ya tenemos tu pedido.'} Te escribimos por WhatsApp para coordinar la entrega.`, itemsText(o), `${entregaText(o)}\nPago: ${PAGO[o.pago] || o.pago}${o.envio ? '\nEnvío: ' + peso(o.envio) : ''}\nTotal: ${peso(o.total)}`],
+      rows: [`Hola ${o.nombre || ''}, ${paid ? 'tu pago se acreditó.' : 'ya tenemos tu pedido.'} Te escribimos por WhatsApp para coordinar la entrega.`, itemsText(o), `${entregaText(o)}\nPago: ${PAGO[o.pago] || o.pago}${o.envio ? '\nEnvío: ' + peso(o.envio) : o.envioGratis ? '\nEnvío: gratis' : ''}\nTotal: ${peso(o.total)}`],
       footer: `Pedido #${o.id}. Si tenés alguna duda, respondé este mail o escribinos por WhatsApp.`
     })
   };

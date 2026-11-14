@@ -68,11 +68,12 @@ export async function POST(request) {
 
   const subtotal = items.reduce((s, i) => s + i.precio * i.cantidad, 0);
   const descuento = pago === 'transferencia' ? subtotal - transferPrice(subtotal) : 0;
-  const sucOk = state.ship && state.ship.suc && Object.values(state.ship.suc).some(v => Number(v) > 0);
+  const sucOk = state.ship && (state.ship.sucGratis || (state.ship.suc && Object.values(state.ship.suc).some(v => Number(v) > 0)));
   const q = entrega === 'envio' ? shipQuote(state, provincia, cp, body.modo === 'sucursal' && sucOk ? 'sucursal' : 'domicilio') : null;
   const modo = q ? (q.suc ? 'sucursal' : 'domicilio') : '';
   const envio = q ? q.price : 0;
-  if (pago === 'online' && entrega === 'envio' && !envio) return json({ error: 'no_ship', message: 'Para tu zona el envío se coordina aparte. Escribinos por WhatsApp.' }, 400);
+  const envioGratis = Boolean(q && q.free);
+  if (pago === 'online' && entrega === 'envio' && !envio && !envioGratis) return json({ error: 'no_ship', message: 'Para tu zona el envío se coordina aparte. Escribinos por WhatsApp.' }, 400);
   const total = subtotal - descuento + envio;
 
   const id = Date.now().toString(36).toUpperCase().slice(-5) + randomBytes(2).toString('hex').toUpperCase();
@@ -82,7 +83,7 @@ export async function POST(request) {
     estado: pago === 'online' ? 'pendiente' : 'a_confirmar',
     cuenta: (() => { try { return readToken(request) || ''; } catch { return ''; } })(),
     nombre, entrega, direccion, detalle, ciudad: entrega === 'envio' ? ciudad : '', provincia: entrega === 'envio' ? provincia : '', cp: entrega === 'envio' ? cp : '', modo, pago,
-    items, subtotal, descuento, envio, total
+    items, subtotal, descuento, envio, envioGratis, total
   };
 
   if (pago !== 'online') {
