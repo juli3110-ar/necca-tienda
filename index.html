@@ -829,8 +829,8 @@ function sizesOf(p) {
 }
 const sizeInfo = (p, s) => { const v = sizesOf(p)[s]; const ok = v === 'si' || v > 0; return { show: ok, ok, enc: false, left: typeof v === 'number' ? v : Infinity }; };
 const stockSizes = p => sizesFor(p).filter(s => sizeInfo(p, s).ok);
-/* Real measurements of one garment (cm). Jeans: cintura, cadera, tiro, largo, entrepierna. */
-const JM = [['cintura', 'Cintura'], ['cadera', 'Cadera'], ['tiro', 'Tiro'], ['largo', 'Largo'], ['entrepierna', 'Entrepierna']];
+/* Real measurements of one garment (cm). Jeans: cintura, cadera, tiro, largo. */
+const JM = [['cintura', 'Cintura'], ['cadera', 'Cadera'], ['tiro', 'Tiro'], ['largo', 'Largo']];
 const jmParts = p => JM.filter(([k]) => p.jm && p.jm[k]).map(([k, t]) => [t, String(p.jm[k])]);
 const jmLine = p => { const x = jmParts(p); return x.length ? x.map(([t, v]) => `${t} ${esc(v)}`).join(' · ') + ' cm' : ''; };
 /* What we ask the customer for an encargo (cm). */
@@ -1127,7 +1127,7 @@ function renderProduct() {
       ${encFor === p.id ? encFormHTML(p) : ''}
       ${p.desc ? `<div class="pv-desc"><p class="pv-head">Detalle del producto</p>${descHTML(p.desc)}</div>` : ''}
       <div class="pv-accs">
-        ${rows ? `<details class="pv-acc"><summary>Medidas de la prenda</summary><table class="measures"><thead><tr><th></th><th>S</th><th>M</th><th>L</th></tr></thead><tbody>${rows}</tbody></table></details>` : ''}
+        ${rows && !isJeanCat(p.cat) ? `<details class="pv-acc"><summary>Medidas de la prenda</summary><table class="measures"><thead><tr><th></th><th>S</th><th>M</th><th>L</th></tr></thead><tbody>${rows}</tbody></table></details>` : ''}
         ${isJeanCat(p.cat) ? `<details class="pv-acc"><summary>Talle y medidas</summary><p class="small" style="margin:8px 0 0">Cada jean es único y está customizado a mano, así que el calce cambia de uno a otro. Si está en stock, arriba ves su talle y sus medidas reales: comparalas con un jean tuyo que te quede bien. Si no está tu talle, encargá el tuyo con tus medidas.</p></details>` : `<details class="pv-acc"><summary>Tabla de talles</summary><table class="measures"><thead><tr><th>cm</th>${SIZES.map(s => `<th>${s}</th>`).join('')}</tr></thead><tbody><tr><td>Busto</td><td>80</td><td>84</td><td>88</td><td>92</td><td>96</td></tr><tr><td>Cintura</td><td>62</td><td>66</td><td>70</td><td>74</td><td>78</td></tr><tr><td>Cadera</td><td>86</td><td>90</td><td>94</td><td>98</td><td>102</td></tr></tbody></table></details>`}
         <details class="pv-acc"><summary>Envíos</summary><ul class="pv-perks"><li>En Rosario, a domicilio o con retiro gratis</li><li>Al resto del país por Correo Argentino, a domicilio o a sucursal: 2 a 5 días hábiles</li><li>Cada pieza es única: no tiene cambio</li></ul></details>
       </div>
@@ -1784,6 +1784,7 @@ function readProductForm() {
   edItem.badge = String($('#ed-new').value || '').replace(/\s+/g, ' ').trim().slice(0, 24);
   edItem.desc = $('#ed-desc').value.trim().slice(0, 800);
   edItem.m = [0, 1, 2].map(i => [0, 1, 2, 3].map(j => $(`#ed-m-${i}-${j}`).value.trim().slice(0, 20))).filter(r => r[0]);
+  if (isJeanCat(edItem.cat)) edItem.m = [];
   if ($('#jm-cintura')) { const jm = {}; JM.forEach(([k]) => { const v = $('#jm-' + k).value.trim().slice(0, 8); if (v) jm[k] = v; }); edItem.jm = jm; }
   if (edItem.isNew && !edItem.img) edItem.glyph = glyphFor(edItem.cat);
   return '';
