@@ -102,6 +102,8 @@ export function cleanState(input) {
         tint: color(p.tint),
         ink: color(p.ink),
         glyph: GLYPHS.includes(p.glyph) ? p.glyph : 'g-top',
+        tiro: ['bajo', 'medio', 'alto'].includes(p.tiro) ? p.tiro : '',
+        ...(p.noEnc ? { noEnc: true } : {}),
         jm: Object.fromEntries(['cintura', 'cadera', 'tiro', 'largo', 'entrepierna'].map(k => [k, str(p.jm && p.jm[k], 8)]).filter(x => x[1])),
         m: (Array.isArray(p.m) ? p.m : []).slice(0, 4)
           .map(r => (Array.isArray(r) ? r : []).slice(0, 4).map(x => str(x, 20)))

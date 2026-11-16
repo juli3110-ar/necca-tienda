@@ -182,7 +182,21 @@ details summary { cursor: pointer; color: var(--rose-ink); width: fit-content; }
 .enc-btn { min-height: 44px; padding: 8px 10px; border: 1px solid var(--fg); border-radius: 2px; background: transparent; color: var(--fg); font: 400 11px/1.3 var(--body); letter-spacing: .14em; text-transform: uppercase; cursor: pointer; }
 .pv-info .enc-btn.pv-enc { width: 100%; min-height: 52px; margin-top: 10px; font-size: 12px; letter-spacing: .2em; }
 .jm { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
-.jm-table { margin: 0 0 16px; max-width: 320px; }
+.jm-table { margin: 0; max-width: 320px; }
+.jm-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 150px; gap: 16px; align-items: center; margin: 4px 0 18px; }
+.enc-check { display: flex; flex-direction: row; align-items: center; gap: 10px; font-size: 15px; text-transform: none; letter-spacing: 0; }
+.enc-check input { width: 20px; height: 20px; flex-shrink: 0; accent-color: var(--fg); }
+.pv-tiro { margin: 2px 0 6px; font-size: 15px; }
+.jm-title { margin: 0 0 6px; font-family: var(--display); font-weight: 400; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; }
+.jm-note { margin: 8px 0 0; }
+.kmg { color: var(--fg); }
+.mg-svg { display: block; width: 100%; height: auto; }
+.kmg-body { width: 100%; max-width: 230px; justify-self: center; margin: 4px 0 6px; }
+.mg-line { stroke: var(--fg); }
+.mg-head { fill: var(--fg); }
+.mg-lead { stroke: var(--muted); stroke-width: 1; }
+.mg-lab { fill: var(--fg); font-family: var(--body); font-size: 15px; font-weight: 400; }
+.kmg-jean .mg-lab { font-size: 24px; }
 .enc-form { margin-top: 16px; padding: 18px 16px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); display: grid; gap: 12px; }
 .enc-form .field input { width: 100%; }
 .enc-hint { display: block; margin: -2px 0 2px; font-size: 12.5px; color: var(--muted); letter-spacing: 0; text-transform: none; }
@@ -831,6 +845,7 @@ const sizeInfo = (p, s) => { const v = sizesOf(p)[s]; const ok = v === 'si' || v
 const stockSizes = p => sizesFor(p).filter(s => sizeInfo(p, s).ok);
 /* Real measurements of one garment (cm). Jeans: cintura, cadera, tiro, largo. */
 const JM = [['cintura', 'Cintura'], ['cadera', 'Cadera'], ['tiro', 'Tiro'], ['largo', 'Largo']];
+const TIROS = { bajo: 'Bajo', medio: 'Medio', alto: 'Alto' };
 const jmParts = p => JM.filter(([k]) => p.jm && p.jm[k]).map(([k, t]) => [t, String(p.jm[k])]);
 const jmLine = p => { const x = jmParts(p); return x.length ? x.map(([t, v]) => `${t} ${esc(v)}`).join(' · ') + ' cm' : ''; };
 /* What we ask the customer for an encargo (cm). */
@@ -846,7 +861,7 @@ function sizeButtons(p, cls) {
 }
 function sizeHint(p) {
   const sel = picked[p.id];
-  if (!stockSizes(p).length) return 'Sin stock · encargá el tuyo con tus medidas';
+  if (!stockSizes(p).length) return p.noEnc ? 'Sin stock' : 'Sin stock · encargá el tuyo con tus medidas';
   if (!sel) return 'Elegí tu talle';
   const i = sizeInfo(p, sel);
   return `Talle ${sel} · en stock`;
@@ -995,6 +1010,7 @@ function renderGrid() {
       <div>
         <h3 class="name"><button type="button" class="open-link" data-open="${esc(p.id)}">${esc(p.name)}</button></h3>
         ${colorsOf(p).length > 1 ? swatches(p, false) : `<div class="color">${esc(colorSel(p))}</div>`}
+        ${isJeanCat(p.cat) && TIROS[p.tiro] ? `<div class="color">Tiro ${TIROS[p.tiro].toLowerCase()}</div>` : ''}
       </div>
       <div class="prices"><span class="price">${peso(p.price)}</span></div>
       ${ss.length ? `<div class="sizes" role="group" aria-label="Talle">${sizeButtons(p, 'size')}</div>` : ''}
@@ -1003,7 +1019,7 @@ function renderGrid() {
       ${rows && !isJeanCat(p.cat) ? `<details><summary>Ver medidas en cm</summary><table class="measures"><thead><tr><th></th><th>S</th><th>M</th><th>L</th></tr></thead><tbody>${rows}</tbody></table></details>` : ''}
       <div class="buy">
         <button type="button" class="add" data-add="${esc(p.id)}" ${ss.length && sel ? '' : 'disabled'}>${ss.length && !sel ? 'Elegí un talle' : 'Comprar'}</button>
-        <button type="button" class="enc-btn" data-enc="${esc(p.id)}">Quiero encargar el mío</button>
+        ${p.noEnc ? '' : `<button type="button" class="enc-btn" data-enc="${esc(p.id)}">Quiero encargar el mío</button>`}
       </div>
     </article>`;
   }).join('');
@@ -1121,10 +1137,11 @@ function renderProduct() {
         <div class="pv-opts"><div class="tsizes" role="group" aria-label="Talle">${sizeButtons(p, 'tsize')}</div></div>
       </div>` : ''}
       <div class="hint">${sizeHint(p)}</div>
-      ${ss.length && jmParts(p).length ? `<table class="measures jm-table"><tbody>${jmParts(p).map(([t, v]) => `<tr><td>${t}</td><td>${esc(v)} cm</td></tr>`).join('')}</tbody></table>` : ''}
+      ${isJeanCat(p.cat) && TIROS[p.tiro] ? `<div class="pv-row pv-tiro"><span class="pv-label">Tiro</span><span>${TIROS[p.tiro]}</span></div>` : ''}
+      ${ss.length && jmParts(p).length ? `<div class="jm-wrap"><div><p class="jm-title">Medidas de este jean</p><table class="measures jm-table"><tbody>${jmParts(p).map(([t, v]) => `<tr><td>${t}</td><td>${esc(v)} cm</td></tr>`).join('')}</tbody></table><p class="small jm-note">Medido con el jean apoyado plano. Cintura y cadera, de lado a lado por 2.</p></div><div class="kmg kmg-jean">${jeanGuideSVG()}</div></div>` : ''}
       <button type="button" class="add pv-add" data-add="${esc(p.id)}" ${ss.length && sel ? '' : 'disabled'}>${ss.length && !sel ? 'Elegí un talle' : 'Comprar'}</button>
-      <button type="button" class="enc-btn pv-enc" data-enc="${esc(p.id)}" aria-expanded="${encFor === p.id}">Quiero encargar el mío</button>
-      ${encFor === p.id ? encFormHTML(p) : ''}
+      ${p.noEnc ? '' : `<button type="button" class="enc-btn pv-enc" data-enc="${esc(p.id)}" aria-expanded="${encFor === p.id}">Quiero encargar el mío</button>
+      ${encFor === p.id ? encFormHTML(p) : ''}`}
       ${p.desc ? `<div class="pv-desc"><p class="pv-head">Detalle del producto</p>${descHTML(p.desc)}</div>` : ''}
       <div class="pv-accs">
         ${rows && !isJeanCat(p.cat) ? `<details class="pv-acc"><summary>Medidas de la prenda</summary><table class="measures"><thead><tr><th></th><th>S</th><th>M</th><th>L</th></tr></thead><tbody>${rows}</tbody></table></details>` : ''}
@@ -1166,10 +1183,48 @@ function addToCart(id, btn) {
   btn.textContent = 'Agregada ✓'; btn.classList.add('done');
   setTimeout(() => { btn.textContent = 'Comprar'; btn.classList.remove('done'); openBag(); }, 500);
 }
+/* Measuring guides, drawn as line art in the page colours. */
+function bodyGuideSVG(keys) {
+  const on = k => keys.includes(k);
+  const ln = 'stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"';
+  const ms = 'class="mg-line" stroke-width="2" stroke-linecap="round" fill="none" stroke-dasharray="5 4"';
+  const lab = (x, y, t) => `<text x="${x}" y="${y}" class="mg-lab">${t}</text>`;
+  return `<svg class="mg-svg" viewBox="0 0 250 360" role="img" aria-label="Dónde medirte">
+    <g ${ln} opacity=".55">
+      <circle cx="90" cy="30" r="17"/>
+      <path d="M84 47v9M96 47v9M84 56C68 58 56 63 54 72M96 56c16 2 28 7 30 16"/>
+      <path d="M54 72L44 178M60 82L53 174M126 72L136 178M120 82L127 174"/>
+      <path d="M60 82C64 110 70 132 68 150C66 168 58 180 60 196C61 204 62 210 64 216L72 334H86L89 226Q90 221 91 226L94 334H108L116 216C118 210 119 204 120 196C122 180 114 168 112 150C110 132 116 110 120 82"/>
+    </g>
+    ${on('busto') ? `<path d="M60 104c20 7 40 7 60 0" ${ms}/><path d="M122 104h22" class="mg-lead"/>${lab(148, 108, 'Busto')}` : ''}
+    ${on('cintura') ? `<path d="M68 150c15 6 29 6 44 0" ${ms}/><path d="M114 150h30" class="mg-lead"/>${lab(148, 154, 'Cintura')}` : ''}
+    ${on('cadera') ? `<path d="M60 192c20 8 40 8 60 0" ${ms}/><path d="M122 192h22" class="mg-lead"/>${lab(148, 196, 'Cadera')}` : ''}
+    ${on('entrepierna') ? `<path d="M100 230V332" ${ms}/><path d="M102 280h42" class="mg-lead"/>${lab(148, 276, 'Largo de')}${lab(148, 292, 'pierna')}` : ''}
+  </svg>`;
+}
+function jeanGuideSVG() {
+  const ln = 'stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" fill="none"';
+  const ar = (x1, y1, x2, y2) => `<path d="M${x1} ${y1}L${x2} ${y2}" class="mg-line" stroke-width="2.4" marker-start="url(#mg-a)" marker-end="url(#mg-a)"/>`;
+  const lab = (x, y, t, extra) => `<text x="${x}" y="${y}" class="mg-lab" ${extra || ''}>${t}</text>`;
+  return `<svg class="mg-svg" viewBox="0 0 280 360" role="img" aria-label="Cómo se miden los jeans">
+    <defs><marker id="mg-a" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 1L9 5L0 9z" class="mg-head"/></marker></defs>
+    <g ${ln} opacity=".5">
+      <path d="M40 54h150v18H40z"/>
+      <path d="M40 72l-8 276h72l11-190 11 190h72l-8-276"/>
+      <path d="M115 72v70c0 7-4 12-8 16"/>
+      <path d="M45 84c16 2 30 12 36 28M185 84c-16 2-30 12-36 28"/>
+    </g>
+    ${ar(40, 36, 190, 36)}${lab(115, 24, 'Cintura', 'text-anchor="middle"')}
+    ${ar(38, 150, 192, 150)}${lab(46, 178, 'Cadera')}
+    ${ar(150, 54, 150, 158)}${lab(158, 112, 'Tiro')}
+    ${ar(236, 54, 236, 348)}${lab(264, 201, 'Largo', 'text-anchor="middle" transform="rotate(-90 264 201)"')}
+  </svg>`;
+}
 function encFormHTML(p) {
   return `<div class="enc-form" id="enc-form">
     <p class="enc-title">Encargá el tuyo</p>
     <p class="small">Lo hacemos con el mismo diseño sobre otro jean, a tu medida. El tono o el corte pueden variar un poco. Tarda de 10 a 15 días. Medite con un centímetro, sin apretar.</p>
+    <div class="kmg kmg-body">${bodyGuideSVG(ENC_F(p).filter(f => f[2]).map(f => f[0]))}</div>
     ${ENC_F(p).map(([k, t, req, h]) => `<label class="field"><span>${t}${k === 'talle' ? '' : ' (cm)'}${req ? '' : ' · opcional'}</span>${h && k !== 'talle' ? `<small class="enc-hint">${esc(h)}</small>` : ''}<input type="text" id="enc-${k}" inputmode="${k === 'talle' ? 'text' : 'numeric'}" maxlength="12" value="${esc(encVals[k] || '')}" placeholder="${k === 'talle' ? esc(h) : 'Ej: ' + ({ cintura: 72, cadera: 96, entrepierna: 78, altura: 165, busto: 88 }[k] || '')}"></label>`).join('')}
     <label class="field"><span>Algo más que quieras contarnos · opcional</span><input type="text" id="enc-nota" maxlength="140" value="${esc(encVals.nota || '')}" placeholder="Ej: lo quiero de tiro alto"></label>
     <div class="ed-msg err" id="enc-err" aria-live="polite"></div>
@@ -1718,8 +1773,9 @@ function openProductEditor(id) {
     <label class="field"><span>Categoría</span><select id="ed-cat">${allCats().some(c => c.id === edItem.cat) ? '' : '<option value="" selected>Sin categoría</option>'}${curMenu().map(g => `<optgroup label="${esc(g.t)}">${(g.items || []).map(c => `<option value="${esc(c.id)}" ${c.id === edItem.cat ? 'selected' : ''}>${esc(c.label)}</option>`).join('')}</optgroup>`).join('')}</select></label>
     <div class="field"><span class="field-label">Talles y stock</span>
       <div class="st-grid" id="st-grid">${stGridHTML(edItem)}</div>
-      <p class="small">“En stock”: poné cuántas tenés; se descuenta sola con cada venta y en 0 aparece tachado. “Sí, sin contar”: se vende sin límite. “No lo traigo”: no aparece.</p>
+      <p class="small">“En stock”: el talle que tenés, con la cantidad (en piezas únicas, 1). Se descuenta solo con cada venta y pasa a “Sin stock”.</p>
     </div>
+    <label class="field enc-check"><input type="checkbox" id="ed-enc" ${edItem.noEnc ? '' : 'checked'}> <span>Se puede encargar (muestra el botón “Quiero encargar el mío”)</span></label>
     <div class="field"><span class="field-label">Colores</span>
       <div id="ed-colors"></div>
       <button type="button" class="ghost" id="ed-addcolor" style="align-self:flex-start">+ Agregar color</button>
@@ -1759,10 +1815,11 @@ function renderEdExtra() {
 function jmEditHTML(item) {
   if (!isJeanCat(item.cat)) return '';
   const j = item.jm || {};
-  return `<div class="field"><span class="field-label">Medidas reales de este jean (cm)</span><p class="small">Aparecen junto al talle. Medilo apoyado plano: cintura y cadera de lado a lado por 2.</p><div class="ship-grid">${JM.map(([k, t]) => `<label>${t}<input type="text" id="jm-${k}" inputmode="numeric" maxlength="8" value="${esc(j[k] || '')}"></label>`).join('')}</div></div>`;
+  const t = item.tiro || '';
+  return `<label class="field"><span>Tiro del jean</span><select id="ed-tiro"><option value="" ${t ? '' : 'selected'}>Sin indicar</option>${['bajo', 'medio', 'alto'].map(x => `<option value="${x}" ${t === x ? 'selected' : ''}>${x[0].toUpperCase() + x.slice(1)}</option>`).join('')}</select></label><div class="field"><span class="field-label">Medidas reales de este jean (cm)</span><p class="small">Aparecen junto al talle. Medilo apoyado plano: cintura y cadera de lado a lado por 2.</p><div class="ship-grid">${JM.map(([k, t]) => `<label>${t}<input type="text" id="jm-${k}" inputmode="numeric" maxlength="8" value="${esc(j[k] || '')}"></label>`).join('')}</div></div>`;
 }
 function stGridHTML(item) {
-  return sizesFor(item).map(z => { const v = sizesOf(item)[z]; const mode = typeof v === 'number' ? 'n' : v; return `<div class="st-row"><b>${z}</b><select id="st-m-${z}" aria-label="Talle ${z}"><option value="n" ${mode === 'n' ? 'selected' : ''}>En stock</option><option value="si" ${mode === 'si' ? 'selected' : ''}>Sí, sin contar</option><option value="no" ${mode === 'no' ? 'selected' : ''}>No lo traigo</option></select><input type="number" id="st-n-${z}" min="0" step="1" inputmode="numeric" value="${typeof v === 'number' ? v : ''}" placeholder="Cant." aria-label="Unidades talle ${z}" ${mode === 'n' ? '' : 'hidden'}></div>`; }).join('');
+  return sizesFor(item).map(z => { const v = sizesOf(item)[z]; const on = v === 'si' || (typeof v === 'number' && v > 0); return `<div class="st-row"><b>${z}</b><select id="st-m-${z}" aria-label="Talle ${z}"><option value="no" ${on ? '' : 'selected'}>Sin stock</option><option value="n" ${on ? 'selected' : ''}>En stock</option></select><input type="number" id="st-n-${z}" min="1" step="1" inputmode="numeric" value="${typeof v === 'number' && v > 0 ? v : 1}" aria-label="Unidades talle ${z}" ${on ? '' : 'hidden'}></div>`; }).join('');
 }
 function readProductForm() {
   const name = $('#ed-name').value.trim();
@@ -1774,7 +1831,7 @@ function readProductForm() {
   edItem.cat = $('#ed-cat').value;
   const sz = {};
   const zs = sizesFor(edItem);
-  zs.forEach(z => { const el = $(`#st-m-${z}`); const m = el ? el.value : 'no'; sz[z] = m === 'n' ? Math.max(0, Math.round(Number($(`#st-n-${z}`).value) || 0)) : m; });
+  zs.forEach(z => { const el = $(`#st-m-${z}`); const m = el ? el.value : 'no'; sz[z] = m === 'n' ? Math.max(1, Math.round(Number($(`#st-n-${z}`).value) || 1)) : 'no'; });
   if (zs.every(z => sz[z] === 'no')) return 'Elegí al menos un talle que traigas.';
   edItem.sizes = Object.assign({}, edItem.sizes && typeof edItem.sizes === 'object' ? edItem.sizes : {}, sz);
   syncEdColors();
@@ -1785,6 +1842,8 @@ function readProductForm() {
   edItem.desc = $('#ed-desc').value.trim().slice(0, 800);
   edItem.m = [0, 1, 2].map(i => [0, 1, 2, 3].map(j => $(`#ed-m-${i}-${j}`).value.trim().slice(0, 20))).filter(r => r[0]);
   if (isJeanCat(edItem.cat)) edItem.m = [];
+  if ($('#ed-enc')) { if ($('#ed-enc').checked) delete edItem.noEnc; else edItem.noEnc = true; }
+  if ($('#ed-tiro')) edItem.tiro = $('#ed-tiro').value; else if (!isJeanCat(edItem.cat)) delete edItem.tiro;
   if ($('#jm-cintura')) { const jm = {}; JM.forEach(([k]) => { const v = $('#jm-' + k).value.trim().slice(0, 8); if (v) jm[k] = v; }); edItem.jm = jm; }
   if (edItem.isNew && !edItem.img) edItem.glyph = glyphFor(edItem.cat);
   return '';

@@ -45,6 +45,7 @@ export async function POST(request) {
     const qty = Math.max(1, Math.min(10, Math.round(Number(l.qty) || 0)));
     if (!p) continue;
     if (l.size === 'ENC') {
+      if (p.noEnc) return json({ error: 'no_enc', message: p.name + ' no se puede encargar por ahora. Sacalo de tu bolsa para seguir.' }, 409);
       const med = {};
       for (const k of ['cintura', 'cadera', 'entrepierna', 'altura', 'busto', 'talle']) { const v = str(l.med && l.med[k], 12); if (v) med[k] = v; }
       const nota = str(l.med && l.med.nota, 140); if (nota) med.nota = nota;
